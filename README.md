@@ -2,7 +2,7 @@
 # finmate
 a financial management app for everyday needs
 =======
-# moneyy
+# finmate
 
 A new Flutter project.
 
