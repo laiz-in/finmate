@@ -11,6 +11,9 @@
 migrate_working_dir/
 assets/
 
+# Ignore firebase_options.dart file
+/lib/firebase_options.dart
+
 # IntelliJ related
 *.iml
 *.ipr

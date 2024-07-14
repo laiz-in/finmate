@@ -21,19 +21,14 @@ import 'Widgets/user_auth/sign_up_screen.dart';
 import 'auth/auth_bloc.dart';
 import 'auth/auth_event.dart';
 import 'auth/auth_guard.dart';
+import 'firebase_options.dart';
 import 'splash.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   await Firebase.initializeApp(
-    options: FirebaseOptions(
-      apiKey: "AIzaSyCRREnMu-hBCdKujy-t-IBUU8eN0HPiSPo",
-      projectId: "finmate-d9f70",
-      storageBucket: "finmate-d9f70.appspot.com",
-      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-      appId: "604761908212",
-    ),
+    options: getFirebaseOptions(), // Use the function from firebase_options.dart
   );
 
   runApp(
