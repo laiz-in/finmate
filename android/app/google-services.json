@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "604761908212",
+    "project_id": "finmate-d9f70",
+    "storage_bucket": "finmate-d9f70.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:604761908212:android:1158e984b21eace9bc0fa1",
+        "android_client_info": {
+          "package_name": "com.example.moneyy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRREnMu-hBCdKujy-t-IBUU8eN0HPiSPo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
