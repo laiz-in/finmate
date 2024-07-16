@@ -2,8 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/styles/themes.dart';
+import 'package:moneyy/ui/error_snackbar.dart';
 
-import '../../ui/dialogue_box.dart';
+import '../../ui/succes_snackbar.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key});
@@ -22,10 +23,10 @@ class _ResetPasswordState extends State<ResetPassword> {
     if (_formKey.currentState!.validate()) {
       try {
       await _auth.sendPasswordResetEmail(email: _emailController.text);
-      showCustomSnackBar(context, 'Email has been sent', duration: Duration(seconds: 5));
+      successSnackbar(context, 'Email has been sent');
       } catch (e) {
       // dilaloge message to error when sending verification email
-      showCustomSnackBarError(context, "Failed to send");
+      errorSnackbar(context, "Failed to send");
       }// vatch block ends
     }
   }
@@ -34,9 +35,8 @@ class _ResetPasswordState extends State<ResetPassword> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: const Color.fromARGB(57, 45, 63, 117).withOpacity(0.9),
-        backgroundColor: Colors.black,
-        iconTheme: IconThemeData(color:AppColors.myFadeblue),
+        backgroundColor: Color(0xFF4C7766),
+        iconTheme: IconThemeData(color:Colors.white.withOpacity(0.7)),
       ),
       body: GestureDetector(
         onTap: () {
@@ -47,7 +47,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             // Container
             Container(
               decoration: BoxDecoration(
-                color:Colors.black,
+                color:Color(0xFF4C7766),
               ),
             ),
             // Align for the email and button Text fields
@@ -73,7 +73,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                             Text(
                               'Reset password',
                               style: GoogleFonts.montserrat(
-                                color: AppColors.myFadeblue,
+                                color: Colors.white.withOpacity(0.7),
                                 fontSize: 25,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -81,7 +81,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                             SizedBox(width: 10),
                             Icon(
                               Icons.settings_backup_restore_outlined,
-                              color:AppColors.myFadeblue,
+                              color:Colors.white.withOpacity(0.7),
                               size: 35,
                             ),
                           ],
@@ -92,55 +92,69 @@ class _ResetPasswordState extends State<ResetPassword> {
                       // Email address field
                       Padding(
                         padding: EdgeInsets.fromLTRB(20.0, 30, 20, 0),
-                        child: TextFormField(
-                          controller: _emailController,
-                          cursorColor: AppColors.myFadeblue,
-                          style: GoogleFonts.montserrat(
-                            color:AppColors.myFadeblue,
-                            fontWeight: FontWeight.w500,
-                            decoration: TextDecoration.none,
-                            fontSize: 20,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.2),
+                              spreadRadius: 8,
+                              blurRadius: 15,
+                              offset: Offset(0, 4), // changes position of shadow
+                            ),
+                          ],
                           ),
-                          decoration: InputDecoration(
-                            fillColor: AppColors.myfaded,
-                            filled: true,
-                            contentPadding: EdgeInsets.all(20),
-                            prefixIcon: Icon(
-                              Icons.email,
-                              color:AppColors.myFadeblue,
-                            ),
-                            label: Text(
-                              'Verification Email',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            labelStyle: GoogleFonts.montserrat(
-                              color:AppColors.myFadeblue,
+                          child: TextFormField(
+                            controller: _emailController,
+                            cursorColor: Colors.white.withOpacity(0.7),
+                            style: GoogleFonts.montserrat(
+                              color:Colors.white.withOpacity(0.7),
                               fontWeight: FontWeight.w500,
+                              decoration: TextDecoration.none,
+                              fontSize: 20,
                             ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.0),
+                            decoration: InputDecoration(
+                              fillColor: Color.fromARGB(255, 134, 168, 163),
+                              filled: true,
+                              contentPadding: EdgeInsets.all(20),
+                              prefixIcon: Icon(
+                                Icons.email,
+                                color:Colors.white.withOpacity(0.7),
+                              ),
+                              label: Text(
+                                'Verification Email',
+                                style: GoogleFonts.montserrat(fontSize: 18,fontWeight: FontWeight.w500,color: Colors.white.withOpacity(0.7)),
+                              ),
+                              floatingLabelBehavior: FloatingLabelBehavior.never,
+                              labelStyle: GoogleFonts.montserrat(
+                                color:AppColors.myFadeblue,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: BorderSide(color: Color.fromARGB(255, 134, 168, 163),width: 0),
+
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: BorderSide(color: Color.fromARGB(255, 134, 168, 163),width: 0),
+
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: BorderSide(color: Color.fromARGB(255, 134, 168, 163),width: 0),
+
+                              ),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                              
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                              borderSide: BorderSide(
-                                  color: AppColors.myFadeblue,
-                                  width: 1),
-                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter your email';
+                              }
+                              if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                                return 'Please enter a valid email address';
+                              }
+                              return null;
+                            },
                           ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your email';
-                            }
-                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                              return 'Please enter a valid email address';
-                            }
-                            return null;
-                          },
                         ),
                       ),
                       SizedBox(height: 20),
@@ -155,8 +169,16 @@ class _ResetPasswordState extends State<ResetPassword> {
                           height: 63,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: AppColors.myFadeblue,
+                            color: Colors.white.withOpacity(0.7),
                             borderRadius: BorderRadius.circular(15.0),
+                            boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.2),
+                              spreadRadius: 8,
+                              blurRadius: 15,
+                              offset: Offset(0, 4), // changes position of shadow
+                            ),
+                          ],
                           ),
                           child: Center(
                             child: Row(
@@ -165,7 +187,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                                 Text(
                             'Verify',
                             style: GoogleFonts.montserrat(
-                              color: AppColors.myDark,
+                              color: Color(0xFF4C7766),
                               fontSize: 25,
                               fontWeight: FontWeight.w600,
                             ),

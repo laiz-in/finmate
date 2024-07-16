@@ -34,7 +34,10 @@ primaryColor: Color(0xFFEBE6E0),
 
 
 final ThemeData darkTheme = ThemeData(
-  primaryColor: Colors.black,
+    cardColor:Color.fromARGB(255, 149, 202, 181),
+  primaryColorDark: Color.fromARGB(255, 245, 241, 227),
+
+  primaryColor: const Color.fromARGB(255, 34, 34, 34),
   scaffoldBackgroundColor: Colors.black,
   textTheme: TextTheme(
     bodyLarge: TextStyle(color: AppColors.myWhite),

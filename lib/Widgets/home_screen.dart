@@ -255,8 +255,8 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
 
                     // 4 Icon buttons
                     Padding(
-                  padding: const EdgeInsets.all(0),
-                  child: Container(
+                    padding: const EdgeInsets.all(0),
+                    child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Theme.of(context).primaryColorDark,
@@ -298,7 +298,7 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
                               },
                               ),
                               Text(
-                                'Individuals',
+                                'Interpersonal',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w700,
@@ -570,6 +570,7 @@ Widget _graphCard(context,double? todaySpending, double? totalSpending, double? 
             children: [
               Row(
               children: [
+
               // circular progress indicator for monthly limit
               Container(
                 decoration: BoxDecoration(
@@ -592,7 +593,7 @@ Widget _graphCard(context,double? todaySpending, double? totalSpending, double? 
                     style: GoogleFonts.montserrat(color: Theme.of(context).cardColor,fontSize: 18, fontWeight: FontWeight.w800),),
                     circularStrokeCap: CircularStrokeCap.round,
                     progressColor:Theme.of(context).cardColor,
-                    backgroundColor: Colors.amber.shade100,
+                    backgroundColor: Theme.of(context).cardColor.withOpacity(0.3),
                   ),
                 ],
               ),
@@ -621,7 +622,7 @@ Widget _graphCard(context,double? todaySpending, double? totalSpending, double? 
                     style: GoogleFonts.montserrat(color: Theme.of(context).cardColor, fontWeight: FontWeight.w800,fontSize: 18),),
                     circularStrokeCap: CircularStrokeCap.round,
                     progressColor:Theme.of(context).cardColor,
-                    backgroundColor: Colors.amber.shade100,
+                    backgroundColor: Theme.of(context).cardColor.withOpacity(0.3),
                   ),
                 ],
               ),

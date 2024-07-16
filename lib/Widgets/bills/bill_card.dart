@@ -132,11 +132,11 @@ class _BillCardState extends State<BillCard> {
       ),
       color: Theme.of(context).cardColor,
       child: ListTile(
-        contentPadding: EdgeInsets.all(15.0),
+        contentPadding: EdgeInsets.fromLTRB(15.0,15,15,5),
 
         // bill title
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Text(
               '₹${widget.bill['billAmount'] ?? '0.00'}',
@@ -146,25 +146,32 @@ class _BillCardState extends State<BillCard> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-
-            Text(
-              widget.bill['billTitle'] ?? 'No name',
-              style: GoogleFonts.montserrat(
-                fontSize: 25,
-                color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.w600,
+            SizedBox(width: 20), // Adjust the width as needed for spacing
+            
+            // Correct the Text widget structure and properties
+            Expanded(
+              child: Text(
+                widget.bill['billTitle'] ?? 'No name',
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.montserrat(
+                  fontSize: 25,
+                  color: Theme.of(context).primaryColorDark.withOpacity(0.6),
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ),
-
           ],
         ),
+
+
+
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Column(
               children: [
                 Text(
-                
+              overflow: TextOverflow.ellipsis,
               widget.bill['billDescription'] ?? 'No name',
               style: GoogleFonts.montserrat(
                 fontSize: 15,
@@ -185,40 +192,49 @@ class _BillCardState extends State<BillCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Checkbox(
-                      shape: CircleBorder(eccentricity:0.8),
 
-                      value: isPaid,
-                      onChanged: (value) {
-                        _togglePaidStatus();
-                      },
-                      activeColor: Theme.of(context).cardColor,
-                      checkColor: Theme.of(context).primaryColorDark,
-                    ),
-                    Text(
-                      'Paid',
-                      style: GoogleFonts.montserrat(
-                        color: Theme.of(context).cardColor,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
+
+
                 Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.edit, color: Theme.of(context).cardColor),
+                      icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
                       onPressed: _updateBill,
                     ),
                     IconButton(
-                      icon: Icon(Icons.delete, color: Theme.of(context).cardColor),
+                      icon: Icon(Icons.delete, color:Colors.orange.shade200),
                       onPressed: _showDeleteConfirmationDialog,
                     ),
                   ],
                 ),
+
+
+                Row(
+                  children: [
+                    Text(
+                      'Paid already?',
+                      style: GoogleFonts.montserrat(
+                        color: Theme.of(context).primaryColorDark,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+
+                    Checkbox(
+                      shape: CircleBorder(eccentricity:0.8),
+                      value: isPaid,
+                      onChanged: (value) {
+                        _togglePaidStatus();
+                      },
+                      
+                      activeColor: Theme.of(context).primaryColorDark,
+                      checkColor: Theme.of(context).cardColor,
+                    ),
+                  ],
+                ),
+
+
+
               ],
             ),
           ],

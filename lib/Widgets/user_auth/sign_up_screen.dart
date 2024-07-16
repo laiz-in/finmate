@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../styles/themes.dart';
-import '../../ui/dialogue_box.dart';
+import '../../ui/error_snackbar.dart';
+import '../../ui/info_snackbar.dart';
 
 
 class SignUpScreen extends StatefulWidget {
@@ -63,18 +63,10 @@ Future<void> _register() async {
       });
 
 
-      // 2. Create subcollections for financial data (store references, not actual data)
-      await FirebaseFirestore.instance.collection('spendings').doc().set({});
-      await FirebaseFirestore.instance.collection('lent_money').doc().set({});
-      await FirebaseFirestore.instance.collection('reminders').doc().set({});
-      await FirebaseFirestore.instance.collection('money_owes').doc().set({});
-      await FirebaseFirestore.instance.collection('upcoming_bills').doc().set({});
-
-
       setState(() {
         _isLoading = false;
       });
-      showCustomSnackBarInfo(context, "Verify your email to complete");
+      infoSnackbar(context, "Verify your email to complete");
     
 
 
@@ -82,7 +74,7 @@ Future<void> _register() async {
         setState(() {_isLoading = false;});
 
         // dialogue box to show sign up error
-        showCustomSnackBarError(context, "Email is already used !");
+        errorSnackbar(context, "Email is already used !");
 
     }
   }
@@ -96,27 +88,31 @@ Future<void> _register() async {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
 
-
+        backgroundColor: Color(0xFF4C7766),
         body: Stack(
           children: [
 
             Container(
               decoration: BoxDecoration(
-                color:Colors.black,
+                color: Theme.of(context).cardColor,
               ),
             ),
 
             Align(
               alignment: Alignment.center,
               child: SingleChildScrollView(
-                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                padding: EdgeInsets.all(5),
                 child: Form(
                   key: _formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+
+                      // Sign up header
                       _buildSignUpHeader(),
+                      
+                      // first name field
                       _buildTextField(
                         controller: _firstNameController,
                         label: 'First name',
@@ -128,6 +124,8 @@ Future<void> _register() async {
                           return null;
                         },
                       ),
+
+                      // last name field
                       _buildTextField(
                         controller: _lastNameController,
                         label: 'Last name',
@@ -139,6 +137,8 @@ Future<void> _register() async {
                           return null;
                         },
                       ),
+
+                      // Email field
                       _buildTextField(
                         controller: _emailController,
                         label: 'Email',
@@ -153,6 +153,8 @@ Future<void> _register() async {
                           return null;
                         },
                       ),
+                      
+                      // password field
                       _buildTextField(
                         controller: _passwordController,
                         label: 'Password',
@@ -168,6 +170,8 @@ Future<void> _register() async {
                           return null;
                         },
                       ),
+                      
+                      // confirm password field
                       _buildTextField(
                         controller: _confirmPasswordController,
                         label: 'Confirm password',
@@ -180,7 +184,11 @@ Future<void> _register() async {
                           return null;
                         },
                       ),
+                      
+                      // register button
                       _buildRegisterButton(),
+                      
+                      // already signed in prompt
                       _buildSignInPrompt(context),
                     ],
                   ),
@@ -207,15 +215,15 @@ Future<void> _register() async {
           Text(
             'Sign up',
             style: GoogleFonts.montserrat(
-              color:AppColors.myFadeblue,
-              fontSize: 45,
+              color:Theme.of(context).primaryColor,
+              fontSize: 35,
               fontWeight: FontWeight.w600,
             ),
           ),
-          const SizedBox(width: 10),
-          const Icon(
+          const SizedBox(width: 15),
+          Icon(
             Icons.person_add,
-            color: AppColors.myOrange,
+            color: Theme.of(context).primaryColor,
             size: 35,
           ),
         ],
@@ -227,16 +235,17 @@ Future<void> _register() async {
   InputDecoration _inputDecoration(String label, IconData icon) {
     return InputDecoration(
       filled: true,
-      fillColor: AppColors.myfaded,
+      fillColor: Color.fromARGB(255, 134, 168, 163),
       contentPadding: const EdgeInsets.all(15),
       prefixIcon: Icon(
         icon,
-        color:AppColors.myFadeblue,
+        size: 20,
+        color:Colors.white.withOpacity(0.7),
       ),
       labelText: label,
       floatingLabelBehavior: FloatingLabelBehavior.never,
       labelStyle: GoogleFonts.montserrat(
-        color:AppColors.myFadeblue,
+        color:Colors.white.withOpacity(0.7),
         fontWeight: FontWeight.w500,
       ),
       border: OutlineInputBorder(
@@ -245,12 +254,13 @@ Future<void> _register() async {
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15.0),
+        borderSide: BorderSide(color:Color.fromARGB(255, 134, 168, 163) , width: 0),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15.0),
         borderSide: const BorderSide(
-          color: AppColors.myFadeblue,
-          width: 2,
+          color: Color.fromARGB(255, 209, 211, 216),
+          width: 1,
         ),
       ),
     );
@@ -265,21 +275,34 @@ Future<void> _register() async {
     required String? Function(String?) validator,
   }) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20.0, 12, 20, 0),
+      padding: const EdgeInsets.fromLTRB(15,10,15,10),
       
-      child: TextFormField(
-        controller: controller,
-        cursorColor: AppColors.myFadeblue,
-        
-        obscureText: obscureText,
-        style: GoogleFonts.montserrat(
-          color:AppColors.myFadeblue,
-          fontWeight: FontWeight.w500,
-          decoration: TextDecoration.none,
-          fontSize: 20,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          boxShadow: [
+                BoxShadow(
+                  color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.18),
+                  spreadRadius: 5,
+                  blurRadius: 12,
+                  offset: Offset(0, 8), // changes position of shadow
+                ),
+              ],
         ),
-        decoration: _inputDecoration(label, icon),
-        validator: validator,
+        child: TextFormField(
+          controller: controller,
+          cursorColor: Colors.white.withOpacity(0.7),
+          
+          obscureText: obscureText,
+          style: GoogleFonts.montserrat(
+            color:Colors.white.withOpacity(0.7),
+            fontWeight: FontWeight.w500,
+            decoration: TextDecoration.none,
+            fontSize: 20,
+          ),
+          decoration: _inputDecoration(label, icon),
+          validator: validator,
+        ),
       ),
     );
   }
@@ -287,15 +310,21 @@ Future<void> _register() async {
   // Register button
   Widget _buildRegisterButton() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.fromLTRB(15,20,15,10),
       child: InkWell(
         onTap: _register,
         child: Container(
-          height: 60,
-          width: 347,
+          padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
           decoration: BoxDecoration(
-          
-            color:AppColors.myFadeblue,
+            boxShadow: [
+                BoxShadow(
+                  color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.18),
+                  spreadRadius: 8,
+                  blurRadius: 15,
+                  offset: Offset(0, 8), // changes position of shadow
+                ),
+              ],
+            color:Colors.white.withOpacity(0.8),
             borderRadius: BorderRadius.circular(15.0),
           ),
           child: Center(
@@ -305,7 +334,7 @@ Future<void> _register() async {
                 Text(
                   'Register',
                   style: GoogleFonts.montserrat(
-                    color:AppColors.myDark,
+                    color:Color(0xFF4C7766),
                     fontSize: 26,
                     fontWeight: FontWeight.w600,
                   ),
@@ -327,7 +356,7 @@ Future<void> _register() async {
           Text(
             "Already have an account?",
             style: GoogleFonts.montserrat(
-              color:AppColors.myFadeblue,
+              color:Colors.white.withOpacity(0.5),
               letterSpacing: 0.5,
               fontWeight: FontWeight.w500,
             ),
@@ -340,7 +369,7 @@ Future<void> _register() async {
             child: Text(
               "Sign in",
               style: GoogleFonts.montserrat(
-                color: Color.fromARGB(255, 55, 113, 223),
+                color: Color.fromARGB(255, 134, 170, 236),
                 fontWeight: FontWeight.w500,
                 fontSize: 15,
               ),

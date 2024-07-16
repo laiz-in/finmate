@@ -277,7 +277,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                   color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.18),
                   spreadRadius: 5,
                   blurRadius: 15,
-                  offset: Offset(0, 3), // changes position of shadow
+                  offset: Offset(0, 3),
                 ),
                 ],
                   color:Theme.of(context).primaryColorDark,

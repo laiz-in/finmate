@@ -25,7 +25,7 @@ class ModernSnackBarContent extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
       decoration: BoxDecoration(
         color: Colors.red.shade200,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.2),
@@ -38,8 +38,8 @@ class ModernSnackBarContent extends StatelessWidget {
         children: [
           Lottie.asset(
           'assets/animations/error.json', // Path to your Lottie file
-          width: 40,
-          height: 40,
+          width: 35,
+          height: 35,
           fit: BoxFit.fill,
         ),
           const SizedBox(width: 16),

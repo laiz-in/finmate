@@ -47,7 +47,7 @@ class _AllBillsState extends State<AllBills> with SingleTickerProviderStateMixin
             "Bills to Pay",
             style: GoogleFonts.montserrat(
               color: Theme.of(context).cardColor,
-              fontSize: 25,
+              fontSize: 20,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -65,29 +65,7 @@ class _AllBillsState extends State<AllBills> with SingleTickerProviderStateMixin
           ),
 
 
-          actions: [
-          TextButton.icon(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => Dialog(
-                  backgroundColor: Colors.transparent,
-                  insetPadding: EdgeInsets.all(25),
-                  child: AddBillDialog(),
-                ),
-              );
-            },
-            icon: Icon(Icons.add, color: Theme.of(context).cardColor, size: 30),
-            label: Text(
-              "Add bill",
-              style: GoogleFonts.montserrat(
-                color: Theme.of(context).cardColor,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-        ],
+          
         ),
       ),
       body: user == null
