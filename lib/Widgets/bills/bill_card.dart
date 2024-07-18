@@ -125,112 +125,132 @@ class _BillCardState extends State<BillCard> {
     final formattedDueDate = dueDate != null ? DateFormat('dd-MM-yy').format(dueDate) : 'No date';
 
     return Card(
+      elevation: 20,
       margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
-    
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30.0),
+        borderRadius: BorderRadius.circular(20.0),
       ),
-      color: Theme.of(context).cardColor,
-      child: ListTile(
-        contentPadding: EdgeInsets.fromLTRB(15.0,15,15,5),
-
-        // bill title
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Text(
-              '₹${widget.bill['billAmount'] ?? '0.00'}',
-              style: GoogleFonts.montserrat(
-                fontSize: 25,
-                color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            SizedBox(width: 20), // Adjust the width as needed for spacing
-            
-            // Correct the Text widget structure and properties
-            Expanded(
-              child: Text(
-                widget.bill['billTitle'] ?? 'No name',
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.montserrat(
-                  fontSize: 25,
-                  color: Theme.of(context).primaryColorDark.withOpacity(0.6),
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
-        ),
-
-
-
-        subtitle: Column(
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-              overflow: TextOverflow.ellipsis,
-              widget.bill['billDescription'] ?? 'No name',
-              style: GoogleFonts.montserrat(
-                fontSize: 15,
-                color: Theme.of(context).primaryColor.withOpacity(0.6),
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-                Text(
-                  'Due Date: $formattedDueDate',
+                  '₹${widget.bill['billAmount'] ?? '0.00'}',
                   style: GoogleFonts.montserrat(
-                    color: Theme.of(context).primaryColor.withOpacity(0.6),
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 24,
+                    color: Theme.of(context).cardColor,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ],
+                SizedBox(width: 20,),
+                Text(
+              widget.bill['billTitle'] ?? 'No name',
+              style: GoogleFonts.montserrat(
+                fontSize: 24,
+                color: Theme.of(context).cardColor.withOpacity(0.7),
+                fontWeight: FontWeight.bold,
+              ),
             ),
+            ],
+            ),
+
+
+            SizedBox(height: 8.0),
+            
+            Text(
+              widget.bill['billDescription'] ?? 'No description',
+              style: GoogleFonts.montserrat(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+                color: Theme.of(context).cardColor.withOpacity(0.6),
+              ),
+            ),
+            SizedBox(height: 8.0),
+            Text(
+              'Due Date: $formattedDueDate',
+              style: GoogleFonts.montserrat(
+                fontSize: 16,
+                fontWeight: FontWeight.w600 ,
+                color: Theme.of(context).cardColor.withOpacity(0.6),
+              ),
+            ),
+
+            SizedBox(height: 8.0),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
 
-
-
-                Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.edit, color: Theme.of(context).primaryColor),
-                      onPressed: _updateBill,
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    color: Color.fromARGB(255, 151, 199, 221),
+                  ),
+                  child: TextButton(
+                    onPressed:_updateBill,
+                    child: Text(
+                      'update',
+                      style: GoogleFonts.montserrat(
+                        color: Color.fromARGB(255, 44, 83, 121),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.delete, color:Colors.orange.shade200),
-                      onPressed: _showDeleteConfirmationDialog,
-                    ),
-                  ],
+                  ),
                 ),
 
 
-                Row(
-                  children: [
-                    Text(
-                      'Paid already?',
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    color: Color.fromARGB(255, 235, 125, 117),
+                  ),
+                  child: TextButton(
+                    onPressed:_showDeleteConfirmationDialog,
+                    child: Text(
+                      'delete',
                       style: GoogleFonts.montserrat(
-                        color: Theme.of(context).primaryColorDark,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
+                        color: Color.fromARGB(255, 248, 245, 245),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
+                  ),
+                ),
 
-                    Checkbox(
-                      shape: CircleBorder(eccentricity:0.8),
-                      value: isPaid,
-                      onChanged: (value) {
-                        _togglePaidStatus();
-                      },
-                      
-                      activeColor: Theme.of(context).primaryColorDark,
-                      checkColor: Theme.of(context).cardColor,
-                    ),
-                  ],
+
+              Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    color: Color.fromARGB(255, 164, 206, 177),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                          '  mark as paid',
+                          style: GoogleFonts.montserrat(
+                            color: Color.fromARGB(255, 51, 88, 40),
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                          ),
+                      ),
+                      Checkbox(
+                  shape: CircleBorder(eccentricity: 0.8),
+                  value: isPaid,
+                  onChanged: (value) {
+                    _togglePaidStatus();
+                  },
+
+                  activeColor: Theme.of(context).primaryColor,
+                  checkColor: Theme.of(context).cardColor,
+                ),
+                    ],
+                  ),
                 ),
 
 
