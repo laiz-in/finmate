@@ -5,6 +5,8 @@ import 'package:intl/intl.dart';
 
 import '../../ui/error_snackbar.dart';
 import '../../ui/succes_snackbar.dart';
+import 'update_bill.dart';
+
 
 class BillCard extends StatefulWidget {
   final DocumentSnapshot bill;
@@ -17,6 +19,7 @@ class BillCard extends StatefulWidget {
 }
 
 class _BillCardState extends State<BillCard> {
+  
   bool isPaid = false;
 
   @override
@@ -48,7 +51,7 @@ class _BillCardState extends State<BillCard> {
           elevation: 15,
           title: Center(
             child: Text(
-              'Are you sure you want to delete this bill?',
+              'You want to delete this bill?',
               textAlign: TextAlign.center,
               style: GoogleFonts.montserrat(
                 color: Color.fromARGB(255, 197, 81, 73),
@@ -115,14 +118,12 @@ class _BillCardState extends State<BillCard> {
     );
   }
 
-  void _updateBill() {
-    // Implement update functionality
-  }
 
   @override
   Widget build(BuildContext context) {
     final dueDate = widget.bill['billDueDate']?.toDate();
     final formattedDueDate = dueDate != null ? DateFormat('dd-MM-yy').format(dueDate) : 'No date';
+    final userId;
 
     return Card(
       elevation: 32,
@@ -141,7 +142,7 @@ class _BillCardState extends State<BillCard> {
                 Text(
                   '₹${widget.bill['billAmount'] ?? '0.00'}',
                   style: GoogleFonts.montserrat(
-                    fontSize: 20,
+                    fontSize: 17,
                     color: Theme.of(context).cardColor,
                     fontWeight: FontWeight.bold,
                   ),
@@ -150,26 +151,26 @@ class _BillCardState extends State<BillCard> {
                 Text(
               widget.bill['billTitle'] ?? 'No name',
               style: GoogleFonts.montserrat(
-                fontSize: 20,
+                fontSize: 17,
                 color: Theme.of(context).cardColor.withOpacity(0.7),
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
             ),
             ],
             ),
-            Divider(color: Color.fromARGB(255, 177, 179, 177),endIndent: 5,),
+            Divider(color: Color.fromARGB(255, 209, 211, 209),endIndent: 5,),
             Text(
               widget.bill['billDescription'] ?? 'No description',
               style: GoogleFonts.montserrat(
                 fontWeight: FontWeight.w600,
-                fontSize: 14,
+                fontSize: 13,
                 color: Theme.of(context).cardColor.withOpacity(0.6),
               ),
             ),
             Text(
-              'Due on : $formattedDueDate',
+              'due on - $formattedDueDate',
               style: GoogleFonts.montserrat(
-                fontSize: 14,
+                fontSize: 13,
                 fontWeight: FontWeight.w600 ,
                 color: Theme.of(context).cardColor.withOpacity(0.6),
               ),
@@ -193,7 +194,18 @@ class _BillCardState extends State<BillCard> {
                       minimumSize: Size(70, 30),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    onPressed:_updateBill,
+                  onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => Dialog(
+                      backgroundColor: Colors.transparent,
+                      insetPadding: EdgeInsets.all(25),
+                      child: UpdateBillDialog(
+                        bill: widget.bill,
+                      ),
+                    ),
+                  );
+                },
                     child: Text(
                       'update',
                       style: GoogleFonts.montserrat(

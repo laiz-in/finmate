@@ -272,7 +272,7 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
                           Column(
                             children: [
                               IconButton(
-                                icon: Icon(Icons.receipt,color: Theme.of(context).cardColor),
+                                icon: Icon(Icons.arrow_drop_up_sharp,color: Theme.of(context).cardColor),
                               onPressed: () {
                               Navigator.pushNamed(context, '/AllBillsScreen');
                               },

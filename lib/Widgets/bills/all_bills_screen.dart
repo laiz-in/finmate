@@ -37,17 +37,17 @@ class _AllBillsState extends State<AllBills> with SingleTickerProviderStateMixin
         child: AppBar(
           scrolledUnderElevation: 0,
           elevation: 0,
-          toolbarHeight: 90,
+          toolbarHeight: 50,
           iconTheme: IconThemeData(
             color: Theme.of(context).cardColor,
             size: 30,
           ),
           backgroundColor: Theme.of(context).primaryColor,
           title: Text(
-            "Bills to Pay",
+            "Bills",
             style: GoogleFonts.montserrat(
               color: Theme.of(context).cardColor,
-              fontSize: 20,
+              fontSize: 19,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -61,7 +61,7 @@ class _AllBillsState extends State<AllBills> with SingleTickerProviderStateMixin
             labelColor: Theme.of(context).cardColor,
             unselectedLabelColor: Colors.grey,
             indicatorColor: Theme.of(context).cardColor,
-            labelStyle: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 17),
+            labelStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w600, fontSize: 17),
             unselectedLabelStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w600),
           ),
         ),
@@ -115,7 +115,8 @@ class _AllBillsState extends State<AllBills> with SingleTickerProviderStateMixin
         }
         final bills = snapshot.data?.docs ?? [];
         if (bills.isEmpty) {
-          return Center(child: Text(isPaid == null ? "No bills." : (isPaid ? "No paid bills." : "No upcoming bills."), style: TextStyle(color: Theme.of(context).cardColor)));
+          return Center(child: Text(isPaid == null ? "No bills." : (isPaid ? "Oh! no paid bills" : "Oh! no upcoming bills."), 
+          style: GoogleFonts.montserrat(fontSize:20, fontWeight: FontWeight.w600  ,color:  Theme.of(context).cardColor.withOpacity(0.5))));
         }
         return ListView.builder(
           padding: EdgeInsets.all(15.0),
