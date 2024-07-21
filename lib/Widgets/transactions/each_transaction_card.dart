@@ -86,11 +86,11 @@ class _TransactionCardState extends State<TransactionCard> {
       },
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
-        margin: EdgeInsets.symmetric(vertical: 2.0, horizontal: 16.0),
+        margin: EdgeInsets.symmetric(vertical: 6.0, horizontal: 15.0),
         padding: EdgeInsets.fromLTRB(15, 10, 10, 10.0),
         decoration: BoxDecoration(
           color:Theme.of(context).cardColor,
-          borderRadius: BorderRadius.circular(29.0),
+          borderRadius: BorderRadius.circular(25.0),
         ),
         child: Column(
           children: [

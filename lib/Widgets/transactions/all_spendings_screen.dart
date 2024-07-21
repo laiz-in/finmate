@@ -195,28 +195,25 @@ class _AllSpendingsState extends State<AllSpendings> {
               onRefresh: fetchTransactions,
               child: Container(
                 color: Theme.of(context).primaryColor,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 0.0),
-                  child: isLoading
-                      ? Center(
-                          child: CircularProgressIndicator(
-                            color: Theme.of(context).primaryColorDark,
-                            strokeWidth: 1,
-                          ),
-                        )
-                      : ListView.builder(
-                          itemCount: filteredTransactions.length,
-                          itemBuilder: (context, index) {
-                            return TransactionCard(
-                              transaction: filteredTransactions[index],
-                              onDelete: fetchTransactions,
-                              onUpdate: () {
-                                fetchTransactions();
-                              },
-                            );
-                          },
+                child: isLoading
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).primaryColorDark,
+                          strokeWidth: 1,
                         ),
-                ),
+                      )
+                    : ListView.builder(
+                        itemCount: filteredTransactions.length,
+                        itemBuilder: (context, index) {
+                          return TransactionCard(
+                            transaction: filteredTransactions[index],
+                            onDelete: fetchTransactions,
+                            onUpdate: () {
+                              fetchTransactions();
+                            },
+                          );
+                        },
+                      ),
               ),
             ),
           ),

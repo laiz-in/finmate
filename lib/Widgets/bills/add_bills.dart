@@ -240,12 +240,13 @@ class _AddBillDialogState extends State<AddBillDialog> {
                       final user = FirebaseAuth.instance.currentUser;
                       if (user != null) {
                         try {
+                          // Creates a document ID
                           final newBillRef = FirebaseFirestore.instance
                               .collection("users")
                               .doc(user.uid)
                               .collection("bills")
-                              .doc(); // Create a DocumentReference with a generated ID
-
+                              .doc();
+                          // Add the input datas to firebase
                           await newBillRef.set({
                             'billTitle': _billTitle,
                             'billAmount': _billAmount,
@@ -255,9 +256,10 @@ class _AddBillDialogState extends State<AddBillDialog> {
                             'uidOfBill': newBillRef.id, // Store the generated document ID
                             'paidStatus': 0,
                           });
-
+                          // Show success message
                           successSnackbar(context, 'Bill added successfully!');
                           Navigator.of(context).pop();
+
                         } catch (e) {
                           errorSnackbar(context, 'Error adding bill: $e');
                         }

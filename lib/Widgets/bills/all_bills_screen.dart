@@ -17,7 +17,7 @@ class _AllBillsState extends State<AllBills> with SingleTickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -54,18 +54,16 @@ class _AllBillsState extends State<AllBills> with SingleTickerProviderStateMixin
           bottom: TabBar(
             controller: _tabController,
             tabs: const [
-            Tab(text: "Upcoming Bills"),
-            Tab(text: "Paid Bills"),
+              Tab(text: "All Bills"),
+              Tab(text: "Upcoming Bills"),
+              Tab(text: "Paid Bills"),
             ],
             labelColor: Theme.of(context).cardColor,
             unselectedLabelColor: Colors.grey,
             indicatorColor: Theme.of(context).cardColor,
-            labelStyle: GoogleFonts.montserrat(fontWeight: FontWeight.bold,fontSize: 17),
+            labelStyle: GoogleFonts.montserrat(fontWeight: FontWeight.bold, fontSize: 17),
             unselectedLabelStyle: GoogleFonts.montserrat(fontWeight: FontWeight.w600),
           ),
-
-
-          
         ),
       ),
       body: user == null
@@ -73,39 +71,41 @@ class _AllBillsState extends State<AllBills> with SingleTickerProviderStateMixin
           : TabBarView(
               controller: _tabController,
               children: [
-                _buildBillList(user.uid, false),
-                _buildBillList(user.uid, true),
+                _buildBillList(user.uid, null), // All Bills
+                _buildBillList(user.uid, false), // Upcoming Bills
+                _buildBillList(user.uid, true), // Paid Bills
               ],
             ),
-
       floatingActionButton: FloatingActionButton(
-      onPressed: () {
-        showDialog(
-          context: context,
-          builder: (context) => Dialog(
-            backgroundColor: Colors.transparent,
-            insetPadding: EdgeInsets.all(25),
-            child: AddBillDialog(),
-          ),
-        );
-      },
-      backgroundColor: Theme.of(context).cardColor,
-      elevation: 0,
-      child:Icon(Icons.add, color: Theme.of(context).primaryColor, size: 30),
-    ),
-
-
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => Dialog(
+              backgroundColor: Colors.transparent,
+              insetPadding: EdgeInsets.all(25),
+              child: AddBillDialog(),
+            ),
+          );
+        },
+        backgroundColor: Theme.of(context).cardColor,
+        elevation: 0,
+        child: Icon(Icons.add, color: Theme.of(context).primaryColor, size: 30),
+      ),
     );
   }
 
-  Widget _buildBillList(String userId, bool isPaid) {
+  Widget _buildBillList(String userId, bool? isPaid) {
+    Query<Map<String, dynamic>> query = FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('bills');
+
+    if (isPaid != null) {
+      query = query.where('paidStatus', isEqualTo: isPaid ? 1 : 0);
+    }
+
     return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .collection('bills')
-          .where('paidStatus', isEqualTo: isPaid ? 1 : 0)
-          .snapshots(),
+      stream: query.snapshots(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -115,7 +115,7 @@ class _AllBillsState extends State<AllBills> with SingleTickerProviderStateMixin
         }
         final bills = snapshot.data?.docs ?? [];
         if (bills.isEmpty) {
-          return Center(child: Text(isPaid ? "No paid bills." : "No upcoming bills.", style: TextStyle(color: Theme.of(context).cardColor)));
+          return Center(child: Text(isPaid == null ? "No bills." : (isPaid ? "No paid bills." : "No upcoming bills."), style: TextStyle(color: Theme.of(context).cardColor)));
         }
         return ListView.builder(
           padding: EdgeInsets.all(15.0),

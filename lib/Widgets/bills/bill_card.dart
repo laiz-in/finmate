@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
+import '../../ui/error_snackbar.dart';
+import '../../ui/succes_snackbar.dart';
 
 class BillCard extends StatefulWidget {
   final DocumentSnapshot bill;
@@ -88,13 +90,11 @@ class _BillCardState extends State<BillCard> {
                             .collection('bills')
                             .doc(widget.bill.id)
                             .delete();
-                        Navigator.of(context).pop();
+                                                    Navigator.of(context).pop();
+
+                        successSnackbar(context, "Bill succesfully deleted");
                       } catch (e) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Failed to delete'),
-                          ),
-                        );
+                        errorSnackbar(context, "Failed to delete bill");
                       }
                     },
                     child: Text(
@@ -116,7 +116,7 @@ class _BillCardState extends State<BillCard> {
   }
 
   void _updateBill() {
-    // Implement update functionality here
+    // Implement update functionality
   }
 
   @override
@@ -125,7 +125,7 @@ class _BillCardState extends State<BillCard> {
     final formattedDueDate = dueDate != null ? DateFormat('dd-MM-yy').format(dueDate) : 'No date';
 
     return Card(
-      elevation: 20,
+      elevation: 32,
       margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
@@ -141,7 +141,7 @@ class _BillCardState extends State<BillCard> {
                 Text(
                   '₹${widget.bill['billAmount'] ?? '0.00'}',
                   style: GoogleFonts.montserrat(
-                    fontSize: 24,
+                    fontSize: 20,
                     color: Theme.of(context).cardColor,
                     fontWeight: FontWeight.bold,
                   ),
@@ -150,30 +150,26 @@ class _BillCardState extends State<BillCard> {
                 Text(
               widget.bill['billTitle'] ?? 'No name',
               style: GoogleFonts.montserrat(
-                fontSize: 24,
+                fontSize: 20,
                 color: Theme.of(context).cardColor.withOpacity(0.7),
                 fontWeight: FontWeight.bold,
               ),
             ),
             ],
             ),
-
-
-            SizedBox(height: 8.0),
-            
+            Divider(color: Color.fromARGB(255, 177, 179, 177),endIndent: 5,),
             Text(
               widget.bill['billDescription'] ?? 'No description',
               style: GoogleFonts.montserrat(
                 fontWeight: FontWeight.w600,
-                fontSize: 16,
+                fontSize: 14,
                 color: Theme.of(context).cardColor.withOpacity(0.6),
               ),
             ),
-            SizedBox(height: 8.0),
             Text(
-              'Due Date: $formattedDueDate',
+              'Due on : $formattedDueDate',
               style: GoogleFonts.montserrat(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.w600 ,
                 color: Theme.of(context).cardColor.withOpacity(0.6),
               ),
@@ -187,16 +183,22 @@ class _BillCardState extends State<BillCard> {
 
                 Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                    color: Color.fromARGB(255, 151, 199, 221),
+                    
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                    color: Color.fromARGB(255, 214, 236, 247),
                   ),
                   child: TextButton(
+                  style: TextButton.styleFrom(
+                    elevation: 25,
+                      minimumSize: Size(70, 30),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
                     onPressed:_updateBill,
                     child: Text(
                       'update',
                       style: GoogleFonts.montserrat(
                         color: Color.fromARGB(255, 44, 83, 121),
-                        fontSize: 15,
+                        fontSize: 12,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -207,15 +209,20 @@ class _BillCardState extends State<BillCard> {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(12)),
-                    color: Color.fromARGB(255, 235, 125, 117),
+                    color: Color.fromARGB(255, 248, 218, 216),
                   ),
                   child: TextButton(
+                    style: TextButton.styleFrom(
+                    elevation: 25,
+                      minimumSize: Size(70, 30),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
                     onPressed:_showDeleteConfirmationDialog,
                     child: Text(
                       'delete',
                       style: GoogleFonts.montserrat(
-                        color: Color.fromARGB(255, 248, 245, 245),
-                        fontSize: 15,
+                        color: Color.fromARGB(255, 223, 109, 109),
+                        fontSize: 12,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
@@ -224,31 +231,35 @@ class _BillCardState extends State<BillCard> {
 
 
               Container(
+                height: 35,
+                padding: EdgeInsets.only(left: 10),
                   decoration: BoxDecoration(
+                    
+                    
                     borderRadius: BorderRadius.all(Radius.circular(12)),
-                    color: Color.fromARGB(255, 164, 206, 177),
+                    color: Color.fromARGB(255, 189, 218, 198),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Text(
-                          '  mark as paid',
+                          'mark as paid',
                           style: GoogleFonts.montserrat(
                             color: Color.fromARGB(255, 51, 88, 40),
-                            fontSize: 15,
+                            fontSize: 12,
                             fontWeight: FontWeight.w700,
                           ),
                       ),
                       Checkbox(
-                  shape: CircleBorder(eccentricity: 0.8),
-                  value: isPaid,
-                  onChanged: (value) {
-                    _togglePaidStatus();
-                  },
-
-                  activeColor: Theme.of(context).primaryColor,
-                  checkColor: Theme.of(context).cardColor,
-                ),
+                      
+                      shape: CircleBorder(eccentricity: 0.5),
+                      value: isPaid,
+                      onChanged: (value) {
+                        _togglePaidStatus();
+                      },
+                      activeColor: Theme.of(context).primaryColor,
+                      checkColor: Theme.of(context).cardColor,
+                    ),
                     ],
                   ),
                 ),
