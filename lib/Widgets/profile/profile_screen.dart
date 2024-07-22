@@ -44,7 +44,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       });
     } catch (e) {
       if (mounted) {
-        showCustomSnackBarError(context, "Error loading user data");
+        errorSnackbar(context, "Error loading user data");
       }
     }
   }
@@ -57,7 +57,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     }
     try {
       await _userService.updateEmail(email);
-      showCustomSnackBar(context, "Email updated successfully");
+      successSnackbar(context, "Email updated successfully");
     } catch (e) {
       errorSnackbar(context, "Login again to perform this action");
     }
@@ -79,7 +79,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
       setState(() {
         _userData['monthlyLimit'] = limit;
       });
-      showCustomSnackBar(context, "Monthly limit updated successfully");
+      successSnackbar(context, "Monthly limit updated successfully");
     } catch (e) {
       errorSnackbar(context, "Error updating monthly limit");
     }

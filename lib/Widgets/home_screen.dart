@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/firebase/firebase_utils.dart' as firebase_utils;
-import 'package:moneyy/ui/dialogue_box.dart';
+import 'package:moneyy/ui/error_snackbar.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../firebase/firebase_utils.dart';
@@ -62,7 +62,7 @@ Future<void> _fetchUserData() async {
       }
     } catch (e) {
       if (mounted) {
-        showCustomSnackBarError(context, "Error fetching user data");
+        errorSnackbar(context, "Error fetching user data");
       }
     }
   }

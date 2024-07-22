@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/styles/themes.dart';
 import 'package:moneyy/ui/succes_snackbar.dart';
 
-import '../../ui/dialogue_box.dart';
+import '../../ui/error_snackbar.dart';
 
 class UpdateSpendingDialog extends StatefulWidget {
   final double initialAmount;
@@ -347,7 +347,7 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
               } else {
                 // Show error message
                 Navigator.of(context).pop();
-                showCustomSnackBarError(context, "Could not update spending");
+                errorSnackbar(context, "Could not update spending");
               }
             }
           },

@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/firebase/firebase_utils.dart' as firebase_utils;
-import 'package:moneyy/ui/dialogue_box.dart';
 import 'package:moneyy/ui/error_snackbar.dart';
 import 'package:moneyy/ui/succes_snackbar.dart';
 
@@ -52,7 +51,7 @@ class _TransactionCardState extends State<TransactionCard> {
         await firebase_utils.deleteTransaction(context,userId, widget.transaction.uid);
         widget.onDelete();
       } catch (e) {
-        showCustomSnackBarError(context, "Failed to delete");
+        errorSnackbar(context, "Failed to delete");
       }
     }
   }
