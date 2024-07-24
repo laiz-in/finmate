@@ -1,17 +1,12 @@
 // C:\Users\Hp\Desktop\moneyy\moneyy\lib\Widgets\profile\profile_screen.dart
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/Widgets/user_auth/password_reset_screen.dart';
-import 'package:moneyy/ui/succes_snackbar.dart';
 
 import '../../firebase/user_service.dart';
-import '../../styles/theme_bloc.dart';
-import '../../styles/theme_event.dart';
 import '../../styles/themes.dart';
 import '../../ui/dialogue_box.dart';
 import '../../ui/error_snackbar.dart';
-
 
 class ProfileSettings extends StatefulWidget {
   @override
@@ -22,7 +17,6 @@ class _ProfileSettingsState extends State<ProfileSettings> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _monthlyLimitController = TextEditingController();
   final TextEditingController _dailyLimitController = TextEditingController();
-  bool _isDarkMode = false;
 
   late UserService _userService;
   Map<String, dynamic> _userData = {};
@@ -34,6 +28,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     _loadUserData();
   }
 
+// Loading user data
   void _loadUserData() async {
     try {
       _userData = await _userService.fetchUserData(context);
@@ -49,65 +44,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     }
   }
 
-  void _updateEmail() async {
-    final email = _emailController.text.trim();
-    if (email.isEmpty) {
-      errorSnackbar(context, "Email cannot be empty");
-      return;
-    }
-    try {
-      await _userService.updateEmail(email);
-      successSnackbar(context, "Email updated successfully");
-    } catch (e) {
-      errorSnackbar(context, "Login again to perform this action");
-    }
-  }
-
-  void _updateMonthlyLimit() async {
-    final text = _monthlyLimitController.text.trim();
-    if (text.isEmpty) {
-      errorSnackbar(context, "Monthly limit cannot be empty");
-      return;
-    }
-    final limit = double.tryParse(text);
-    if (limit == null) {
-      errorSnackbar(context, "Invalid monthly limit");
-      return;
-    }
-    try {
-      await _userService.updateMonthlyLimit(_userData['uid'], limit);
-      setState(() {
-        _userData['monthlyLimit'] = limit;
-      });
-      successSnackbar(context, "Monthly limit updated successfully");
-    } catch (e) {
-      errorSnackbar(context, "Error updating monthly limit");
-    }
-  }
-
-  void _updateDailyLimit() async {
-    final text = _dailyLimitController.text.trim();
-    if (text.isEmpty) {
-      errorSnackbar(context, "Daily limit cannot be empty");
-      return;
-    }
-    final limit = double.tryParse(text);
-    if (limit == null) {
-      errorSnackbar(context, "Invalid daily limit");
-      return;
-    }
-    try {
-      await _userService.updateDailyLimit(_userData['uid'], limit);
-      setState(() {
-        _userData['dailyLimit'] = limit;
-      });
-      successSnackbar(context, "Daily limit updated successfully");
-    } catch (e) {
-      errorSnackbar(context, "Error updating daily limit");
-      print(e);
-    }
-  }
-
+// fucntion to update password
   void _updatePassword() {
     Navigator.push(
       context,
@@ -115,17 +52,21 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     );
   }
 
+// function to log out
   void _logout(BuildContext context) {
     showSignOutConfirmationDialog(context);
   }
 
-  void _deleteAccount() {
-    _userService.deleteAccount(_userData['uid']);
-  }
+// funciton to delete the user account
+void _deleteAccount(BuildContext context) {
+  showAccountDeletionConfirmationDialog(context);
+}
 
-  void _toggleTheme() {
-    context.read<ThemeBloc>().add(ToggleThemeEvent());
-  }
+// function to toggle theme changing switch
+void _toggleTheme() {
+  // context.read<ThemeBloc>().add(ToggleThemeEvent());
+  showThemeChangeDialog(context);
+}
 
   @override
   void dispose() {
@@ -176,7 +117,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                 boxShadow: [
                 BoxShadow(
                   color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.10),
-                  spreadRadius: 5,
+                  spreadRadius: 10,
                   blurRadius: 15,
                   offset: Offset(0, 5), // changes position of shadow
                 ),
@@ -189,7 +130,9 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                   children: [
 
                     // Text button to change email
-                    TextButton(onPressed: _updateEmail,
+                    TextButton(onPressed: () {
+                                      Navigator.pushNamed(context, '/changeEmail');
+                                      },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
@@ -203,7 +146,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                     Divider(color: Theme.of(context).cardColor.withOpacity(0.6),),
                     
                     // Text button to update password
-                    TextButton(onPressed: (){},
+                    TextButton(onPressed: _updatePassword,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
@@ -295,7 +238,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
                     ),
                     SizedBox(height: 20),
                     _buildElevatedButton(
-                      onPressed: _deleteAccount,
+                      onPressed: () => _deleteAccount(context),
                       text: 'Delete account',
                       icon: Icons.delete_outline,
                       backgroundColor: AppColors.myOrange,
@@ -310,27 +253,6 @@ class _ProfileSettingsState extends State<ProfileSettings> {
     );
   }
 
-  Widget _buildTextField({required TextEditingController controller, required String hintText, bool isEmail = false}) {
-    return Container(
-      padding: EdgeInsets.only(left: 10),
-      decoration: BoxDecoration(
-        color: Colors.black,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: TextField(
-        controller: controller,
-        style: GoogleFonts.montserrat(color: AppColors.myFadeblue),
-        keyboardType: isEmail ? TextInputType.emailAddress : TextInputType.number,
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: GoogleFonts.montserrat(color: AppColors.myFadeblue),
-          border: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          focusedBorder: InputBorder.none,
-        ),
-      ),
-    );
-  }
 
   Widget _buildElevatedButton({
     required VoidCallback onPressed,
@@ -356,7 +278,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
             if (icon != null) ...[
               Icon(
                 icon,
-                color: AppColors.myDark,
+                color: Colors.white,
                 size: 20,
               ),
               SizedBox(width: 8),
@@ -364,7 +286,7 @@ class _ProfileSettingsState extends State<ProfileSettings> {
             Text(
               text,
               style: GoogleFonts.montserrat(
-                color: AppColors.myDark,
+                color:Colors.white,
                 fontSize: fontSize,
                 fontWeight: FontWeight.w600,
               ),

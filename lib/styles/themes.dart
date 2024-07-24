@@ -22,11 +22,12 @@ class AppColors {
   static const Color myDark = Color.fromARGB(255, 37, 37, 37);
 }
 
+
 final ThemeData lightTheme = ThemeData(
   cardColor:Color(0xFF4C7766),
-primaryColor: Color(0xFFEBE6E0),
-  primaryColorDark: Color.fromARGB(255, 245, 241, 227),
-  scaffoldBackgroundColor: Color(0xFFEBE6E0),
+primaryColor:Colors.white,
+  primaryColorDark: Colors.white,
+  scaffoldBackgroundColor: Colors.white,
 
   // Define other properties for the light theme
 );
@@ -34,8 +35,8 @@ primaryColor: Color(0xFFEBE6E0),
 
 
 final ThemeData darkTheme = ThemeData(
-    cardColor:Color.fromARGB(255, 149, 202, 181),
-  primaryColorDark: Color.fromARGB(255, 245, 241, 227),
+  cardColor:Color(0xFF4C7766),
+  primaryColorDark: Color.fromARGB(255, 48, 48, 47),
 
   primaryColor: const Color.fromARGB(255, 34, 34, 34),
   scaffoldBackgroundColor: Colors.black,

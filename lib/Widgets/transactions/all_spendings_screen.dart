@@ -117,6 +117,7 @@ class _AllSpendingsState extends State<AllSpendings> {
       
       body: Column(
         children: [
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
             child: Row(
@@ -128,7 +129,7 @@ class _AllSpendingsState extends State<AllSpendings> {
       color: Theme.of(context).cardColor.withOpacity(0.4),
       borderRadius: BorderRadius.circular(20.0),
     ),
-    padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+    padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
     child: Row(
       children: [
         Icon(
@@ -156,9 +157,9 @@ class _AllSpendingsState extends State<AllSpendings> {
             decoration: InputDecoration(
               hintText: 'Search..',
               hintStyle: GoogleFonts.montserrat(
-                  color: Theme.of(context).primaryColorDark.withOpacity(0.5),
+                  color: Theme.of(context).primaryColorDark.withOpacity(0.7),
                   fontWeight: FontWeight.w600,
-                  fontSize: 18),
+                  fontSize: 15),
               border: InputBorder.none,
             ),
           ),

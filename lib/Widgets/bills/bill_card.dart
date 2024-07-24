@@ -123,10 +123,10 @@ class _BillCardState extends State<BillCard> {
   Widget build(BuildContext context) {
     final dueDate = widget.bill['billDueDate']?.toDate();
     final formattedDueDate = dueDate != null ? DateFormat('dd-MM-yy').format(dueDate) : 'No date';
-    final userId;
 
     return Card(
-      elevation: 32,
+      color: Color.fromARGB(255, 247, 246, 246),
+      elevation: 1,
       margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
@@ -136,6 +136,8 @@ class _BillCardState extends State<BillCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            
+            // Row that contains bill amount and bill title
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -158,7 +160,10 @@ class _BillCardState extends State<BillCard> {
             ),
             ],
             ),
+
             Divider(color: Color.fromARGB(255, 209, 211, 209),endIndent: 5,),
+            
+            // bill description
             Text(
               widget.bill['billDescription'] ?? 'No description',
               style: GoogleFonts.montserrat(
@@ -167,6 +172,7 @@ class _BillCardState extends State<BillCard> {
                 color: Theme.of(context).cardColor.withOpacity(0.6),
               ),
             ),
+            // Due on text
             Text(
               'due on - $formattedDueDate',
               style: GoogleFonts.montserrat(
@@ -181,8 +187,8 @@ class _BillCardState extends State<BillCard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-
-                Container(
+              // Update button
+              Container(
                   decoration: BoxDecoration(
                     
                     borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -217,31 +223,31 @@ class _BillCardState extends State<BillCard> {
                   ),
                 ),
 
-
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                    color: Color.fromARGB(255, 248, 218, 216),
+              // delete button
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(12)),
+                  color: Color.fromARGB(255, 248, 218, 216),
+                ),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                  elevation: 25,
+                    minimumSize: Size(70, 30),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                    elevation: 25,
-                      minimumSize: Size(70, 30),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    onPressed:_showDeleteConfirmationDialog,
-                    child: Text(
-                      'delete',
-                      style: GoogleFonts.montserrat(
-                        color: Color.fromARGB(255, 223, 109, 109),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                      ),
+                  onPressed:_showDeleteConfirmationDialog,
+                  child: Text(
+                    'delete',
+                    style: GoogleFonts.montserrat(
+                      color: Color.fromARGB(255, 223, 109, 109),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ),
+              ),
 
-
+              // mark as paid container
               Container(
                 height: 35,
                 padding: EdgeInsets.only(left: 10),
@@ -276,9 +282,8 @@ class _BillCardState extends State<BillCard> {
                   ),
                 ),
 
-
-
               ],
+              
             ),
           ],
         ),

@@ -24,7 +24,7 @@ class ModernSnackBarContent extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
       decoration: BoxDecoration(
-        color: Colors.blue.shade200,
+        color: Color.fromARGB(255, 217, 232, 243),
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(

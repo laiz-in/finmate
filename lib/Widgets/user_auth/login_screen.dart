@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,30 +19,34 @@ class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   String? _errorMessage;
 
+  // Funtion to perform log in operations
   Future<void> _loginWithEmailAndPassword(BuildContext context) async {
     try {
       final String email = _emailController.text.trim();
       final String password = _passwordController.text.trim();
+      final user = _auth.currentUser;
+
 
       // Sign in the user
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-
       // Check if the email is verified
-      if (!userCredential.user!.emailVerified) {
-        // Email not verified
-        setState(() {
-          _errorMessage = "Email not verified";
-        });
-        _auth.signOut();
-        errorSnackbar(context, _errorMessage!);
-        return;
+      if (!userCredential.user!.emailVerified){
+        // Email not verified case
+              setState(() {
+              _errorMessage = "Email not verified";
+              });
+              _auth.signOut();
+              errorSnackbar(context, _errorMessage!);
+              return;
       }
-
+      
+      await FirebaseFirestore.instance.collection('users').doc(user?.uid).update({'status': 1});
       // Email verified, navigate to HomeScreen
       Navigator.pushReplacementNamed(context, '/HomeScreen');
+
     } catch (error) {
       // General error handling
       setState(() {
@@ -110,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: _emailController,
                       cursorColor: Colors.white.withOpacity(0.7),
                       style: GoogleFonts.montserrat(
-                        color:  Colors.white.withOpacity(0.7),
+                        color:  Colors.white.withOpacity(0.9),
                         fontWeight: FontWeight.w500,
                         decoration: TextDecoration.none,
                         fontSize: 20,
@@ -119,10 +124,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         filled: true,
                         fillColor: Color.fromARGB(255, 134, 168, 163),
                         contentPadding: EdgeInsets.all(18),
-                        prefixIcon: Icon(Icons.email,size: 22, color: Colors.white.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.email,size: 22, color: Colors.white.withOpacity(0.5)),
                         label: Text(
                           'Email',
-                          style: GoogleFonts.montserrat(color: Colors.white.withOpacity(0.7), fontSize: 16,fontWeight:FontWeight.w500 ),
+                          style: GoogleFonts.montserrat(color: Colors.white.withOpacity(0.5), fontSize: 16,fontWeight:FontWeight.w500 ),
                         ),
                         floatingLabelBehavior: FloatingLabelBehavior.never,
                         labelStyle: GoogleFonts.montserrat(
@@ -167,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: _passwordController,
                       obscureText: true,
                       style: GoogleFonts.montserrat(
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.white.withOpacity(0.9),
                         fontWeight: FontWeight.w500,
                         decoration: TextDecoration.none,
                         fontSize: 20,
@@ -175,10 +180,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: Color.fromARGB(255, 134, 168, 163),
-                        prefixIcon: Icon(Icons.lock,size: 22, color:Colors.white.withOpacity(0.7)),
+                        prefixIcon: Icon(Icons.lock,size: 22, color:Colors.white.withOpacity(0.5)),
                         contentPadding: EdgeInsets.all(18),
                         label: Text('Password', style: GoogleFonts.montserrat(fontSize: 16,
-                        color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.w500)),
+                        color: Colors.white.withOpacity(0.5), fontWeight: FontWeight.w500)),
                         floatingLabelBehavior: FloatingLabelBehavior.never,
                         labelStyle: GoogleFonts.montserrat(color: Colors.yellow, fontWeight: FontWeight.w500),
                         border: OutlineInputBorder(
@@ -202,26 +207,23 @@ class _LoginScreenState extends State<LoginScreen> {
                 // forgot password link
                 Padding(
                   padding: EdgeInsets.all(15),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(context, '/ResetPasswordScreen');
-                    },
-                    child:
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              "Forgot Password?",
-                              style: GoogleFonts.montserrat(
-                                color: Colors.white.withOpacity(0.4),
-                                letterSpacing: 0.5,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      InkWell(
+                        onTap: () {
+                                      Navigator.pushNamed(context, '/ResetPasswordScreen');
+                                      },
+                        child: Text(
+                          "Forgot Password?",
+                          style: GoogleFonts.montserrat(
+                            color: Colors.white.withOpacity(0.4),
+                            letterSpacing: 0.5,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                      
-                    
+                      ),
+                    ],
                   ),
                 ),
 

@@ -33,49 +33,4 @@ class UserService {
       'recentTransactions': transactions,
     };
   }
-
-  // Update email for the current user
-  Future<void> updateEmail(String newEmail) async {
-    try {
-      User? user = _auth.currentUser;
-      if (user == null) {
-        throw Exception('No user logged in');
-      }
-      await user.verifyBeforeUpdateEmail(newEmail);
-    } catch (e) {
-      rethrow; // Rethrow the error for handling in UI
-    }
-  }
-
-  // Update monthly limit for the current user
-  Future<void> updateMonthlyLimit(String userId, double newLimit) async {
-    try {
-      await _firestore.collection('users').doc(userId).update({
-        'monthlyLimit': newLimit,
-      });
-    } catch (e) {
-      rethrow; // Rethrow the error for handling in UI
-    }
-  }
-
-  // Update daily limit for the current user
-  Future<void> updateDailyLimit(String userId, double newLimit) async {
-    try {
-      await _firestore.collection('users').doc(userId).update({
-        'dailyLimit': newLimit,
-      });
-    } catch (e) {
-      rethrow; // Rethrow the error for handling in UI
-    }
-  }
-
-  // Delete the current user account
-  Future<void> deleteAccount(String userId) async {
-    try {
-      // Show account deletion confirmation dialog here
-      // Example: showAccountDeletionConfirmationDialog(context);
-    } catch (e) {
-      rethrow; // Rethrow the error for handling in UI
-    }
-  }
 }

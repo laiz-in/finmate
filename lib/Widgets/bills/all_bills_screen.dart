@@ -2,9 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 import 'add_bills.dart';
 import 'bill_card.dart';
+
 
 class AllBills extends StatefulWidget {
   @override
@@ -42,7 +44,7 @@ class _AllBillsState extends State<AllBills> with SingleTickerProviderStateMixin
             color: Theme.of(context).cardColor,
             size: 30,
           ),
-          backgroundColor: Theme.of(context).primaryColor,
+          backgroundColor: Colors.white,
           title: Text(
             "Bills",
             style: GoogleFonts.montserrat(
@@ -115,8 +117,18 @@ class _AllBillsState extends State<AllBills> with SingleTickerProviderStateMixin
         }
         final bills = snapshot.data?.docs ?? [];
         if (bills.isEmpty) {
-          return Center(child: Text(isPaid == null ? "No bills." : (isPaid ? "Oh! no paid bills" : "Oh! no upcoming bills."), 
-          style: GoogleFonts.montserrat(fontSize:20, fontWeight: FontWeight.w600  ,color:  Theme.of(context).cardColor.withOpacity(0.5))));
+          return Center(child:Column(crossAxisAlignment: CrossAxisAlignment.center,mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+          Lottie.asset(
+          'assets/animations/nobills.json',
+          width: 180,
+          height: 180,
+          fit: BoxFit.fill,
+        ),
+        Text("No bills to show",style: GoogleFonts.montserrat(fontSize:20, color:Theme.of(context).cardColor.withOpacity(0.7)),)
+
+          ],
+          ));
         }
         return ListView.builder(
           padding: EdgeInsets.all(15.0),

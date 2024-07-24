@@ -33,9 +33,9 @@ class _SplashScreenState extends State<SplashScreen> {
       backgroundColor: Theme.of(context).cardColor,
       body: Center(
         child: Image.asset(
-          'assets/images/logo_bg_removed.png',
-          width: 70,
-          height: 70,
+          // 'assets/images/logo_bg_removed.png',
+          'assets/images/splash.png',
+          fit: BoxFit.cover,
         ),
       ),
     );

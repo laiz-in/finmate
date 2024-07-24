@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
-void errorSnackbar(BuildContext context, String message, {Duration duration = const Duration(seconds: 5)}) {
+void errorSnackbar(BuildContext context, String message, {Duration duration = const Duration(seconds: 3)}) {
   final snackBar = SnackBar(
     content: ModernSnackBarContent(message: message),
     backgroundColor: Colors.transparent,
@@ -22,13 +22,13 @@ class ModernSnackBarContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
       decoration: BoxDecoration(
-        color: Colors.red.shade200,
+        color: Color.fromARGB(255, 243, 222, 222),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: const Color.fromARGB(255, 48, 48, 48).withOpacity(0.2),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -37,12 +37,12 @@ class ModernSnackBarContent extends StatelessWidget {
       child: Row(
         children: [
           Lottie.asset(
-          'assets/animations/error.json', // Path to your Lottie file
-          width: 35,
-          height: 35,
+          'assets/animations/error.json',
+          width: 40,
+          height: 40,
           fit: BoxFit.fill,
         ),
-          const SizedBox(width: 16),
+        const SizedBox(width: 15),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -51,9 +51,9 @@ class ModernSnackBarContent extends StatelessWidget {
                 Text(
                   'OOPS!',
                   style: GoogleFonts.montserrat(
-                      color: const Color.fromARGB(255, 155, 60, 54),
+                      color: Color.fromARGB(255, 83, 53, 51),
                       fontSize: 16,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w700,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -61,7 +61,7 @@ class ModernSnackBarContent extends StatelessWidget {
                   message,
                   style: GoogleFonts.montserrat(
                     textStyle: const TextStyle(
-                      color: Color.fromARGB(255, 173, 57, 57),
+                      color: Color.fromARGB(255, 85, 43, 43),
                       fontSize: 14,
                       fontWeight: FontWeight.w600
                     ),

@@ -58,22 +58,30 @@ Future<void> _register() async {
         'firstName': _firstNameController.text.trim(),
         'lastName': _lastNameController.text.trim(),
         'createdAt': DateTime.now(),
-        'status': 1,
+        'status': 0,
         'totalSpending' : 0,
+        'dailyLimit' : 100,
+        'monthlyLimit' : 1000,
+
+
       });
 
 
       setState(() {
         _isLoading = false;
       });
-      infoSnackbar(context, "Verify your email to complete");
-    
+      infoSnackbar(context, "please verify your email and login");
+      Navigator.pushNamedAndRemoveUntil(context, '/LoginScreen', (route) => false);
+
+
+
+
+
 
 
     }catch (e) {
         setState(() {_isLoading = false;});
-
-        // dialogue box to show sign up error
+        // show sign up error
         errorSnackbar(context, "Email is already used !");
 
     }
@@ -298,7 +306,7 @@ Future<void> _register() async {
             color:Colors.white.withOpacity(0.7),
             fontWeight: FontWeight.w500,
             decoration: TextDecoration.none,
-            fontSize: 20,
+            fontSize: 18,
           ),
           decoration: _inputDecoration(label, icon),
           validator: validator,

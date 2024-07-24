@@ -14,6 +14,7 @@ import './styles/theme_state.dart';
 import 'Widgets/connectivity_check/connectivity_bloc.dart';
 import 'Widgets/connectivity_check/connectivity_lost_screen.dart';
 import 'Widgets/home_screen.dart';
+import 'Widgets/profile/change_email.dart';
 import 'Widgets/transactions/all_spendings_screen.dart';
 import 'Widgets/user_auth/login_screen.dart';
 import 'Widgets/user_auth/password_reset_screen.dart';
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
                 '/AllIndividuals' : (context) => AllIndividuals(),
                 '/AllReminders' : (context) => AllReminders(),
                 '/AllStatistics' : (context) => AllStatistics(),
+                '/changeEmail' : (context) => ResetEmail(),
 
 
               },

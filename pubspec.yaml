@@ -86,6 +86,9 @@ flutter:
     - assets/animations/info.json
     - assets/animations/connection_lost.json
     - assets/images/finmate_icon.png
+    - assets/images/splash.png
+    - assets/animations/nobills.json
+
 
 
 

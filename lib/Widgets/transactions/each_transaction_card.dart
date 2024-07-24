@@ -88,7 +88,7 @@ class _TransactionCardState extends State<TransactionCard> {
         margin: EdgeInsets.symmetric(vertical: 6.0, horizontal: 15.0),
         padding: EdgeInsets.fromLTRB(15, 10, 10, 10.0),
         decoration: BoxDecoration(
-          color:Theme.of(context).cardColor,
+          color:Color.fromARGB(255, 247, 246, 246),
           borderRadius: BorderRadius.circular(25.0),
         ),
         child: Column(
@@ -98,25 +98,15 @@ class _TransactionCardState extends State<TransactionCard> {
               onTap: _toggleExpanded,
 
               // Category icon
-              leading: Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                boxShadow: [
-                BoxShadow(
-                  color: Color.fromARGB(255, 10, 10, 10).withOpacity(0.1),
-                  spreadRadius: 4,
-                  blurRadius: 9,
-                  offset: Offset(4, 4),
-                ),
+              leading: Column(
+                children: [
+                  Icon(Icons.arrow_outward,color: Colors.red.shade200,),
+                  Icon(
+                    getIconForCategory(widget.transaction.spendingCategory),
+                    size: 25,
+                    color: Colors.red.shade200,
+                  ),
                 ],
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  color: Theme.of(context).primaryColor
-                ),
-                child: Icon(
-                  getIconForCategory(widget.transaction.spendingCategory),
-                  size: 32,
-                  color: Theme.of(context).cardColor,
-                ),
               ),
 
               // Row for amount and forward icon
@@ -124,19 +114,19 @@ class _TransactionCardState extends State<TransactionCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '₹ ${widget.transaction.spendingAmount.toStringAsFixed(2)}',
+                    '₹${widget.transaction.spendingAmount.toStringAsFixed(2)}',
                     style: GoogleFonts.montserrat(
                       fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).cardColor,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
                   IconButton(
                     icon: Icon(
                       _expanded ? Icons.arrow_downward : Icons.arrow_forward_ios_sharp,
-                      size: 25,
-                      color: Theme.of(context).primaryColor.withOpacity(0.9),
+                      size: 20,
+                      color: Theme.of(context).cardColor.withOpacity(0.9),
                     ),
                     onPressed: _toggleExpanded,
                   ),
@@ -155,9 +145,9 @@ class _TransactionCardState extends State<TransactionCard> {
                       Text(
                         widget.transaction.spendingDescription,
                         style: GoogleFonts.montserrat(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).primaryColor.withOpacity(0.5),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).cardColor.withOpacity(0.7),
                         ),
                       ),
 
@@ -165,9 +155,9 @@ class _TransactionCardState extends State<TransactionCard> {
                       Text(
                         timeAgo(widget.transaction.date),
                         style: GoogleFonts.montserrat(
-                          fontSize: 14,
+                          fontSize: 12,
                           fontWeight: FontWeight.w600,
-                          color:Theme.of(context).primaryColor.withOpacity(0.5),
+                          color:Theme.of(context).cardColor.withOpacity(0.5),
                         ),
                       ),
 
@@ -192,7 +182,7 @@ class _TransactionCardState extends State<TransactionCard> {
                           builder: (context) => Container(
                             padding: EdgeInsets.all(15),
                             child: AlertDialog(
-                              backgroundColor: Theme.of(context).primaryColor,
+                              backgroundColor: Theme.of(context).primaryColorDark,
                               elevation: 15,
                               title: Center(
                                 child: Text('Are you sure you want to delete this expense?',textAlign:TextAlign.center,

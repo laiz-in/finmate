@@ -23,10 +23,12 @@ class _ResetPasswordState extends State<ResetPassword> {
     if (_formKey.currentState!.validate()) {
       try {
       await _auth.sendPasswordResetEmail(email: _emailController.text);
-      successSnackbar(context, 'Email has been sent');
+      successSnackbar(context, 'password reset email has been sent');
+      Navigator.pushNamedAndRemoveUntil(context, '/LoginScreen', (route) => false);
+
       } catch (e) {
       // dilaloge message to error when sending verification email
-      errorSnackbar(context, "Failed to send");
+      errorSnackbar(context, "Unable to send");
       }// vatch block ends
     }
   }
@@ -34,6 +36,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).cardColor,
       appBar: AppBar(
         backgroundColor: Color(0xFF4C7766),
         iconTheme: IconThemeData(color:Colors.white.withOpacity(0.7)),
@@ -63,7 +66,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
 
-                      SizedBox(height: 50,),
+                      SizedBox(height: 40,),
                       // Password reset heading
                       Padding(
                         padding:
@@ -80,7 +83,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                             ),
                             SizedBox(width: 10),
                             Icon(
-                              Icons.settings_backup_restore_outlined,
+                              Icons.lock_open,
                               color:Colors.white.withOpacity(0.7),
                               size: 35,
                             ),
@@ -91,70 +94,58 @@ class _ResetPasswordState extends State<ResetPassword> {
                       SizedBox(height: 15,),
                       // Email address field
                       Padding(
-                        padding: EdgeInsets.fromLTRB(20.0, 30, 20, 0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.2),
-                              spreadRadius: 8,
-                              blurRadius: 15,
-                              offset: Offset(0, 4), // changes position of shadow
-                            ),
-                          ],
+                        padding: EdgeInsets.fromLTRB(20.0, 20, 20, 0),
+                        child: TextFormField(
+                          controller: _emailController,
+                          cursorColor: Colors.white.withOpacity(0.7),
+                          style: GoogleFonts.montserrat(
+                            color:Colors.white.withOpacity(0.7),
+                            fontWeight: FontWeight.w500,
+                            decoration: TextDecoration.none,
+                            fontSize: 20,
                           ),
-                          child: TextFormField(
-                            controller: _emailController,
-                            cursorColor: Colors.white.withOpacity(0.7),
-                            style: GoogleFonts.montserrat(
+                          decoration: InputDecoration(
+                            fillColor: Color.fromARGB(255, 134, 168, 163),
+                            filled: true,
+                            contentPadding: EdgeInsets.all(16),
+                            prefixIcon: Icon(
+                              Icons.email,
                               color:Colors.white.withOpacity(0.7),
+                            ),
+                            label: Text(
+                              'Enter email',
+                              style: GoogleFonts.montserrat(fontSize: 15,fontWeight: FontWeight.w500,color: Colors.white.withOpacity(0.5)),
+                            ),
+                            floatingLabelBehavior: FloatingLabelBehavior.never,
+                            labelStyle: GoogleFonts.montserrat(
+                              color:AppColors.myFadeblue,
                               fontWeight: FontWeight.w500,
-                              decoration: TextDecoration.none,
-                              fontSize: 20,
                             ),
-                            decoration: InputDecoration(
-                              fillColor: Color.fromARGB(255, 134, 168, 163),
-                              filled: true,
-                              contentPadding: EdgeInsets.all(20),
-                              prefixIcon: Icon(
-                                Icons.email,
-                                color:Colors.white.withOpacity(0.7),
-                              ),
-                              label: Text(
-                                'Verification Email',
-                                style: GoogleFonts.montserrat(fontSize: 18,fontWeight: FontWeight.w500,color: Colors.white.withOpacity(0.7)),
-                              ),
-                              floatingLabelBehavior: FloatingLabelBehavior.never,
-                              labelStyle: GoogleFonts.montserrat(
-                                color:AppColors.myFadeblue,
-                                fontWeight: FontWeight.w500,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                                borderSide: BorderSide(color: Color.fromARGB(255, 134, 168, 163),width: 0),
-
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                                borderSide: BorderSide(color: Color.fromARGB(255, 134, 168, 163),width: 0),
-
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                                borderSide: BorderSide(color: Color.fromARGB(255, 134, 168, 163),width: 0),
-
-                              ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              borderSide: BorderSide(color: Color.fromARGB(255, 134, 168, 163),width: 0),
+                        
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your email';
-                              }
-                              if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                                return 'Please enter a valid email address';
-                              }
-                              return null;
-                            },
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              borderSide: BorderSide(color: Color.fromARGB(255, 134, 168, 163),width: 0),
+                        
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                              borderSide: BorderSide(color: Color.fromARGB(255, 134, 168, 163),width: 0),
+                        
+                            ),
                           ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email';
+                            }
+                            if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                              return 'Please enter a valid email address';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                       SizedBox(height: 20),
@@ -171,14 +162,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.7),
                             borderRadius: BorderRadius.circular(15.0),
-                            boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.2),
-                              spreadRadius: 8,
-                              blurRadius: 15,
-                              offset: Offset(0, 4), // changes position of shadow
-                            ),
-                          ],
                           ),
                           child: Center(
                             child: Row(

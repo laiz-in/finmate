@@ -62,10 +62,10 @@ Future<void> _fetchUserData() async {
       }
     } catch (e) {
       if (mounted) {
-        errorSnackbar(context, "Error fetching user data");
-      }
+      errorSnackbar(context, "Error fetching user data");
     }
   }
+}
 
 
 
@@ -76,7 +76,7 @@ Widget build(BuildContext context) {
   // App bar
   appBar: AppBar(
   elevation: 0,
-  toolbarHeight: 70,
+  toolbarHeight: 80,
   scrolledUnderElevation:0,
   automaticallyImplyLeading: false,
   backgroundColor:Theme.of(context).primaryColor,
@@ -86,7 +86,7 @@ Widget build(BuildContext context) {
       ' Hi ${userName ?? ''} ',
       style: GoogleFonts.montserrat(
         fontSize: 24,
-        fontWeight: FontWeight.w800,
+        fontWeight: FontWeight.w700,
         color: Theme.of(context).cardColor,
       ),
     ),
@@ -180,11 +180,17 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
                 
                 // Styling for the whole card
                 decoration: BoxDecoration(
+                image: DecorationImage(
+          image: AssetImage('assets/images/logo_bg_removed.png'),
+          fit: BoxFit.contain,
+          opacity: 0.3, // Path to your image
+         // Cover the entire container
+        ),
                 boxShadow: [
                 BoxShadow(
                   color: Color.fromARGB(255, 71, 71, 71).withOpacity(0.18),
-                  spreadRadius: 8,
-                  blurRadius: 15,
+                  spreadRadius: 0,
+                  blurRadius: 10,
                   offset: Offset(0, 4), // changes position of shadow
                 ),
               ],
@@ -272,7 +278,7 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
                           Column(
                             children: [
                               IconButton(
-                                icon: Icon(Icons.arrow_drop_up_sharp,color: Theme.of(context).cardColor),
+                                icon: Icon(Icons.receipt,color: Theme.of(context).cardColor.withOpacity(0.6),size: 33,),
                               onPressed: () {
                               Navigator.pushNamed(context, '/AllBillsScreen');
                               },
@@ -281,7 +287,7 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
                                 'Bills',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 12,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w600,
                                   color: Theme.of(context).cardColor,
                                 ),
                               ),
@@ -292,7 +298,7 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
                           Column(
                             children: [
                               IconButton(
-                                icon: Icon(Icons.person_add,color: Theme.of(context).cardColor,),
+                                icon: Icon(Icons.person_add,color: Theme.of(context).cardColor.withOpacity(0.6),size: 35,),
                                 onPressed: () {
                               Navigator.pushNamed(context, '/AllIndividuals');
                               },
@@ -301,7 +307,7 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
                                 'Interpersonal',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 12,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w600,
                                   color: Theme.of(context).cardColor,
                                 ),
                               ),
@@ -312,7 +318,7 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
                           Column(
                             children: [
                               IconButton(
-                                icon: Icon(Icons.alarm_add,color: Theme.of(context).cardColor,),
+                                icon: Icon(Icons.alarm_add,color: Theme.of(context).cardColor.withOpacity(0.6),size: 35,),
                                 onPressed: () {
                                 Navigator.pushNamed(context, '/AllReminders');
 
@@ -322,7 +328,7 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
                                 'Reminders',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 12,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w600,
                                   color: Theme.of(context).cardColor,
                                 ),
                               ),
@@ -333,16 +339,16 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
                           Column(
                             children: [
                               IconButton(
-                                icon: Icon(Icons.assessment,color: Theme.of(context).cardColor,),
+                                icon: Icon(Icons.graphic_eq,color: Theme.of(context).cardColor.withOpacity(0.6),size: 35,),
                                 onPressed: () {
                                 Navigator.pushNamed(context, '/AllStatistics');
                                 },
                               ),
                               Text(
-                                'Statistics',
+                                'Insights',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 12,
-                                  fontWeight: FontWeight.w700,
+                                  fontWeight: FontWeight.w600,
                                   color: Theme.of(context).cardColor,
                                 ),
                               ),
@@ -417,22 +423,29 @@ Widget _recentTransactionCard(List<CustomTransaction> recentTransactions, BuildC
               return Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
+                    padding: const EdgeInsets.fromLTRB(2,8,8,8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         // Amount text
                         Expanded(
                           flex: 3, // 30% of the width
-                          child: Text(
-                            '₹ ${transaction.spendingAmount.toStringAsFixed(2)}',
-                            style: GoogleFonts.montserrat(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w800,
-                              color: Theme.of(context).cardColor,
-                            ),
+                          child: Row(
+                            children: [
+                              Icon(Icons.arrow_outward,color: Colors.red.shade200,),
+                            
+                              Text(
+                                '₹${transaction.spendingAmount.toStringAsFixed(1)}',
+                                style: GoogleFonts.montserrat(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  color: Theme.of(context).cardColor,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
+                        
                         Expanded(
                           flex: 7, // 70% of the width
                           child: Row(
@@ -554,9 +567,9 @@ Widget _graphCard(context,double? todaySpending, double? totalSpending, double? 
                 color: Theme.of(context).primaryColorDark,
                 boxShadow: [
                 BoxShadow(
-                  color: Color.fromARGB(255, 104, 103, 103).withOpacity(0.10),
+                  color: Color.fromARGB(255, 49, 49, 49).withOpacity(0.10),
                   spreadRadius: 5,
-                  blurRadius: 15,
+                  blurRadius: 5,
                   offset: Offset(0, 4), // changes position of shadow
                 ),
               ],
