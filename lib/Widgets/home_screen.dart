@@ -73,45 +73,60 @@ Future<void> _fetchUserData() async {
 Widget build(BuildContext context) {
   return Scaffold(
   backgroundColor: Theme.of(context).primaryColor,
-  // App bar
-  appBar: AppBar(
-  elevation: 0,
-  toolbarHeight: 80,
-  scrolledUnderElevation:0,
-  automaticallyImplyLeading: false,
-  backgroundColor:Theme.of(context).primaryColor,
-
-  // Title text
-  title:Text(
-      ' Hi ${userName ?? ''} ',
-      style: GoogleFonts.montserrat(
-        fontSize: 24,
-        fontWeight: FontWeight.w700,
-        color: Theme.of(context).cardColor,
+      
+      // App bar
+      appBar: AppBar(
+      toolbarHeight: 100,
+      scrolledUnderElevation:0,
+      automaticallyImplyLeading: false,
+      backgroundColor:Theme.of(context).primaryColor,
+      // Title text
+      title:
+      Container(
+        padding: EdgeInsets.fromLTRB(5,8,0,0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+                'Welcome back !',
+                style: GoogleFonts.montserrat(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).cardColor.withOpacity(0.6),
+                ),
+              ),
+            Text(
+                '${userName ?? ''} ',
+                style: GoogleFonts.montserrat(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).cardColor,
+                ),
+              ),
+          ],
+        ),
       ),
+      // Action button
+      actions: [IconButton(
+        icon: Icon(Icons.notification_add_outlined, color: Theme.of(context).cardColor,size: 25,),
+        onPressed: () {
+          // Add your notification logic here
+        },
+      ),
+        IconButton(
+          icon: Icon(Icons.person_outlined, color: Theme.of(context).cardColor,size: 25,),
+          onPressed: () {
+            Navigator.pushNamed(context, '/ProfileScreen');
+          },
+        ),
+        SizedBox(width: 20,),
+      ],
     ),
-  
-  // Action button
-  actions: [IconButton(
-    icon: Icon(Icons.notification_add_outlined, color: Theme.of(context).cardColor,size: 25,),
-    onPressed: () {
-      // Add your notification logic here
-    },
-  ),
-    IconButton(
-      icon: Icon(Icons.person_outlined, color: Theme.of(context).cardColor,size: 25,),
-      onPressed: () {
-        Navigator.pushNamed(context, '/ProfileScreen');
-      },
-    ),
-    SizedBox(width: 20,),
-  ],
-),
 
   // Body of the home screen with pull-to-refresh
   body: RefreshIndicator(
-      color: Theme.of(context).primaryColor,
-      backgroundColor: Colors.transparent,
+      color: Theme.of(context).cardColor,
+      backgroundColor: Colors.white,
       strokeWidth: 2,
       onRefresh: _fetchUserData,
       child: Container(
@@ -126,48 +141,45 @@ Widget build(BuildContext context) {
                   ),
                 )
               : ListView(
+                
                   children: [
                     // First Row title card
                     _titleCard(context, totalSpending, todaySpending),
-                    
                     SizedBox(height: 10,),
 
-                    // GRAPH CARDS
+                    // Graph card
                     _graphCard(context,todaySpending,totalSpending,monthlyLimit, dailyLimit,allTransactions),
-                    
 
-                    // Transactions card
+                    // Recent Transactions card
                     _transactionHeading(context),
                     _recentTransactionCard(recentTransactions, context),
+
                     SizedBox(height: 15,),
-
-                  
-
                   ],
                 ),
         ),
       ),
     ),
   
-  // floating button
-  floatingActionButton: FloatingActionButton(
-  onPressed: () {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: EdgeInsets.all(25),
-        child: AddSpendingBottomSheet(), // Renamed as AddSpendingDialog for clarity
+        // floating button
+        floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (context) => Dialog(
+              backgroundColor: Colors.transparent,
+              insetPadding: EdgeInsets.all(25),
+              child: AddSpendingBottomSheet(), // Renamed as AddSpendingDialog for clarity
+            ),
+          );
+        },
+        backgroundColor: Theme.of(context).cardColor,
+        elevation: 0,
+        child: Icon(Icons.add, color: Theme.of(context).primaryColor, size: 35),
       ),
-    );
-  },
-  backgroundColor: Theme.of(context).cardColor,
-  elevation: 0,
-  child: Icon(Icons.add, color: Theme.of(context).primaryColor, size: 35),
-),
 
-  );
-}
+    );
+  }
 }
 
 
@@ -178,28 +190,25 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
               padding: const EdgeInsets.fromLTRB(15,15,15,7),
               child: Container(
                 
-                // Styling for the whole card
                 decoration: BoxDecoration(
                 image: DecorationImage(
-          image: AssetImage('assets/images/logo_bg_removed.png'),
-          fit: BoxFit.contain,
-          opacity: 0.3, // Path to your image
-         // Cover the entire container
-        ),
+                image: AssetImage('assets/images/logo_bg_removed.png'),
+                fit:BoxFit.scaleDown,
+                opacity: 0.3,),
+
                 boxShadow: [
                 BoxShadow(
                   color: Color.fromARGB(255, 71, 71, 71).withOpacity(0.18),
                   spreadRadius: 0,
                   blurRadius: 10,
                   offset: Offset(0, 4), // changes position of shadow
-                ),
-              ],
+                ),],
+
                 color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(16.0),
                 ),
 
                 child: Column(
-                  
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     
@@ -359,10 +368,6 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
                     ),
                   ),
                 )
-
-
-
-
               ],
             ),
           ),

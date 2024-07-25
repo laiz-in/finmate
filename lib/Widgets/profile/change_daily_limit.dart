@@ -7,42 +7,34 @@ import 'package:moneyy/ui/error_snackbar.dart';
 
 import '../../ui/succes_snackbar.dart';
 
-class ResetEmail extends StatefulWidget {
-  const ResetEmail({super.key});
+class ResetDailyLimit extends StatefulWidget {
+  const ResetDailyLimit({super.key});
 
   @override
-  State<ResetEmail> createState() => _ResetEmailState();
+  State<ResetDailyLimit> createState() => _ResetDailyLimitState();
 }
 
-class _ResetEmailState extends State<ResetEmail> {
+class _ResetDailyLimitState extends State<ResetDailyLimit> {
   final TextEditingController _emailController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   
-  // Reset password logic
-  void _resetEmail() async {
-    if (_formKey.currentState!.validate()) {
+  // Reset daily limit logic
+  void _resetDailyLimit() async {
       try {
       User? user = _auth.currentUser;
 
       if (user != null) {
-        String newEmail = _emailController.text.trim();
-        await _auth.currentUser!.verifyBeforeUpdateEmail(newEmail);
-
-
-        await user.sendEmailVerification();
-        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({'status': 0});
+        int newlimit = 150;
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).update({'dailyLimit': newlimit});
 
       }
-
-      successSnackbar(context, ' email has been sent');
-      Navigator.pushNamedAndRemoveUntil(context, '/LoginScreen', (route) => false);
+      successSnackbar(context, ' Daily limit has been updated');
 
       } catch (e) {
       // dilaloge message to error when sending verification email
       errorSnackbar(context, "Unable to send");
       }// vatch block ends
-    }
   }
 
 
@@ -88,13 +80,13 @@ class _ResetEmailState extends State<ResetEmail> {
                         child: Row(
                           children: [
                             Icon(
-                              Icons.email,
+                              Icons.settings,
                               color:Colors.white.withOpacity(0.7),
                               size: 35,
                             ),
                             SizedBox(width: 10),
                             Text(
-                              'Reset Email',
+                              'Reset daily limit',
                               style: GoogleFonts.montserrat(
                                 color: Colors.white.withOpacity(0.7),
                                 fontSize: 25,
@@ -107,7 +99,7 @@ class _ResetEmailState extends State<ResetEmail> {
 
                       SizedBox(height: 15,),
                       
-                      // Email address field
+                      // amount field
                       Padding(
                         padding: EdgeInsets.fromLTRB(20.0, 20, 20, 0),
                         child: TextFormField(
@@ -128,7 +120,7 @@ class _ResetEmailState extends State<ResetEmail> {
                               color:Colors.white.withOpacity(0.7),
                             ),
                             label: Text(
-                              'Enter email',
+                              'Enter amount',
                               style: GoogleFonts.montserrat(fontSize: 15,fontWeight: FontWeight.w500,color: Colors.white.withOpacity(0.5)),
                             ),
                             floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -167,7 +159,7 @@ class _ResetEmailState extends State<ResetEmail> {
                       
                       // Send button
                       InkWell(
-                        onTap: _resetEmail,
+                        onTap: _resetDailyLimit,
                         child:Padding(
                           padding: EdgeInsets.fromLTRB(20.0, 10, 20, 20),
                         child:

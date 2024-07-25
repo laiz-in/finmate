@@ -190,8 +190,8 @@ class _AllSpendingsState extends State<AllSpendings> {
           SizedBox(height: 15,),
           Expanded(
             child: RefreshIndicator(
-              color: Theme.of(context).primaryColorDark,
-              backgroundColor: Colors.transparent,
+              color: Theme.of(context).cardColor,
+              backgroundColor: Colors.white,
               strokeWidth: 2,
               onRefresh: fetchTransactions,
               child: Container(
@@ -199,7 +199,8 @@ class _AllSpendingsState extends State<AllSpendings> {
                 child: isLoading
                     ? Center(
                         child: CircularProgressIndicator(
-                          color: Theme.of(context).primaryColorDark,
+                          color: Theme.of(context).primaryColor,
+                          backgroundColor: Theme.of(context).primaryColor,
                           strokeWidth: 1,
                         ),
                       )

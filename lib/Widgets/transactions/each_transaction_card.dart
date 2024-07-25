@@ -88,6 +88,13 @@ class _TransactionCardState extends State<TransactionCard> {
         margin: EdgeInsets.symmetric(vertical: 6.0, horizontal: 15.0),
         padding: EdgeInsets.fromLTRB(15, 10, 10, 10.0),
         decoration: BoxDecoration(
+          boxShadow: [
+                BoxShadow(
+                  color: Color.fromARGB(255, 71, 71, 71).withOpacity(0.2),
+                  spreadRadius: 0.3,
+                  blurRadius: 0,
+                  offset: Offset(0, 2), // changes position of shadow
+                ),],
           color:Color.fromARGB(255, 247, 246, 246),
           borderRadius: BorderRadius.circular(25.0),
         ),
@@ -209,15 +216,48 @@ class _TransactionCardState extends State<TransactionCard> {
                                   ),
                                   child: TextButton(
                                     onPressed: () async {
+                                      final userId = FirebaseAuth.instance.currentUser?.uid;
+                                      final transactionId = widget.transaction.uid;
+
+                                      if (userId == null) {
+                                        errorSnackbar(context, 'User not logged in');
+                                        return;
+                                      }
+
+                                      // Show a loading indicator immediately
+                                      showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return Center(
+                                            child: CircularProgressIndicator(
+                                              color: Theme.of(context).primaryColorDark,
+                                            ),
+                                          );
+                                        },
+                                      );
+
                                       try {
-                                        await firebase_utils.deleteTransaction(context,
-                                            FirebaseAuth.instance.currentUser!.uid,
-                                            widget.transaction.uid);
-                                        widget.onDelete();
-                                        successSnackbar(context, "transaction has been deleted");
+                                        // Perform the deletion
+                                        await firebase_utils.deleteTransaction(context, userId, transactionId);
+
+                                        // Hide the loading indicator
                                         Navigator.of(context).pop();
+
+                                        // Call the onDelete callback and show success snackbar
+                                        widget.onDelete();
+                                        successSnackbar(context, "Transaction has been deleted");
                                       } catch (e) {
-                                        errorSnackbar(context, 'Failed to delete');
+                                        // Hide the loading indicator
+                                        Navigator.of(context).pop();
+
+                                        // Show error snackbar
+                                        errorSnackbar(context, 'Failed to delete: ${e.toString()}');
+                                      } finally {
+                                        // Close the dialog if it's still open
+                                        if (Navigator.of(context).canPop()) {
+                                          Navigator.of(context).pop();
+                                        }
                                       }
                                     },
                                     child: Text('Yes, delete',style: GoogleFonts.montserrat(color: Color.fromARGB(255, 248, 245, 245),fontSize: 15,
@@ -234,10 +274,9 @@ class _TransactionCardState extends State<TransactionCard> {
                         );
                       },
 
-                      icon: Icon(Icons.delete,color: const Color.fromARGB(255, 131, 78, 74),),
-                      label: Text('Delete',style: GoogleFonts.montserrat(fontWeight: FontWeight.w600,color: const Color.fromARGB(255, 128, 76, 72)),),
+                      label: Text('Delete',style: GoogleFonts.montserrat(fontWeight: FontWeight.w600,color: Color.fromARGB(255, 133, 78, 78)),),
                       style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all<Color>(Color.fromARGB(255, 224, 194, 194)),
+                        backgroundColor: WidgetStateProperty.all<Color>(Color.fromARGB(255, 248, 214, 214)),
                         elevation: WidgetStateProperty.all<double>(0), // No elevation
                         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
@@ -267,8 +306,7 @@ class _TransactionCardState extends State<TransactionCard> {
                           ),
                         );
                       },
-                      icon: Icon(Icons.edit,color: Theme.of(context).cardColor,),
-                      label: Text('Edit',style: GoogleFonts.montserrat(color:Theme.of(context).cardColor,
+                      label: Text('Edit',style: GoogleFonts.montserrat(color:Colors.white,
                       fontWeight: FontWeight.w600),),
                       style: ButtonStyle(
                         backgroundColor: WidgetStateProperty.all<Color>(Color.fromARGB(255, 181, 205, 226)),

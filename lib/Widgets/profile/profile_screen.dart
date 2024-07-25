@@ -160,7 +160,9 @@ void _toggleTheme() {
                     Divider(color: Theme.of(context).cardColor.withOpacity(0.6),),
                     
                     // Text button to change daily limit
-                    TextButton(onPressed: (){},
+                    TextButton(onPressed: () {
+                                      Navigator.pushNamed(context, '/changeDailyLimit');
+                                      },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
