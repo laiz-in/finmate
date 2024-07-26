@@ -176,7 +176,8 @@ void _toggleTheme() {
                     Divider(color: Theme.of(context).cardColor.withOpacity(0.6),),
 
                     // Textb button to change monthly limit
-                    TextButton(onPressed: (){},
+                    TextButton(onPressed: (){Navigator.pushNamed(context, '/changeMonthlyLimit');
+},
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[

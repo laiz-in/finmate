@@ -595,12 +595,12 @@ Widget _graphCard(context,double? todaySpending, double? totalSpending, double? 
                   borderRadius: BorderRadius.circular(25.0),
                   ),
                 width: MediaQuery.of(context).size.width * 0.43,
-                height: 160,
+                height: 200,
                 child: Column(
                 children: [
                   SizedBox(height: 10,),
                   Text('Monthly limit'
-                  ,style: GoogleFonts.montserrat(color: Theme.of(context).cardColor,fontWeight: FontWeight.w800),
+                  ,style: GoogleFonts.montserrat(color: Theme.of(context).cardColor,fontWeight: FontWeight.w700),
                   ),
                   SizedBox(height: 12.0), // Add some space between children
                   CircularPercentIndicator(
@@ -624,13 +624,13 @@ Widget _graphCard(context,double? todaySpending, double? totalSpending, double? 
                   borderRadius: BorderRadius.circular(25.0),
                   ),
                 width: MediaQuery.of(context).size.width * 0.43,
-                height: 160,
+                height: 165,
                 child: Column(
                 children: [
-                  SizedBox(height: 10,),
                   Text('Daily limit'
-                  ,style: GoogleFonts.montserrat(color:Theme.of(context).cardColor,fontWeight: FontWeight.w800),
+                  ,style: GoogleFonts.montserrat(color:Theme.of(context).cardColor,fontWeight: FontWeight.w700),
                   ),
+
                   SizedBox(height: 12.0), // Add some space between children
                   CircularPercentIndicator(
                     radius: 50.0,
@@ -642,13 +642,16 @@ Widget _graphCard(context,double? todaySpending, double? totalSpending, double? 
                     progressColor:Theme.of(context).cardColor,
                     backgroundColor: Theme.of(context).cardColor.withOpacity(0.3),
                   ),
+                  SizedBox(height: 5,),
+                  Text( '${todaySpending.toStringAsFixed(1)}/${dailyLimit.toStringAsFixed(0)}'
+                  ,style: GoogleFonts.montserrat(color:Theme.of(context).cardColor.withOpacity(0.8),fontWeight: FontWeight.w700),
+                  ),
                 ],
               ),
               ),
               ]
               ),
 
-              SizedBox(height: 2,),
               DaywiseBarchart(transactions: allTransactions),
 
             
