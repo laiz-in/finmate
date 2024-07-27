@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
                 '/TransactionScreen': (context) => AllSpendings(),
                 '/ProfileScreen': (context) => ProfileSettings(),
                 '/AllBillsScreen': (context) => AllBills(),
-                '/AllIndividuals' : (context) => AllIndividuals(),
+                '/AllIndividuals' : (context) => AllLiabilites(),
                 '/AllReminders' : (context) => AllReminders(),
                 '/AllStatistics' : (context) => AllStatistics(),
                 '/changeEmail' : (context) => ResetEmail(),
