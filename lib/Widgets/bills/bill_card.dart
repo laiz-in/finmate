@@ -125,8 +125,8 @@ class _BillCardState extends State<BillCard> {
     final formattedDueDate = dueDate != null ? DateFormat('dd-MM-yy').format(dueDate) : 'No date';
 
     return Card(
-      color: Color.fromARGB(255, 247, 246, 246),
-      elevation: 1,
+      color:Color.fromARGB(255, 238, 240, 238),
+      elevation: 0,
       margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),

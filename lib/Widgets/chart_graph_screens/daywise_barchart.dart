@@ -38,16 +38,17 @@ class _DaywiseBarchartState extends State<DaywiseBarchart> {
         width: double.infinity,
         height: 100,
         decoration: BoxDecoration(
-          boxShadow: [
-      BoxShadow(
-        color: const Color.fromARGB(255, 49, 49, 49).withOpacity(0.15),
-        spreadRadius: 8,
-        blurRadius: 17,
-        offset: Offset(0,4), // changes position of shadow
-      ),
-    ],
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: Theme.of(context).primaryColorDark,
+          
+    //       boxShadow: [
+    //   BoxShadow(
+    //     color: const Color.fromARGB(255, 49, 49, 49).withOpacity(0.10),
+    //     spreadRadius: 12,
+    //     blurRadius: 17,
+    //     offset: Offset(0,4), // changes position of shadow
+    //   ),
+    // ],
+          borderRadius: BorderRadius.all(Radius.circular(25)),
+          color: Colors.green.shade100.withOpacity(0.2),
         ),
         child: _loading
             ? Center(child: CircularProgressIndicator())

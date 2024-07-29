@@ -100,54 +100,42 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Email field
                 Padding(
                   padding: EdgeInsets.fromLTRB(10.0, 20, 10.0, 20.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                BoxShadow(
-                  color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.2),
-                  spreadRadius: 8,
-                  blurRadius: 12,
-                  offset: Offset(0, 8), // changes position of shadow
-                ),
-              ],
+                  child: TextField(
+                    controller: _emailController,
+                    cursorColor: Colors.white.withOpacity(0.7),
+                    style: GoogleFonts.montserrat(
+                      color:  Colors.white.withOpacity(0.9),
+                      fontWeight: FontWeight.w500,
+                      decoration: TextDecoration.none,
+                      fontSize: 20,
                     ),
-                    child: TextField(
-                      controller: _emailController,
-                      cursorColor: Colors.white.withOpacity(0.7),
-                      style: GoogleFonts.montserrat(
-                        color:  Colors.white.withOpacity(0.9),
-                        fontWeight: FontWeight.w500,
-                        decoration: TextDecoration.none,
-                        fontSize: 20,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Color.fromARGB(255, 134, 168, 163),
+                      contentPadding: EdgeInsets.all(18),
+                      prefixIcon: Icon(Icons.email,size: 22, color: Colors.white.withOpacity(0.5)),
+                      label: Text(
+                        'Email',
+                        style: GoogleFonts.montserrat(color: Colors.white.withOpacity(0.5), fontSize: 16,fontWeight:FontWeight.w500 ),
                       ),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color.fromARGB(255, 134, 168, 163),
-                        contentPadding: EdgeInsets.all(18),
-                        prefixIcon: Icon(Icons.email,size: 22, color: Colors.white.withOpacity(0.5)),
-                        label: Text(
-                          'Email',
-                          style: GoogleFonts.montserrat(color: Colors.white.withOpacity(0.5), fontSize: 16,fontWeight:FontWeight.w500 ),
-                        ),
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        labelStyle: GoogleFonts.montserrat(
-                          color: AppColors.myFadeblue,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Color.fromARGB(255, 134, 168, 163),width: 0),
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color:Color.fromARGB(255, 134, 168, 163), width: 0),
-                    
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color:Colors.white.withOpacity(0.5), width: 1),
-                    
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      labelStyle: GoogleFonts.montserrat(
+                        color: AppColors.myFadeblue,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Color.fromARGB(255, 134, 168, 163),width: 0),
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color:Color.fromARGB(255, 134, 168, 163), width: 0),
+                  
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color:Colors.white.withOpacity(0.5), width: 1),
+                  
+                        borderRadius: BorderRadius.circular(15.0),
                       ),
                     ),
                   ),
@@ -156,49 +144,37 @@ class _LoginScreenState extends State<LoginScreen> {
                 // Password field
                 Padding(
                   padding: EdgeInsets.fromLTRB(10.0, 1, 10.0, 10.0),
-                  child: Container(
-                      decoration: BoxDecoration(
-                      boxShadow: [
-                BoxShadow(
-                  color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.2),
-                  spreadRadius: 8,
-                  blurRadius: 15,
-                  offset: Offset(0, 8), // changes position of shadow
-                ),
-              ],
+                  child: TextField(
+                    cursorColor:Colors.white.withOpacity(0.7),
+                    controller: _passwordController,
+                    obscureText: true,
+                    style: GoogleFonts.montserrat(
+                      color: Colors.white.withOpacity(0.9),
+                      fontWeight: FontWeight.w500,
+                      decoration: TextDecoration.none,
+                      fontSize: 20,
                     ),
-                    child: TextField(
-                      cursorColor:Colors.white.withOpacity(0.7),
-                      controller: _passwordController,
-                      obscureText: true,
-                      style: GoogleFonts.montserrat(
-                        color: Colors.white.withOpacity(0.9),
-                        fontWeight: FontWeight.w500,
-                        decoration: TextDecoration.none,
-                        fontSize: 20,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Color.fromARGB(255, 134, 168, 163),
+                      prefixIcon: Icon(Icons.lock,size: 22, color:Colors.white.withOpacity(0.5)),
+                      contentPadding: EdgeInsets.all(18),
+                      label: Text('Password', style: GoogleFonts.montserrat(fontSize: 16,
+                      color: Colors.white.withOpacity(0.5), fontWeight: FontWeight.w500)),
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                      labelStyle: GoogleFonts.montserrat(color: Colors.yellow, fontWeight: FontWeight.w500),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color:Theme.of(context).cardColor, width: 1),
+                        borderRadius: BorderRadius.circular(15.0),
                       ),
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color.fromARGB(255, 134, 168, 163),
-                        prefixIcon: Icon(Icons.lock,size: 22, color:Colors.white.withOpacity(0.5)),
-                        contentPadding: EdgeInsets.all(18),
-                        label: Text('Password', style: GoogleFonts.montserrat(fontSize: 16,
-                        color: Colors.white.withOpacity(0.5), fontWeight: FontWeight.w500)),
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        labelStyle: GoogleFonts.montserrat(color: Colors.yellow, fontWeight: FontWeight.w500),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color:Theme.of(context).cardColor, width: 1),
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          borderSide: BorderSide(color:Theme.of(context).cardColor, width: 0),
-                    
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          borderSide: BorderSide(color: Colors.white.withOpacity(0.5), width: 1),
-                        ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        borderSide: BorderSide(color:Theme.of(context).cardColor, width: 0),
+                  
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                        borderSide: BorderSide(color: Colors.white.withOpacity(0.5), width: 1),
                       ),
                     ),
                   ),
@@ -236,14 +212,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 65,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.2),
-                            spreadRadius: 8,
-                            blurRadius: 18,
-                            offset: Offset(0, 8), // changes position of shadow
-                          ),
-                        ],
+                       
                         color:Colors.white.withOpacity(0.8),
                         borderRadius: BorderRadius.circular(15.0),
                       ),

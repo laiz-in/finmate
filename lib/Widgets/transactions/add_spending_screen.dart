@@ -299,7 +299,6 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
                                     Navigator.of(context).pop();
                                   } catch (e) {
                                     print("Error adding spending: $e");
-                                    errorSnackbar(context, 'Error adding spending: $e');
                                   }
                                 } else {
                                   errorSnackbar(context, 'User not logged in!');

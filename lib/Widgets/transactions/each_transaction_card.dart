@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:moneyy/firebase/firebase_utils.dart' as firebase_utils;
 import 'package:moneyy/ui/error_snackbar.dart';
 import 'package:moneyy/ui/succes_snackbar.dart';
@@ -33,15 +34,17 @@ class _TransactionCardState extends State<TransactionCard> {
   }
 
   String timeAgo(DateTime date) {
-    DateTime now = DateTime.now();
-    Duration difference = now.difference(date);
-    if (difference.inDays > 0) {
-      return '${difference.inDays}d ago';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours}h ago';
-    } else {
-      return '${difference.inMinutes}m ago';
-    }
+      final DateFormat formatter = DateFormat('d MMMM y \'at\' h:mm a');
+      return formatter.format(date);
+    // DateTime now = DateTime.now();
+    // Duration difference = now.difference(date);
+    // if (difference.inDays > 0) {
+    //   return '${difference.inDays}d ago';
+    // } else if (difference.inHours > 0) {
+    //   return '${difference.inHours}h ago';
+    // } else {
+    //   return '${difference.inMinutes}m ago';
+    // }
   }
 
   Future<void> _deleteTransaction() async {
@@ -88,14 +91,8 @@ class _TransactionCardState extends State<TransactionCard> {
         margin: EdgeInsets.symmetric(vertical: 6.0, horizontal: 15.0),
         padding: EdgeInsets.fromLTRB(15, 10, 10, 10.0),
         decoration: BoxDecoration(
-          boxShadow: [
-                BoxShadow(
-                  color: Color.fromARGB(255, 71, 71, 71).withOpacity(0.2),
-                  spreadRadius: 0.3,
-                  blurRadius: 0,
-                  offset: Offset(0, 2), // changes position of shadow
-                ),],
-          color:Color.fromARGB(255, 247, 246, 246),
+        
+      color:Color.fromARGB(255, 238, 240, 238),
           borderRadius: BorderRadius.circular(25.0),
         ),
         child: Column(
@@ -141,19 +138,21 @@ class _TransactionCardState extends State<TransactionCard> {
               ),
 
 
-              subtitle: Column(
+              subtitle:Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Divider(color: Color.fromARGB(255, 212, 214, 212),),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
                       // Description text
                       Text(
                         widget.transaction.spendingDescription,
                         style: GoogleFonts.montserrat(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
                           color: Theme.of(context).cardColor.withOpacity(0.7),
                         ),
                       ),
@@ -162,7 +161,7 @@ class _TransactionCardState extends State<TransactionCard> {
                       Text(
                         timeAgo(widget.transaction.date),
                         style: GoogleFonts.montserrat(
-                          fontSize: 12,
+                          fontSize: 11,
                           fontWeight: FontWeight.w600,
                           color:Theme.of(context).cardColor.withOpacity(0.5),
                         ),

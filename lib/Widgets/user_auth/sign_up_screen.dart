@@ -288,14 +288,6 @@ Future<void> _register() async {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(15)),
-          boxShadow: [
-                BoxShadow(
-                  color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.18),
-                  spreadRadius: 5,
-                  blurRadius: 12,
-                  offset: Offset(0, 8), // changes position of shadow
-                ),
-              ],
         ),
         child: TextFormField(
           controller: controller,
@@ -324,15 +316,7 @@ Future<void> _register() async {
         child: Container(
           padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
           decoration: BoxDecoration(
-            boxShadow: [
-                BoxShadow(
-                  color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.18),
-                  spreadRadius: 8,
-                  blurRadius: 15,
-                  offset: Offset(0, 8), // changes position of shadow
-                ),
-              ],
-            color:Colors.white.withOpacity(0.8),
+            color:Color.fromARGB(255, 241, 234, 234).withOpacity(0.8),
             borderRadius: BorderRadius.circular(15.0),
           ),
           child: Center(

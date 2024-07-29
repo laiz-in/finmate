@@ -397,8 +397,8 @@ Widget _recentTransactionCard(List<CustomTransaction> recentTransactions, BuildC
     decoration: BoxDecoration(
       boxShadow: [
       BoxShadow(
-        color: const Color.fromARGB(255, 49, 49, 49).withOpacity(0.25),
-        spreadRadius: 5,
+        color: const Color.fromARGB(255, 49, 49, 49).withOpacity(0.18),
+        spreadRadius: 8,
         blurRadius: 15,
         offset: Offset(0, 4), // changes position of shadow
       ),
@@ -411,14 +411,28 @@ Widget _recentTransactionCard(List<CustomTransaction> recentTransactions, BuildC
       children: recentTransactions.isEmpty
           ? [
               Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Text(
-                  "No transactions found..",
-                  style: GoogleFonts.montserrat(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: Theme.of(context).cardColor,
-                  ),
+                padding: const EdgeInsets.fromLTRB(0.0,15,0,15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      "oopss!",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).cardColor.withOpacity(0.6),
+                      ),
+                    ),
+                    Text(
+                      "no transactions found",
+                      style: GoogleFonts.montserrat(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).cardColor.withOpacity(0.6),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ]
@@ -569,49 +583,49 @@ Widget _graphCard(context,double? todaySpending, double? totalSpending, double? 
         padding: const EdgeInsets.symmetric(horizontal: 0.0),
         child: Container(
           decoration: BoxDecoration(
-                color: Theme.of(context).primaryColorDark,
-                boxShadow: [
-                BoxShadow(
-                  color: Color.fromARGB(255, 49, 49, 49).withOpacity(0.10),
-                  spreadRadius: 5,
-                  blurRadius: 5,
-                  offset: Offset(0, 4), // changes position of shadow
-                ),
-              ],
-              borderRadius: BorderRadius.all(Radius.circular(25)),
-
-              ),
+            color: Theme.of(context).primaryColorDark,
+            boxShadow: [
+            BoxShadow(
+            color: Color.fromARGB(255, 49, 49, 49).withOpacity(0.10),
+            spreadRadius: 10,
+            blurRadius: 15,
+            offset: Offset(0, 4),
+            ),
+            ],
+            borderRadius: BorderRadius.all(Radius.circular(25)),
+            ),
             child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-
             children: [
               Row(
               children: [
-
               // circular progress indicator for monthly limit
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25.0),
                   ),
                 width: MediaQuery.of(context).size.width * 0.43,
-                height: 200,
+                height: 165,
                 child: Column(
                 children: [
-                  SizedBox(height: 10,),
+                  SizedBox(height: 8,),
                   Text('Monthly limit'
-                  ,style: GoogleFonts.montserrat(color: Theme.of(context).cardColor,fontWeight: FontWeight.w700),
+                  ,style: GoogleFonts.montserrat(color: Theme.of(context).cardColor.withOpacity(0.8),fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(height: 12.0), // Add some space between children
+                  SizedBox(height: 10,),
                   CircularPercentIndicator(
-                    radius: 50.0,
-                    lineWidth: 10.0,
+                    radius: 40.0,
+                    lineWidth: 7.0,
                     percent:monthlyLimitPercentage/100 ,
                     center: Text('${monthlyLimitPercentage.toStringAsFixed(0)}%',
                     style: GoogleFonts.montserrat(color: Theme.of(context).cardColor,fontSize: 18, fontWeight: FontWeight.w800),),
                     circularStrokeCap: CircularStrokeCap.round,
                     progressColor:Theme.of(context).cardColor,
                     backgroundColor: Theme.of(context).cardColor.withOpacity(0.3),
+                  ),
+                  SizedBox(height: 5,),
+                  Text( '${totalSpending.toStringAsFixed(1)}/${monthlyLimit.toStringAsFixed(0)}'
+                  ,style: GoogleFonts.montserrat(color:Theme.of(context).cardColor.withOpacity(0.8),fontWeight: FontWeight.w700),
                   ),
                 ],
               ),
@@ -627,14 +641,15 @@ Widget _graphCard(context,double? todaySpending, double? totalSpending, double? 
                 height: 165,
                 child: Column(
                 children: [
-                  Text('Daily limit'
-                  ,style: GoogleFonts.montserrat(color:Theme.of(context).cardColor,fontWeight: FontWeight.w700),
-                  ),
+                  SizedBox(height: 8,),
 
-                  SizedBox(height: 12.0), // Add some space between children
+                  Text('Daily limit'
+                  ,style: GoogleFonts.montserrat(color:Theme.of(context).cardColor.withOpacity(0.8),fontWeight: FontWeight.w700),
+                  ),
+                  SizedBox(height: 10,),
                   CircularPercentIndicator(
-                    radius: 50.0,
-                    lineWidth: 10.0,
+                    radius: 40.0,
+                    lineWidth: 7.0,
                     percent: dailySpendingPercentageForGraph,
                     center: Text('${dailySpendingPercentage?.toStringAsFixed(0)}%',
                     style: GoogleFonts.montserrat(color: Theme.of(context).cardColor, fontWeight: FontWeight.w800,fontSize: 18),),

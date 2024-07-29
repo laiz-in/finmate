@@ -60,6 +60,7 @@ class MyApp extends StatelessWidget {
                 '/': (context) => connectivityState is DisconnectedState
                     ? NoInternetScreen()
                     : SplashScreen(),
+                
                 '/auth': (context) => AuthGuard(),
                 '/HomeScreen': (context) => HomeScreen(),
                 '/SignUpScreen': (context) => SignUpScreen(),
@@ -74,8 +75,6 @@ class MyApp extends StatelessWidget {
                 '/changeEmail' : (context) => ResetEmail(),
                 '/changeDailyLimit' : (context) => ResetDailyLimit(),
                 '/changeMonthlyLimit' : (context) => ResetMonthlyLimit(),
-
-
               },
               theme: themeState.themeData,
               title: 'Finmate',
