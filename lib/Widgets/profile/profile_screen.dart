@@ -7,6 +7,7 @@ import '../../firebase/user_service.dart';
 import '../../styles/themes.dart';
 import '../../ui/dialogue_box.dart';
 import '../../ui/error_snackbar.dart';
+import 'send_feedback_screen.dart';
 
 class ProfileSettings extends StatefulWidget {
   @override
@@ -104,7 +105,7 @@ void _toggleTheme() {
       ),
 
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(15.0, 15, 20, 15),
+        padding: const EdgeInsets.fromLTRB(15.0, 25, 20, 15),
 
         child: SingleChildScrollView(
           child: Column(
@@ -117,7 +118,7 @@ void _toggleTheme() {
                 boxShadow: [
                 BoxShadow(
                   color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.10),
-                  spreadRadius: 10,
+                  spreadRadius: 13,
                   blurRadius: 15,
                   offset: Offset(0, 5), // changes position of shadow
                 ),
@@ -176,12 +177,28 @@ void _toggleTheme() {
                     Divider(color: Theme.of(context).cardColor.withOpacity(0.6),),
 
                     // Textb button to change monthly limit
-                    TextButton(onPressed: (){Navigator.pushNamed(context, '/changeMonthlyLimit');
-},
+                    TextButton(onPressed: (){Navigator.pushNamed(context, '/changeMonthlyLimit');},
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
                         Text("Reset your monthly limit",
+                        style: GoogleFonts.montserrat(fontSize: 16,color: Theme.of(context).cardColor
+                        ,fontWeight: FontWeight.w600),),
+                        Icon(Icons.arrow_forward_ios,color: Theme.of(context).cardColor,),
+                      ],
+                    )
+                    ),
+                    Divider(color: Theme.of(context).cardColor.withOpacity(0.6),),
+
+                    // Textb button to send feedback
+                    TextButton(onPressed: (){Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => SendFeedbackScreen()),
+                                            );},
+                      child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children:[
+                        Text("Send your feedback",
                         style: GoogleFonts.montserrat(fontSize: 16,color: Theme.of(context).cardColor
                         ,fontWeight: FontWeight.w600),),
                         Icon(Icons.arrow_forward_ios,color: Theme.of(context).cardColor,),
@@ -220,8 +237,8 @@ void _toggleTheme() {
                 decoration: BoxDecoration(
                   boxShadow: [
                   BoxShadow(
-                  color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.18),
-                  spreadRadius: 5,
+                  color: const Color.fromARGB(255, 32, 32, 32).withOpacity(0.10),
+                  spreadRadius: 12,
                   blurRadius: 15,
                   offset: Offset(0, 3),
                 ),
@@ -269,9 +286,10 @@ void _toggleTheme() {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.all(15),
           backgroundColor: backgroundColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(15),
           ),
         ),
         child: Row(

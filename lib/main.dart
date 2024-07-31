@@ -25,11 +25,12 @@ import 'auth/auth_event.dart';
 import 'auth/auth_guard.dart';
 import 'firebase_options.dart';
 import 'splash.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   await Firebase.initializeApp(
-    options: getFirebaseOptions(), // Use the function from firebase_options.dart
+    options: getFirebaseOptions(),
   );
 
   runApp(
@@ -75,6 +76,8 @@ class MyApp extends StatelessWidget {
                 '/changeEmail' : (context) => ResetEmail(),
                 '/changeDailyLimit' : (context) => ResetDailyLimit(),
                 '/changeMonthlyLimit' : (context) => ResetMonthlyLimit(),
+
+
               },
               theme: themeState.themeData,
               title: 'Finmate',

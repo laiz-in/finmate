@@ -71,8 +71,8 @@ void showThemeChangeDialog(BuildContext context){
       elevation: 15,
       title: Center(
         child: Text('Sorry! multi theme mode is not available yet',textAlign:TextAlign.center,
-                      style: GoogleFonts.montserrat(color: Color.fromARGB(255, 197, 81, 73),
-                      fontWeight: FontWeight.w600,fontSize: 13)),
+                      style: GoogleFonts.montserrat(color: Color.fromARGB(255, 218, 115, 107),
+                      fontWeight: FontWeight.w600,fontSize: 15)),
       ),
       actions: [
         Center(

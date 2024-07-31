@@ -9,6 +9,7 @@ import '../firebase/firebase_utils.dart';
 import '../firebase/user_service.dart';
 import './transactions/add_spending_screen.dart';
 import 'chart_graph_screens/daywise_barchart.dart';
+import 'loading_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -76,7 +77,7 @@ Widget build(BuildContext context) {
       
       // App bar
       appBar: AppBar(
-      toolbarHeight: 100,
+      toolbarHeight: 80,
       scrolledUnderElevation:0,
       automaticallyImplyLeading: false,
       backgroundColor:Theme.of(context).primaryColor,
@@ -124,7 +125,9 @@ Widget build(BuildContext context) {
     ),
 
   // Body of the home screen with pull-to-refresh
-  body: RefreshIndicator(
+  body:isLoading
+        ? LoadingScreen() // Show loading screen while data is loading
+        :  RefreshIndicator(
       color: Theme.of(context).cardColor,
       backgroundColor: Colors.white,
       strokeWidth: 2,
@@ -198,9 +201,9 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
 
                 boxShadow: [
                 BoxShadow(
-                  color: Color.fromARGB(255, 71, 71, 71).withOpacity(0.18),
-                  spreadRadius: 0,
-                  blurRadius: 10,
+                  color: Color.fromARGB(255, 71, 71, 71).withOpacity(0.10),
+                  spreadRadius: 8,
+                  blurRadius: 15,
                   offset: Offset(0, 4), // changes position of shadow
                 ),],
 
@@ -479,7 +482,7 @@ Widget _recentTransactionCard(List<CustomTransaction> recentTransactions, BuildC
                                   style: GoogleFonts.montserrat(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w600,
-                                    color: Theme.of(context).cardColor,
+                                    color: Theme.of(context).cardColor.withOpacity(0.8),
                                   ),
                                 ),
                               ),
