@@ -12,7 +12,7 @@ migrate_working_dir/
 assets/
 
 # Ignore firebase_options.dart file
-# /lib/config/firebase_options.dart
+/lib/config/firebase_options.dart
 
 # IntelliJ related
 *.iml
