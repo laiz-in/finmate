@@ -1,46 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:moneyy/firebase/firebase_utils.dart' as firebaseUtils; // Ensure this is the correct import for your Firebase service
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-class GraphCardWidget extends StatelessWidget {
-  final double todaySpending;
+class GraphCardWidget extends StatefulWidget {
   final double totalSpending;
   final double monthlyLimit;
   final double dailyLimit;
+  final String userId;
 
   const GraphCardWidget({
     super.key,
-    required this.todaySpending,
     required this.totalSpending,
     required this.monthlyLimit,
     required this.dailyLimit,
+    required this.userId,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final dailySpendingPercentage = (todaySpending / dailyLimit) * 100;
-    final monthlyLimitPercentage = (totalSpending / monthlyLimit) * 100;
-    double dailySpendingPercentageForGraph = 0;
+  GraphCardWidgetState createState() => GraphCardWidgetState();
+}
 
-    if ((dailySpendingPercentage / 100) > 1) {
-      dailySpendingPercentageForGraph = 1.0;
-    } else {
-      dailySpendingPercentageForGraph = dailySpendingPercentage / 100;
-    }
+class GraphCardWidgetState extends State<GraphCardWidget> {
+  double todaySpending = 0.0; // To hold today's spending
+  bool isLoading = true; // To track loading state
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchTodaySpending(); // Fetch the spending when the widget is initialized
+  }
+
+  Future<void> _fetchTodaySpending() async {
+    double total = await firebaseUtils.getTodayTotalSpending(context, widget.userId);
+    setState(() {
+      todaySpending = total;
+      isLoading = false; // Update loading state
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dailySpendingPercentage = (todaySpending / widget.dailyLimit) * 100;
+    final monthlyLimitPercentage = (widget.totalSpending / widget.monthlyLimit) * 100;
+
+    double dailySpendingPercentageForGraph = dailySpendingPercentage > 100 ? 1.0 : dailySpendingPercentage / 100;
 
     return Padding(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.only(top: 25),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 0.0),
         child: Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).primaryColorDark,
+            color: Theme.of(context).hintColor,
             boxShadow: [
               BoxShadow(
-                color: Color.fromARGB(255, 49, 49, 49).withOpacity(0.10),
+                color: Color.fromARGB(255, 49, 49, 49).withOpacity(0.05),
                 spreadRadius: 10,
                 blurRadius: 15,
-                offset: Offset(0, 4),
+                offset: Offset(2, 4),
               ),
             ],
             borderRadius: BorderRadius.all(Radius.circular(25)),
@@ -52,26 +70,19 @@ class GraphCardWidget extends StatelessWidget {
                 children: [
                   _buildCircularIndicator(
                     context: context,
-                    title: 'Monthly limit',
+                    title: 'Monthly Limit',
                     percentage: monthlyLimitPercentage,
-                    amount: '$totalSpending/$monthlyLimit',
+                    amount: '${widget.totalSpending.toStringAsFixed(2)}/${
+                      widget.monthlyLimit.toStringAsFixed(2)}',
                   ),
                   _buildCircularIndicator(
                     context: context,
-                    title: 'Daily limit',
+                    title: 'Daily Limit',
                     percentage: dailySpendingPercentageForGraph * 100,
-                    amount: '$todaySpending/$dailyLimit',
+                    amount: '${todaySpending.toStringAsFixed(2)}/${widget.dailyLimit.toStringAsFixed(2)}',
                   ),
                 ],
               ),
-
-
-
-            //  DaywiseBarchart(transactions: allTransactions),
-
-
-
-
             ],
           ),
         ),
@@ -80,7 +91,6 @@ class GraphCardWidget extends StatelessWidget {
   }
 
   // Helper method for building circular indicators
-
   Widget _buildCircularIndicator({
     required BuildContext context,
     required String title,
@@ -95,9 +105,10 @@ class GraphCardWidget extends StatelessWidget {
           SizedBox(height: 8),
           Text(
             title,
-            style: GoogleFonts.montserrat(
-              color: Theme.of(context).cardColor.withOpacity(0.8),
-              fontWeight: FontWeight.w700,
+            style: GoogleFonts.poppins(
+              color: Theme.of(context).canvasColor.withOpacity(0.8),
+              fontWeight: FontWeight.w500,
+              fontSize: 12,
             ),
           ),
           SizedBox(height: 10),
@@ -107,22 +118,23 @@ class GraphCardWidget extends StatelessWidget {
             percent: (percentage / 100),
             center: Text(
               '${percentage.toStringAsFixed(0)}%',
-              style: GoogleFonts.montserrat(
-                color: Theme.of(context).cardColor,
+              style: GoogleFonts.poppins(
+                color: Theme.of(context).canvasColor,
                 fontSize: 18,
-                fontWeight: FontWeight.w800,
+                fontWeight: FontWeight.w600,
               ),
             ),
             circularStrokeCap: CircularStrokeCap.round,
-            progressColor: Theme.of(context).cardColor,
-            backgroundColor: Theme.of(context).cardColor.withOpacity(0.3),
+            progressColor: Theme.of(context).canvasColor,
+            backgroundColor: Theme.of(context).canvasColor.withOpacity(0.3),
           ),
-          SizedBox(height: 5),
+          SizedBox(height: 10),
           Text(
             amount,
-            style: GoogleFonts.montserrat(
-              color: Theme.of(context).cardColor.withOpacity(0.8),
-              fontWeight: FontWeight.w700,
+            style: GoogleFonts.poppins(
+              color: Theme.of(context).canvasColor.withOpacity(0.6),
+              fontWeight: FontWeight.w600,
+              fontSize: 13,
             ),
           ),
         ],

@@ -2,14 +2,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/bloc/home_screen/home_screen_bloc.dart';
 import 'package:moneyy/bloc/home_screen/home_screen_event.dart';
 import 'package:moneyy/bloc/home_screen/home_screen_state.dart';
 import 'package:moneyy/domain/entities/auth/user.dart';
 import 'package:moneyy/presentation/screens/home_screen/widgets/appbar/app_bar_widget.dart';
 import 'package:moneyy/presentation/screens/home_screen/widgets/loading_screen/loading_screen.dart';
+import 'package:moneyy/presentation/screens/home_screen/widgets/recent_expenses/recent_expenses_screen.dart';
 import 'package:moneyy/presentation/screens/home_screen/widgets/titlecard/title_card.dart';
-
+import 'package:moneyy/presentation/screens/home_screen/widgets/visualization/bar_chart.dart';
+import 'package:moneyy/presentation/screens/home_screen/widgets/visualization/percentage_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -34,10 +37,12 @@ class _HomeScreenState extends State<HomeScreen> {
       isRefreshing = true;
     });
     context.read<HomeScreenBloc>().add(FetchUserData());
+    
     setState(() {
       isRefreshing = false;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +50,8 @@ class _HomeScreenState extends State<HomeScreen> {
       body: BlocBuilder<HomeScreenBloc, HomeScreenState>(
         builder: (context, state) {
           if (state is HomeScreenLoading) {
-            return ShimmerScreen(); // Show shimmer effect while loading
+            return ShimmerScreen();
+            // Show shimmer effect while loading
           
           } else if (state is HomeScreenLoaded) {
             final UserEntity user = state.user;
@@ -65,10 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     child:isRefreshing
                     ? Center(
-                        child: CircularProgressIndicator(
-                          color: Theme.of(context).primaryColorDark,
-                          strokeWidth: 2,
-                        ),
+                        
                       ): ListView(
                       children: [
                         // Display user information
@@ -80,21 +83,29 @@ class _HomeScreenState extends State<HomeScreen> {
 
                               // TITLE CARD
                               TitleCardWidget(
-                                totalSpending:user.monthlyLimit,
-                                todaySpending: user.dailyLimit,
+                                totalSpending:user.totalSpending,
+                                userId: user.uid,
                               ),
 
 
-                              // PERCENTAGE INDICATOR
-//                               GraphCardWidget(
-//   todaySpending: user.todaySpending,
-//   totalSpending: user.totalSpending,
-//   monthlyLimit: user,monthlyLimit,
-//   dailyLimit: dailyLimit,
-//   allTransactions: allTransactions,
-// ),
+                              //PERCENTAGE INDICATOR
+                              GraphCardWidget(
+                                              totalSpending: user.totalSpending ?? 0.0,
+                                              monthlyLimit: user.monthlyLimit ?? 0.0,
+                                              dailyLimit: user.dailyLimit ?? 0.0,
+                                              userId: user.uid?? "",
+                              ),
 
-                              // RECENT TRANSACTION HEADING
+
+                            // BAR CHART FOR LAST 7 DAYS
+                            SizedBox(height: 10,),
+                            DaywiseBarchart(),
+
+                            // RECENT TRANSACTION HEADING
+                            _transactionHeading(context),
+
+                            RecentExpensesScreen(),
+
 
                               // RECENT TRANSACTIONS LIST
 
@@ -133,4 +144,48 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
+
+
+Widget _transactionHeading(context) {
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(5, 5, 0, 5),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          'Recent expenses',
+          style: GoogleFonts.poppins(
+            fontSize: 15,
+            color: Theme.of(context).canvasColor,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+          // Navigator.pushNamed(context, '/TransactionScreen');
+          },
+          child: Row(
+            children: [
+              Text(
+                'See all',
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).canvasColor,
+                ),
+              ),
+              SizedBox(width: 5,),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 15,
+                color: Theme.of(context).canvasColor,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
 }

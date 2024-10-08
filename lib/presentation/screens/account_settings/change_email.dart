@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
-import 'package:moneyy/common/widgets/success_snackbar.dart';
 import 'package:moneyy/domain/usecases/auth/email_reset.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
 import 'package:moneyy/service_locator.dart';
@@ -17,23 +16,29 @@ class ResetEmail extends StatefulWidget {
 class _ResetEmailState extends State<ResetEmail> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
+  bool _isLoading = false;
+
 
   // Reset password logic
   void _resetEmail() async {
     if (_formKey.currentState!.validate()) {
+        setState(() {
+        _isLoading = true;
+        });
 
         final resetPasswordUseCase = sl<ResetEmailUseCase>();
         final result = await resetPasswordUseCase.call(email: emailController.text.trim());
 
         result.fold(
           (l) {
-            errorSnackbar(context, l.toString());
+            if(mounted){
+            errorSnackbar(context, l.toString());}
+            setState(() {
+            _isLoading = false;
+            });
           },
+
           (r) {
-            // Show success Snackbar and navigate to login
-            if (mounted) {
-              successSnackbar(context, 'Please verify the new email to complete the process!');
-            }
           Navigator.pushNamedAndRemoveUntil(context, AppRoutes.logIn, (route) => false);
           },
         );
@@ -45,11 +50,14 @@ class _ResetEmailState extends State<ResetEmail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).cardColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+
       appBar: AppBar(
         backgroundColor:Theme.of(context).scaffoldBackgroundColor,
         iconTheme: IconThemeData(color:Theme.of(context).canvasColor),
       ),
+
+
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus(); // Dismisses the keyboard when tapping outside the text field
@@ -188,6 +196,15 @@ class _ResetEmailState extends State<ResetEmail> {
                             ),
                           ),
                                 SizedBox(width: 10),
+                                if (_isLoading)
+                                      SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          color: Theme.of(context).hintColor,
+                                          strokeWidth: 3,
+                                        ),
+                                      ),
                               ],
                             ),
                           ),

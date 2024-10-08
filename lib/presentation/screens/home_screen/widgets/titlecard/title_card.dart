@@ -1,17 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/core/colors/colors.dart';
+import 'package:moneyy/firebase/firebase_utils.dart' as firebaseUtils;
 import 'package:moneyy/presentation/routes/routes.dart';
 
-class TitleCardWidget extends StatelessWidget {
+class TitleCardWidget extends StatefulWidget {
   final double? totalSpending;
-  final double? todaySpending;
+  final String? userId;
+  
 
   const TitleCardWidget({
     super.key,
     required this.totalSpending,
-    required this.todaySpending,
+    required this.userId,
   });
+
+  @override
+  State<TitleCardWidget> createState() => _TitleCardWidgetState();
+}
+
+class _TitleCardWidgetState extends State<TitleCardWidget> {
+    double todaySpending=0.0;
+    String? userId;
+
+
+    @override
+  void initState() {
+    super.initState();
+    _fetchTodaySpending(); // Fetch the spending when the widget is initialized
+  }
+
+  Future<void> _fetchTodaySpending() async {
+    if (widget.userId != null) {
+      double total = await firebaseUtils.getTodayTotalSpending(context, widget.userId!);
+      setState(() {
+        todaySpending = total;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +53,7 @@ class TitleCardWidget extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Color.fromARGB(255, 71, 71, 71).withOpacity(0.25),
+              color: Color.fromARGB(255, 71, 71, 71).withOpacity(0.10),
               spreadRadius: 8,
               blurRadius: 15,
               offset: Offset(0, 4), // Changes position of shadow
@@ -57,8 +83,8 @@ class TitleCardWidget extends StatelessWidget {
                       ),
                     ),
                     TextSpan(
-                      text: totalSpending != null
-                          ? ' ₹ ${totalSpending!.toStringAsFixed(2)}'
+                      text: widget.totalSpending != null
+                          ? ' ₹ ${widget.totalSpending!.toStringAsFixed(2)}'
                           : '',
                       style: GoogleFonts.montserrat(
                         fontSize: 28,
@@ -86,15 +112,13 @@ class TitleCardWidget extends StatelessWidget {
                       ),
                     ),
                     TextSpan(
-                      text: todaySpending != null
-                          ? ' ₹ ${todaySpending!.toStringAsFixed(2)}'
-                          : '',
-                      style: GoogleFonts.montserrat(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
+                    text: ' ₹ ${todaySpending.toStringAsFixed(2)}',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
                     ),
+                  ),
                   ],
                 ),
               ),

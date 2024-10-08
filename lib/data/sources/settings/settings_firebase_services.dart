@@ -34,7 +34,7 @@ class SettingsFirebaseServiceImpl extends SettingsFirebaseService {
       if (user == null) {
         return Left("User not logged in");
       }
-      if(dailyLimit >=9999){
+      if(dailyLimit >9999){
         return Left("maximum daily limit is 9999");
 
       }
@@ -69,8 +69,8 @@ class SettingsFirebaseServiceImpl extends SettingsFirebaseService {
       if (user == null) {
         return Left("User not logged in");
       }
-      if(monthlyLimit >=9999999){
-        return Left("maximum daily limit is 9999999");
+      if(monthlyLimit >999999){
+        return Left("maximum monthly limit is 999999");
 
       }
       // Update the daily limit in Firestore

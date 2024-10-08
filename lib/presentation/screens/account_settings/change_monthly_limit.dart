@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:moneyy/common/widgets/error_snackbar.dart';
 import 'package:moneyy/common/widgets/success_snackbar.dart';
 import 'package:moneyy/domain/usecases/settings/reset_monthly_limit.dart';
 import 'package:moneyy/service_locator.dart';
 import 'package:moneyy/styles/themes.dart';
-import 'package:moneyy/ui/error_snackbar.dart';
 
 
 class ResetMonthlyLimit extends StatefulWidget {
@@ -20,7 +20,7 @@ class _ResetMonthlyLimitState extends State<ResetMonthlyLimit> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
-  // Reset daily limit logic
+  // Reset monthly limit logic
   void _resetMonthlyLimit() async {
 
     if (_formKey.currentState?.validate() ?? false) {
@@ -36,8 +36,8 @@ class _ResetMonthlyLimitState extends State<ResetMonthlyLimit> {
         (l) {
           errorSnackbar(context, l.toString());
           setState(() {
-        _isLoading = false;
-      });
+          _isLoading = false;
+          });
 
         },
         // If limit updation is success
@@ -58,11 +58,15 @@ class _ResetMonthlyLimitState extends State<ResetMonthlyLimit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).cardColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+
+      // APPBAR
       appBar: AppBar(
         backgroundColor:Theme.of(context).scaffoldBackgroundColor,
         iconTheme: IconThemeData(color:Theme.of(context).canvasColor),
       ),
+
+      // BODY
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -90,7 +94,7 @@ class _ResetMonthlyLimitState extends State<ResetMonthlyLimit> {
                     children: [
                       SizedBox(height: 40,),
 
-                      // Password reset heading
+                      // Monthly reset heading
                       Padding(
                         padding: EdgeInsets.all(20),
                         child: Row(

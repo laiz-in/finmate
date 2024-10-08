@@ -33,8 +33,8 @@ class _ResetDailyLimitState extends State<ResetDailyLimit> {
         (l) {
           errorSnackbar(context, l.toString());
           setState(() {
-        _isLoading = false;
-      });
+          _isLoading = false;
+          });
 
         },
         // If limit updation is success
@@ -55,11 +55,15 @@ class _ResetDailyLimitState extends State<ResetDailyLimit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).cardColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+
+      // APPBAR
       appBar: AppBar(
         backgroundColor:Theme.of(context).scaffoldBackgroundColor,
         iconTheme: IconThemeData(color:Theme.of(context).canvasColor),
       ),
+
+      // BODY
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus(); // Dismisses the keyboard when tapping outside the text field

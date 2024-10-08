@@ -7,6 +7,7 @@ import 'package:moneyy/presentation/screens/account_settings/profile_settings_ma
 import 'package:moneyy/presentation/screens/account_settings/send_feedback.dart';
 import 'package:moneyy/presentation/screens/expenses/all_expenses.dart';
 import 'package:moneyy/presentation/screens/home_screen/home_screen.dart'; // Import main screen
+import 'package:moneyy/presentation/screens/home_screen/widgets/visualization/bar_chart.dart';
 import 'package:moneyy/presentation/screens/user_auth/password_forgot/password_reset_screen.dart';
 import 'package:moneyy/presentation/screens/user_auth/sign_in/sign_in.dart';
 import 'package:moneyy/presentation/screens/user_auth/sign_up/sign_up.dart';
@@ -25,9 +26,11 @@ class AppRoutes {
   static const String spendingScreen = '/SpendingScreen';
 
 
+
   static Route<dynamic> generateRoute(RouteSettings settings) {
 
     switch (settings.name) {
+
 
       case signUp:
         return MaterialPageRoute(builder: (_) => SignUpScreen());

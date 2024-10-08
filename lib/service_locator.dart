@@ -32,12 +32,12 @@ final sl = GetIt.instance;
 Future<void> initializeDependencies() async {
 
   // spendings related
+  
   sl.registerLazySingleton(() => LastSevenDayExpensesUseCase(sl()));
   sl.registerLazySingleton(() => ExpensesFirebaseService());
   sl.registerLazySingleton<ExpensesRepository>(() => ExpensesRepositoryImpl(sl()));
   sl.registerLazySingleton(() => TotalExpensesUseCase(sl()));
   sl.registerLazySingleton(() => LastThreeExpensesUseCase(sl()));
-  sl.registerLazySingleton(() => LastSevenDayExpensesUseCase(sl()));
 
   sl.registerLazySingleton(() => AddExpensesUseCase(sl()));
   sl.registerFactory(() => ExpensesBloc(sl(), sl(), sl(), sl()));

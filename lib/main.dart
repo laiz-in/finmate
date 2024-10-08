@@ -52,6 +52,8 @@ void main() async {
     BlocProvider(
       create: (context) => HomeScreenBloc(sl<UserRepository>()), // Pass the user repository
     ),
+
+    
   ],
       child: MyApp(),
     ),
