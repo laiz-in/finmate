@@ -18,6 +18,8 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
   String _spendingDescription = '';
   DateTime? _spendingDate = DateTime.now();
   final TextEditingController _dateController = TextEditingController();
+  bool _isLoading = false;
+
 
   final List<String> _categories = [
     'Groceries',
@@ -66,7 +68,8 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            // Title
+
+            // Title add +
             Padding(
               padding: const EdgeInsets.fromLTRB(5, 8, 5, 20),
               child: Text(
@@ -78,6 +81,7 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
                 ),
               ),
             ),
+
             // Amount field
             TextFormField(
               cursorColor: Theme.of(context).cardColor.withOpacity(0.4),
@@ -115,22 +119,18 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
                 return null;
               },
             ),
+
             SizedBox(height: 15),
+
             // Dropdown to select category
             DropdownButtonFormField<String>(
               value: _spendingCategory,
               style: GoogleFonts.montserrat(
                 color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
                 fontSize: 17,
               ),
               decoration: InputDecoration(
-                labelText: 'Category',
-                labelStyle: GoogleFonts.montserrat(
-                  fontSize: 17,
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.w500,
-                ),
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 filled: true,
                 fillColor: Theme.of(context).cardColor.withOpacity(0.3),
@@ -157,7 +157,7 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
                         style: GoogleFonts.montserrat(
                           color: Theme.of(context).cardColor,
                           fontSize: 17,
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
@@ -171,20 +171,22 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
               },
               isExpanded: true,
             ),
+
             SizedBox(height: 15),
+
             // Description field
             TextFormField(
               style: GoogleFonts.montserrat(
                 color: Theme.of(context).cardColor,
                 fontSize: 17,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
               ),
               decoration: InputDecoration(
                 hintText: 'Description',
                 hintStyle: GoogleFonts.montserrat(
                   fontSize: 17,
                   color: Theme.of(context).cardColor,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                 ),
                 filled: true,
                 fillColor: Theme.of(context).cardColor.withOpacity(0.3),
@@ -202,13 +204,15 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
                 return null;
               },
             ),
+
             SizedBox(height: 15),
+
             // Date field
             TextFormField(
               style: GoogleFonts.montserrat(
                 color: Theme.of(context).cardColor,
                 fontSize: 17,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w600,
               ),
               decoration: InputDecoration(
                 filled: true,
@@ -229,7 +233,9 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
                 return null;
               },
             ),
+            
             SizedBox(height: 15),
+            
             // Add button
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -241,7 +247,7 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
                     style: GoogleFonts.montserrat(
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
-                      color: Colors.red.shade400,
+                      color: const Color.fromARGB(255, 105, 40, 39),
                     ),
                   ),
                   onPressed: () {
@@ -251,61 +257,102 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
       
                 SizedBox(width: 10,),
       
+
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-      
                     backgroundColor: Theme.of(context).cardColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0),
                   ),
-                  child: Text(
-                    '  Add +  ',
-                    style: GoogleFonts.montserrat(
-                      fontSize: 16,
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  child: _isLoading
+                      ?Row(
+                          children: [
+                            Text(
+                          'Adding  ',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 16,
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                            SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : Text(
+                          '  Add +  ',
+                          style: GoogleFonts.montserrat(
+                            fontSize: 16,
+                            color: Theme.of(context).primaryColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+
+                  
                   onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
-                                final user = FirebaseAuth.instance.currentUser;
-                                if (user != null) {
-                                  try {
-                                    final userDocRef = FirebaseFirestore.instance.collection("users").doc(user.uid);
-                                    final userDocSnapshot = await userDocRef.get();
-                                    final currentTotalSpending = userDocSnapshot.get('totalSpending') ?? 0.0;
-                                    final newTotalSpending = currentTotalSpending + _spendingAmount;
-      
-                                    await userDocRef.update({'totalSpending': newTotalSpending});
-                                    final newSpendingRef = FirebaseFirestore.instance
-                                        .collection("users")
-                                        .doc(user.uid)
-                                        .collection("spendings")
-                                        .doc(); // Create a DocumentReference with a generated ID
-      
-                                    await newSpendingRef.set({
-                                    'spendingAmount': _spendingAmount,
-                                    'spendingCategory': _spendingCategory,
-                                    'spendingDescription': _spendingDescription,
-                                    'spendingDate': _spendingDate,
-                                    'createdAt': FieldValue.serverTimestamp(),
-                                    'uidOfTransaction': newSpendingRef.id, // Store the generated document ID
-                                  });
-      
-                                    print("Added new spending successfully.");
-                                    successSnackbar(context, 'Spending added successfully!');
-                                    Navigator.of(context).pop();
-                                  } catch (e) {
-                                    print("Error adding spending: $e");
-                                  }
-                                } else {
-                                  errorSnackbar(context, 'User not logged in!');
-                                }
-                              }
-                            }
-      
+                    if (_formKey.currentState!.validate()) {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      
+                      final user = FirebaseAuth.instance.currentUser;
+                      if (user != null) {
+                        try {
+                          final userDocRef = FirebaseFirestore.instance.collection("users").doc(user.uid);
+                          final userDocSnapshot = await userDocRef.get();
+                          final currentTotalSpending = userDocSnapshot.get('totalSpending') ?? 0.0;
+                          final newTotalSpending = currentTotalSpending + _spendingAmount;
+
+                          await userDocRef.update({'totalSpending': newTotalSpending});
+                          final newSpendingRef = FirebaseFirestore.instance
+                              .collection("users")
+                              .doc(user.uid)
+                              .collection("spendings")
+                              .doc(); // Create a DocumentReference with a generated ID
+
+                          await newSpendingRef.set({
+                            'spendingAmount': _spendingAmount,
+                            'spendingCategory': _spendingCategory,
+                            'spendingDescription': _spendingDescription,
+                            'spendingDate': _spendingDate,
+                            'createdAt': FieldValue.serverTimestamp(),
+                            'uidOfTransaction': newSpendingRef.id, // Store the generated document ID
+                          });
+                          
+                          if (mounted){
+                          successSnackbar(context, 'Spending added successfully!');
+
+                          Navigator.of(context).pop();
+                          }
+
+
+                        } catch (e) {
+                          errorSnackbar(context,"Error adding spending: $e");
+                        } finally {
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
+                      } else {
+                        errorSnackbar(context, 'User not logged in!');
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      }
+                    }
+                  },
+                  
                 ),
       
       

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:moneyy/presentation/routes/routes.dart';
 import 'package:moneyy/styles/themes.dart';
 import 'package:moneyy/ui/error_snackbar.dart';
 
@@ -24,7 +25,7 @@ class _ResetPasswordState extends State<ResetPassword> {
       try {
       await _auth.sendPasswordResetEmail(email: _emailController.text);
       successSnackbar(context, 'password reset email has been sent');
-      Navigator.pushNamedAndRemoveUntil(context, '/LoginScreen', (route) => false);
+      Navigator.pushNamedAndRemoveUntil(context, AppRoutes.logIn, (route) => false);
 
       } catch (e) {
       // dilaloge message to error when sending verification email

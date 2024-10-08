@@ -51,6 +51,13 @@ dependencies:
   connectivity_plus: ^5.0.0
   fl_chart: ^0.68.0
   shimmer: ^2.0.0
+  shared_preferences: ^2.3.2
+  hydrated_bloc:
+  path_provider:
+  flutter_svg:
+  get_it:
+  dartz: ^0.10.1
+
 
 
 
@@ -83,13 +90,15 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/logo_bg_removed.png
-    - assets/animations/succes.json
-    - assets/animations/error.json
-    - assets/animations/info.json
+    # - assets/animations/succes.json
+    # - assets/animations/error.json
+    # - assets/animations/info.json
     - assets/animations/connection_lost.json
     - assets/images/finmate_icon.png
     - assets/images/splash.png
     - assets/animations/nobills.json
+    - assets/animations/loading_dots.json
+
 
 
 

@@ -7,7 +7,6 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 import '../firebase/firebase_utils.dart';
 import '../firebase/user_service.dart';
-import './transactions/add_spending_screen.dart';
 import 'chart_graph_screens/daywise_barchart.dart';
 import 'loading_screen.dart';
 
@@ -117,12 +116,13 @@ Widget build(BuildContext context) {
         IconButton(
           icon: Icon(Icons.person_outlined, color: Theme.of(context).cardColor,size: 25,),
           onPressed: () {
-            Navigator.pushNamed(context, '/ProfileScreen');
+            // Navigator.pushNamed(context, '/ProfileScreen');
           },
         ),
         SizedBox(width: 20,),
       ],
     ),
+
 
   // Body of the home screen with pull-to-refresh
   body:isLoading
@@ -132,6 +132,8 @@ Widget build(BuildContext context) {
       backgroundColor: Colors.white,
       strokeWidth: 2,
       onRefresh: _fetchUserData,
+
+      
       child: Container(
         color: Theme.of(context).primaryColor,
         child: Padding(
@@ -167,14 +169,14 @@ Widget build(BuildContext context) {
         // floating button
         floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) => Dialog(
-              backgroundColor: Colors.transparent,
-              insetPadding: EdgeInsets.all(25),
-              child: AddSpendingBottomSheet(), // Renamed as AddSpendingDialog for clarity
-            ),
-          );
+          // showDialog(
+          //   context: context,
+          //   builder: (context) => Dialog(
+          //     backgroundColor: Colors.transparent,
+          //     insetPadding: EdgeInsets.all(25),
+          //     child: AddSpendingBottomSheet(), // Renamed as AddSpendingDialog for clarity
+          //   ),
+          // );
         },
         backgroundColor: Theme.of(context).cardColor,
         elevation: 0,
@@ -292,7 +294,7 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
                               IconButton(
                                 icon: Icon(Icons.receipt,color: Theme.of(context).cardColor.withOpacity(0.6),size: 33,),
                               onPressed: () {
-                              Navigator.pushNamed(context, '/AllBillsScreen');
+                              // Navigator.pushNamed(context, '/AllBillsScreen');
                               },
                               ),
                               Text(
@@ -312,7 +314,7 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
                               IconButton(
                                 icon: Icon(Icons.person_add,color: Theme.of(context).cardColor.withOpacity(0.6),size: 35,),
                                 onPressed: () {
-                              Navigator.pushNamed(context, '/AllIndividuals');
+                              // Navigator.pushNamed(context, '/AllIndividuals');
                               },
                               ),
                               Text(
@@ -332,7 +334,7 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
                               IconButton(
                                 icon: Icon(Icons.alarm_add,color: Theme.of(context).cardColor.withOpacity(0.6),size: 35,),
                                 onPressed: () {
-                                Navigator.pushNamed(context, '/AllReminders');
+                                // Navigator.pushNamed(context, '/AllReminders');
 
                                 },
                               ),
@@ -353,7 +355,7 @@ Widget _titleCard(context, double? totalSpending, double? todaySpending){
                               IconButton(
                                 icon: Icon(Icons.graphic_eq,color: Theme.of(context).cardColor.withOpacity(0.6),size: 35,),
                                 onPressed: () {
-                                Navigator.pushNamed(context, '/AllStatistics');
+                                // Navigator.pushNamed(context, '/AllStatistics');
                                 },
                               ),
                               Text(
@@ -539,7 +541,7 @@ Widget _transactionHeading(context) {
         ),
         TextButton(
           onPressed: () {
-          Navigator.pushNamed(context, '/TransactionScreen');
+          // Navigator.pushNamed(context, '/TransactionScreen');
           },
           child: Row(
             children: [
@@ -620,6 +622,7 @@ Widget _graphCard(context,double? todaySpending, double? totalSpending, double? 
                     radius: 40.0,
                     lineWidth: 7.0,
                     percent:monthlyLimitPercentage/100 ,
+
                     center: Text('${monthlyLimitPercentage.toStringAsFixed(0)}%',
                     style: GoogleFonts.montserrat(color: Theme.of(context).cardColor,fontSize: 18, fontWeight: FontWeight.w800),),
                     circularStrokeCap: CircularStrokeCap.round,

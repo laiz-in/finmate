@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:moneyy/presentation/routes/routes.dart';
 import 'package:moneyy/ui/succes_snackbar.dart';
 
 import '../ui/error_snackbar.dart';
@@ -43,10 +44,11 @@ void showSignOutConfirmationDialog(BuildContext context){
                         child: TextButton(
                           onPressed: () async {
                             try {
+
                             Navigator.of(context).pop(); // Close the dialog
-                            auth.signOut().then((value) {
-                            Navigator.pushNamedAndRemoveUntil(context, '/LoginScreen', (route) => false);
-                            });
+                            await auth.signOut();
+                            Navigator.pushNamedAndRemoveUntil(context, AppRoutes.logIn, (route) => false);
+                            
                             } catch (e) {
                               errorSnackbar(context, 'oh, failed to log out');
                             }
@@ -61,38 +63,6 @@ void showSignOutConfirmationDialog(BuildContext context){
               );
 }
 
-// dialog box to show theme change option is not available yet
-void showThemeChangeDialog(BuildContext context){
-  showDialog(context: context,
-  builder: (context)=>Container(
-    padding: EdgeInsets.all(15),
-    child: AlertDialog(
-      backgroundColor: Theme.of(context).primaryColor,
-      elevation: 15,
-      title: Center(
-        child: Text('Sorry! multi theme mode is not available yet',textAlign:TextAlign.center,
-                      style: GoogleFonts.montserrat(color: Color.fromARGB(255, 218, 115, 107),
-                      fontWeight: FontWeight.w600,fontSize: 15)),
-      ),
-      actions: [
-        Center(
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(12)),
-                            color: Color.fromARGB(255, 114, 170, 235),
-                          ),
-            child: TextButton(
-                              onPressed: () => Navigator.of(context).pop(),
-                              child: Text('Okay, got it',style: GoogleFonts.montserrat(fontSize: 13,color: Color.fromARGB(255, 250, 247, 247),
-                              fontWeight: FontWeight.w600),),
-                            ),
-          ),
-        ),
-      ],
-    ),
-  ));
-}
 
 // Delete account confirmation box
 void showAccountDeletionConfirmationDialog(BuildContext context){
@@ -102,7 +72,7 @@ void showAccountDeletionConfirmationDialog(BuildContext context){
                 builder: (context) => Container(
                   padding: EdgeInsets.all(15),
                   child: AlertDialog(
-                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: Theme.of(context).hintColor,
                     elevation: 15,
                     title: Center(
                       child: Text('You want to delete your aaccount? all datas will be deleted',textAlign:TextAlign.center,
@@ -138,7 +108,7 @@ void showAccountDeletionConfirmationDialog(BuildContext context){
                             await auth.currentUser!.delete();
                             Navigator.of(context).pop(); // Close the dialog
                             Navigator.pushNamedAndRemoveUntil(
-                                context, '/LoginScreen', (route) => false);
+                                context, AppRoutes.logIn, (route) => false);
                             successSnackbar(context, "User account has been deleted");
                           } catch (e) {
                             errorSnackbar(context, 'You need to login again to perform this action!');

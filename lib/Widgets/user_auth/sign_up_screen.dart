@@ -96,7 +96,7 @@ Future<void> _register() async {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
 
-        backgroundColor: Color(0xFF4C7766),
+        backgroundColor: Color.fromARGB(255, 39, 53, 47),
         body: Stack(
           children: [
 

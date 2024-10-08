@@ -36,15 +36,6 @@ class _TransactionCardState extends State<TransactionCard> {
   String timeAgo(DateTime date) {
       final DateFormat formatter = DateFormat('d MMMM y \'at\' h:mm a');
       return formatter.format(date);
-    // DateTime now = DateTime.now();
-    // Duration difference = now.difference(date);
-    // if (difference.inDays > 0) {
-    //   return '${difference.inDays}d ago';
-    // } else if (difference.inHours > 0) {
-    //   return '${difference.inHours}h ago';
-    // } else {
-    //   return '${difference.inMinutes}m ago';
-    // }
   }
 
   Future<void> _deleteTransaction() async {
@@ -308,7 +299,7 @@ class _TransactionCardState extends State<TransactionCard> {
                       label: Text('Edit',style: GoogleFonts.montserrat(color:Colors.white,
                       fontWeight: FontWeight.w600),),
                       style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all<Color>(Color.fromARGB(255, 181, 205, 226)),
+                        backgroundColor: WidgetStateProperty.all<Color>(Color.fromARGB(255, 136, 182, 221)),
                         elevation: WidgetStateProperty.all<double>(0), // No elevation
                         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
