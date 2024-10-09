@@ -20,6 +20,18 @@ class ExpensesFirebaseService {
       if (userId == null) {
         throw Exception("User is not logged in");
       }
+      print("===================================================");
+      print(expense.createdAt);
+      print(expense.uidOfTransaction);
+      print(expense.spendingAmount);
+      print(expense.spendingCategory);
+      print(expense.spendingDescription);
+      print(expense.spendingDate);
+
+
+
+
+    print("===================================================");
 
       // Adding the expense to Firestore
       await _firestore
@@ -28,6 +40,8 @@ class ExpensesFirebaseService {
           .collection('spendings')
           .doc(expense.uidOfTransaction) // Use uidOfTransaction as the document ID for the expense
           .set(expense.toJson());
+
+
     } catch (e) {
       throw Exception("Failed to add expense: $e");
     }
@@ -36,69 +50,66 @@ class ExpensesFirebaseService {
  // LAST 7 DAYS EXPENSE
   Future<Map<String, double>> fetchLastSevenDayExpenses() async {
     try {
-      final now = DateTime.now();
-      final sevenDaysAgo = now.subtract(const Duration(days: 6));
+    final now = DateTime.now();
+    final fifteenDaysAgo = now.subtract(const Duration(days: 14)); // 15 days back
 
-      final userId = FirebaseAuth.instance.currentUser?.uid;
-      if (userId == null) {
-        throw Exception("User is not authenticated.");
-      }
-
-      // Query expenses for the last 7 days
-      final querySnapshot = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('spendings')
-          .where('spendingDate', isGreaterThanOrEqualTo: Timestamp.fromDate(sevenDaysAgo))
-          .get();
-
-      final expenses = querySnapshot.docs
-          .map((doc) => ExpensesModel.fromJson(doc.data() as Map<String, dynamic>, doc.id))
-          .toList();
-
-      // Initialize a map to store summed expenses per day of the week
-      Map<String, double> expensesPerDay = {
-        'mon': 0,
-        'sun': 0,
-        'sat': 0,
-        'fri': 0,
-        'thu': 0,
-        'wed': 0,
-        'tue': 0,
-      };
-
-      for (final expense in expenses) {
-        final weekday = expense.spendingDate.weekday;
-        final key = _getDayKey(weekday); // Map day number to string (mon, tue, etc.)
-        expensesPerDay[key] = expensesPerDay[key]! + expense.spendingAmount;
-      }
-
-      return expensesPerDay;
-    } catch (e) {
-      throw Exception('Failed to fetch last 7 day expenses: $e');
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    if (userId == null) {
+      throw Exception("User is not authenticated.");
     }
+
+    // Query expenses for the last 15 days, filtering by category
+    final querySnapshot = await _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('spendings')
+        .where('spendingDate', isGreaterThanOrEqualTo: Timestamp.fromDate(fifteenDaysAgo))
+        .where('spendingCategory', whereIn: ['Groceries', 'Food', 'Transport']) // Filter by category
+        .get();
+
+    final expenses = querySnapshot.docs
+        .map((doc) => ExpensesModel.fromJson(doc.data(), doc.id))
+        .toList();
+
+    // Initialize a map to store summed expenses per date (key formatted as "9th", "8th", etc.)
+    Map<String, double> expensesPerDay = {};
+
+    // Iterate through the last 15 days
+    for (int i = 0; i <= 14; i++) {
+      final day = now.subtract(Duration(days: i));
+      final dayKey = _formatDayWithSuffix(day.day); // Format the day (e.g., "9th", "8th")
+      expensesPerDay[dayKey] = 0; // Initialize each day with 0
+    }
+
+    // Sum the expenses per day
+    for (final expense in expenses) {
+      final expenseDate = expense.spendingDate;
+      final dayKey = _formatDayWithSuffix(expenseDate.day);
+      if (expensesPerDay.containsKey(dayKey)) {
+        expensesPerDay[dayKey] = expensesPerDay[dayKey]! + expense.spendingAmount;
+      }
+    }
+
+    return expensesPerDay;
+  } catch (e) {
+    throw Exception('Failed to fetch last 15 days expenses: $e');
   }
+}
 
-  // Helper method to map weekday number to a string key
-  String _getDayKey(int weekday) {
-    switch (weekday) {
-      case DateTime.monday:
-        return 'mon';
-      case DateTime.sunday:
-        return 'sun';
-      case DateTime.saturday:
-        return 'sat';
-      case DateTime.friday:
-        return 'fri';
-      case DateTime.thursday:
-        return 'thu';
-      case DateTime.wednesday:
-        return 'wed';
-      case DateTime.tuesday:
-        return 'tue';
-      default:
-        return 'mon'; // Fallback in case of an issue
-    }
+String _formatDayWithSuffix(int day) {
+  if (day >= 11 && day <= 13) {
+    return '${day}th';
+  }
+  switch (day % 10) {
+    case 1:
+      return '${day}st';
+    case 2:
+      return '${day}nd';
+    case 3:
+      return '${day}rd';
+    default:
+      return '${day}th';
+  }
   }
 
 

@@ -30,15 +30,38 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
       child: FutureBuilder<dartz.Either<String, List<ExpensesEntity>>>(
         future: _recentExpensesFuture,
         builder: (context, snapshot) {
+
+
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: Center());
-          } else if (snapshot.hasError) {
+            return Container(
+                            padding: EdgeInsets.fromLTRB(25,15,25,10),
+                            width: double.infinity,
+                            height: 150,
+                            decoration: BoxDecoration(
+                            boxShadow: [
+                            BoxShadow(
+                            color: const Color.fromARGB(255, 68, 68, 68).withOpacity(0.10),
+                            spreadRadius: 12,
+                            blurRadius: 17,
+                            offset: const Offset(0, 4), // changes position of shadow
+                            ),
+                            ],
+                            borderRadius: const BorderRadius.all(Radius.circular(20)),
+                            color: Theme.of(context).hintColor,
+                          ),
+                        );
+                      }
+          
+          
+          else if (snapshot.hasError) {
             // Display error message
             WidgetsBinding.instance.addPostFrameCallback((_) {
               errorSnackbar(context, snapshot.error.toString());
             });
             return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (snapshot.hasData) {
+          }
+          
+          else if (snapshot.hasData) {
             return snapshot.data!.fold(
               (errorMessage) {
                 // Display error message from the use case
@@ -53,6 +76,8 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
               },
             );
           }
+
+
           return const Center(child: Text('No Data Found'));
         },
       ),
@@ -111,7 +136,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                         ),
                         Text(
                           "no transactions found",
-                          style: GoogleFonts.montserrat(
+                          style: GoogleFonts.poppins(
                             fontSize: 15,
                             fontWeight: FontWeight.w600,
                             color: Theme.of(context).cardColor.withOpacity(0.6),
@@ -145,7 +170,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                                     style: GoogleFonts.montserrat(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
-                                      color: Theme.of(context).cardColor,
+                                      color: Theme.of(context).canvasColor,
                                     ),
                                   ),
                                 ],
@@ -165,7 +190,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                                       style: GoogleFonts.poppins(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
-                                        color: Theme.of(context).cardColor.withOpacity(0.8),
+                                        color: Theme.of(context).canvasColor,
                                       ),
                                     ),
                                   ),
@@ -178,10 +203,10 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                                       children: [
                                         Text(
                                           timeAgo(transaction.spendingDate),
-                                          style: GoogleFonts.montserrat(
+                                          style: GoogleFonts.poppins(
                                             fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                            color: Theme.of(context).cardColor.withOpacity(0.8),
+                                            fontWeight: FontWeight.w500,
+                                            color: Theme.of(context).canvasColor.withOpacity(0.7),
                                           ),
                                         ),
                                       ],
@@ -194,7 +219,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                         ),
                       ),
                       if (index != recentExpenses.length - 1)
-                        const Divider(color: Color.fromARGB(255, 154, 184, 169)),
+                        Divider(color: Theme.of(context).canvasColor.withOpacity(0.1),thickness: 1,),
                     ],
                   );
                 }).toList(),

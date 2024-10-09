@@ -7,6 +7,7 @@ import 'package:moneyy/bloc/home_screen/home_screen_bloc.dart';
 import 'package:moneyy/bloc/home_screen/home_screen_event.dart';
 import 'package:moneyy/bloc/home_screen/home_screen_state.dart';
 import 'package:moneyy/domain/entities/auth/user.dart';
+import 'package:moneyy/presentation/screens/expenses/add_expense_dialogue.dart';
 import 'package:moneyy/presentation/screens/home_screen/widgets/appbar/app_bar_widget.dart';
 import 'package:moneyy/presentation/screens/home_screen/widgets/loading_screen/loading_screen.dart';
 import 'package:moneyy/presentation/screens/home_screen/widgets/recent_expenses/recent_expenses_screen.dart';
@@ -28,7 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Dispatch the event to fetch user data
     context.read<HomeScreenBloc>().add(FetchUserData());
   }
 
@@ -52,7 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
           if (state is HomeScreenLoading) {
             return ShimmerScreen();
             // Show shimmer effect while loading
-          
           } else if (state is HomeScreenLoaded) {
             final UserEntity user = state.user;
 
@@ -129,14 +128,14 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // showDialog(
-          //   context: context,
-          //   builder: (context) => Dialog(
-          //     backgroundColor: Colors.transparent,
-          //     insetPadding: EdgeInsets.all(25),
-          //     child: AddSpendingBottomSheet(), // Renamed as AddSpendingDialog for clarity
-          //   ),
-          // );
+          showDialog(
+            context: context,
+            builder: (context) => Dialog(
+              backgroundColor: Colors.transparent,
+              insetPadding: EdgeInsets.all(25),
+              child: AddSpendingBottomSheet(), // Renamed as AddSpendingDialog for clarity
+            ),
+          );
         },
         backgroundColor: Theme.of(context).cardColor,
         elevation: 5,

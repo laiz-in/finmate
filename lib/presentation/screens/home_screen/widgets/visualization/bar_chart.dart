@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart' as dartz; // Add alias
+import 'package:dartz/dartz.dart' as dartz;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,7 +16,6 @@ class DaywiseBarchart extends StatefulWidget {
 
 class _DaywiseBarchartState extends State<DaywiseBarchart> {
   late Future<dartz.Either<String, Map<String, double>>> _expensesFuture;
-  
 
   @override
   void initState() {
@@ -28,32 +27,29 @@ class _DaywiseBarchartState extends State<DaywiseBarchart> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(0.0), // Use padding instead of Scaffold
+      padding: const EdgeInsets.all(0.0),
       child: FutureBuilder<dartz.Either<String, Map<String, double>>>(
         future: _expensesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center();
+            return _loadingContainer(context);
           } else if (snapshot.hasError) {
-            // Show error if the Future itself fails
             WidgetsBinding.instance.addPostFrameCallback((_) {
               errorSnackbar(context, snapshot.error.toString());
             });
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (snapshot.hasData) {
-            // Handle Either (error or success) type here
             return snapshot.data!.fold(
               (errorMessage) {
-                // Show error message
+                print(errorMessage);
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   errorSnackbar(context, errorMessage);
                 });
                 return Center(child: Text('Error: $errorMessage'));
               },
               (expensesMap) {
-                // On success, build the line graph with the returned expenses
                 List<double> expenses = expensesMap.values.toList();
-                return _buildLineGraph(expenses);
+                return _buildBarChart(expenses);
               },
             );
           }
@@ -63,84 +59,117 @@ class _DaywiseBarchartState extends State<DaywiseBarchart> {
     );
   }
 
-  // Widget to build the line graph with the fetched data
-  Widget _buildLineGraph(List<double> expenses) {
-    double maxY = expenses.reduce((a, b) => a > b ? a : b);
+  // Loading container
+  Widget _loadingContainer(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(25,15,25,10),
+      padding: const EdgeInsets.fromLTRB(25, 15, 25, 10),
       width: double.infinity,
-      height: 100, // Keep the height same as the bar chart
+      height: 100,
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
             color: const Color.fromARGB(255, 68, 68, 68).withOpacity(0.10),
             spreadRadius: 12,
             blurRadius: 17,
-            offset: const Offset(0, 4), // changes position of shadow
+            offset: const Offset(0, 4),
           ),
         ],
         borderRadius: const BorderRadius.all(Radius.circular(20)),
         color: Theme.of(context).hintColor,
       ),
-      child: LineChart(
-        LineChartData(
-          minX: 0,
-          maxX: 6,
+    );
+  }
+
+  // Widget to build the bar chart with the fetched data
+  Widget _buildBarChart(List<double> expenses) {
+    double maxY = expenses.reduce((a, b) => a > b ? a : b);
+
+      List<double> expensesreversed = expenses.reversed.toList();
+
+    return Container(
+      padding: const EdgeInsets.fromLTRB(15, 15, 15, 10),
+      width: double.infinity,
+      height: 150, // Adjust height for bar chart
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: const Color.fromARGB(255, 68, 68, 68).withOpacity(0.10),
+            spreadRadius: 12,
+            blurRadius: 17,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        color: Theme.of(context).hintColor,
+      ),
+      child: BarChart(
+        BarChartData(
+          alignment: BarChartAlignment.spaceEvenly,
+          maxY: maxY,// Adjust to add space above the tallest bar
           minY: 0,
-          // You might want to set maxY based on your data
-          maxY: maxY,
-          gridData: FlGridData(show: true,drawVerticalLine: true,getDrawingHorizontalLine: (value){
-            return FlLine(
-            color: Theme.of(context).hintColor,
-            strokeWidth: 1
-            );
-          }),
           titlesData: FlTitlesData(
             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            leftTitles: AxisTitles(
+              sideTitles: SideTitles(
+                showTitles: true,
+                getTitlesWidget: (value, meta) {
+                  return Padding(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Text(
+                      value.toInt().toString(),
+                      style: GoogleFonts.poppins(
+                        fontSize: 8,
+                        color: Theme.of(context).canvasColor,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
             bottomTitles: AxisTitles(
               sideTitles: SideTitles(
                 showTitles: true,
-                interval: 1, // Ensure labels are shown at integer intervals
+                interval: 1,
                 getTitlesWidget: (double value, TitleMeta meta) {
-                  if (value % 1 == 0) {
-                    // Only show labels for integer x-values
-                    DateTime now = DateTime.now();
-                    DateTime date = now.subtract(Duration(days: 6 - value.toInt()));
-                    String dayName = DateFormat('EEE').format(date).toUpperCase();
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: Text(
-                        dayName,
-                        style: GoogleFonts.poppins(
-                          color: Theme.of(context).canvasColor,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 11,
-                        ),
+                  DateTime now = DateTime.now();
+                  DateTime date = now.subtract(Duration(days: 14 - value.toInt()));
+                  String dayLabel = DateFormat('d').format(date);
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 5.0,left: 0),
+                    child: Text(
+                      dayLabel,
+                      style: GoogleFonts.poppins(
+                        color: Theme.of(context).canvasColor,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 7,
                       ),
-                    );
-                  } else {
-                    return const SizedBox.shrink();
-                  }
+                    ),
+                  );
                 },
               ),
             ),
             rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
           ),
+          gridData: FlGridData(show: false, drawVerticalLine: false),
           borderData: FlBorderData(show: false),
-          lineBarsData: [
-            LineChartBarData(
-              isCurved: true, // Curved lines for smoother appearance
-              color: Theme.of(context).canvasColor,
-              barWidth: 2, // Adjust the line thickness
-              isStrokeCapRound: true, // Rounded line edges
-              dotData: FlDotData(show: true), // Show dots on data points
-              belowBarData: BarAreaData(show: false),
-              spots: expenses.asMap().entries.map((entry) {
-                return FlSpot(entry.key.toDouble(), entry.value);
-              }).toList(),
-            ),
-          ],
+          barGroups: expensesreversed.asMap().entries.map((entry) {
+            return BarChartGroupData(
+              x: entry.key,
+              barRods: [
+                BarChartRodData(
+                  toY: entry.value,
+                  color: Theme.of(context).canvasColor,
+                  width: 10, // Adjust width of the bars
+                  borderRadius: BorderRadius.circular(6),
+                  backDrawRodData: BackgroundBarChartRodData(
+                    show: true,
+                    toY: maxY,
+                    color: Colors.grey.withOpacity(0.2),
+                  ),
+                ),
+              ],
+            );
+          }).toList(),
         ),
       ),
     );
