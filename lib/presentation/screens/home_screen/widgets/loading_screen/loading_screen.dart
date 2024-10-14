@@ -67,13 +67,14 @@ class ShimmerScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
           
             children: [
+              SizedBox(height: 30,),
           
               Shimmer.fromColors(
                 baseColor: Theme.of(context).highlightColor,
                 highlightColor: Theme.of(context).highlightColor.withOpacity(0.7),
                 child: Container(
                   width: double.infinity,
-                  height: 175,
+                  height: 205,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                     color:  Theme.of(context).highlightColor,
@@ -82,14 +83,14 @@ class ShimmerScreen extends StatelessWidget {
                 ),
               ),
           
-              SizedBox(height: 37),
+              SizedBox(height: 32),
           
               Shimmer.fromColors(
                 baseColor:  Theme.of(context).highlightColor,
                 highlightColor: Theme.of(context).highlightColor.withOpacity(0.7),
                 child: Container(
                   width: double.infinity,
-                  height: 150,
+                  height: 165,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                     color: Theme.of(context).highlightColor,
@@ -105,7 +106,7 @@ class ShimmerScreen extends StatelessWidget {
                 highlightColor:  Theme.of(context).highlightColor.withOpacity(0.7),
                 child: Container(
                   width: double.infinity,
-                  height: 70,
+                  height: 120,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                     color:  Theme.of(context).highlightColor,

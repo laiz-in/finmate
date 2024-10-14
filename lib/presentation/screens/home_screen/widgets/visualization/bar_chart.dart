@@ -41,7 +41,6 @@ class _DaywiseBarchartState extends State<DaywiseBarchart> {
           } else if (snapshot.hasData) {
             return snapshot.data!.fold(
               (errorMessage) {
-                print(errorMessage);
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   errorSnackbar(context, errorMessage);
                 });
@@ -64,7 +63,7 @@ class _DaywiseBarchartState extends State<DaywiseBarchart> {
     return Container(
       padding: const EdgeInsets.fromLTRB(25, 15, 25, 10),
       width: double.infinity,
-      height: 100,
+      height: 120,
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -89,7 +88,7 @@ class _DaywiseBarchartState extends State<DaywiseBarchart> {
     return Container(
       padding: const EdgeInsets.fromLTRB(15, 15, 15, 10),
       width: double.infinity,
-      height: 150, // Adjust height for bar chart
+      height: 120, // Adjust height for bar chart
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(

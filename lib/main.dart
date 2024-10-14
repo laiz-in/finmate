@@ -5,13 +5,17 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:moneyy/bloc/authentication/auth_bloc.dart';
 import 'package:moneyy/bloc/authentication/auth_event.dart';
 import 'package:moneyy/bloc/authentication/auth_guard.dart';
+import 'package:moneyy/bloc/expenses/expenses_bloc.dart';
 import 'package:moneyy/bloc/home_screen/home_screen_bloc.dart';
 import 'package:moneyy/bloc/themes/theme_cubit.dart';
 import 'package:moneyy/config/firebase_options.dart';
 import 'package:moneyy/core/colors/theme.dart';
 import 'package:moneyy/data/repository/home/home_repository.dart';
+import 'package:moneyy/domain/usecases/expenses/add_expense_usecase.dart';
+import 'package:moneyy/domain/usecases/expenses/last_seven_day_expense_usecase.dart';
+import 'package:moneyy/domain/usecases/expenses/last_three_expense_usecase.dart';
+import 'package:moneyy/domain/usecases/expenses/total_expenses_usecase.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
-// import 'package:moneyy/presentation/screens/home_screen/home_screen.dart';
 import 'package:moneyy/service_locator.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -43,6 +47,14 @@ void main() async {
       create: (context) => AuthBloc()..add(AuthCheckRequested()),
     ),
 
+    BlocProvider(
+      create: (context) => ExpensesBloc(
+        sl<TotalExpensesUseCase>(),
+        sl<LastThreeExpensesUseCase>(),
+        sl<LastSevenDayExpensesUseCase>(),
+        sl<AddExpensesUseCase>(),
+      ),)
+,
     // ThemeCubit to manage theme changes and load the theme from storage
     BlocProvider(
       create: (context) => sl<ThemeCubit>()..loadTheme(),
@@ -74,15 +86,6 @@ class MyApp extends StatelessWidget {
           routes: {
             '/': (context) => const SplashScreen(),
             '/auth': (context) => const AuthGuard(),
-            // '/TransactionScreen': (context) =>  AllSpendings(),
-            // '/ProfileScreen': (context) =>  ProfileSettings(),
-            // '/AllBillsScreen': (context) =>  AllBills(),
-            // '/AllIndividuals': (context) =>  AllLiabilities(),
-            // '/AllReminders': (context) =>  AllReminders(),
-            // '/AllStatistics': (context) =>  AllStatistics(),
-            // '/changeEmail': (context) => const ResetEmail(),
-            // '/changeDailyLimit': (context) => const ResetDailyLimit(),
-            // '/changeMonthlyLimit': (context) => const ResetMonthlyLimit(),
           },
           theme: AppTheme.lightTheme,  // Light theme
           darkTheme: AppTheme.darkTheme,  // Dark theme
@@ -90,6 +93,5 @@ class MyApp extends StatelessWidget {
           title: 'Finmate',
             );
           });
-  }
-
-}
+        }
+      }

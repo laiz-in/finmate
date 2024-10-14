@@ -55,6 +55,7 @@ class _RegisterButtonWidgetState extends State<RegisterButtonWidget> {
           });
           errorSnackbar(context, l.toString());
         },
+
         (r) {
           setState(() {
             isLoading = false; // Hide animation on success
@@ -67,6 +68,7 @@ class _RegisterButtonWidgetState extends State<RegisterButtonWidget> {
           );
         },
       );
+      
     }
   }
 

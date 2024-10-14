@@ -32,36 +32,22 @@ final sl = GetIt.instance;
 Future<void> initializeDependencies() async {
 
   // spendings related
-  
   sl.registerLazySingleton(() => LastSevenDayExpensesUseCase(sl()));
   sl.registerLazySingleton(() => ExpensesFirebaseService());
   sl.registerLazySingleton<ExpensesRepository>(() => ExpensesRepositoryImpl(sl()));
   sl.registerLazySingleton(() => TotalExpensesUseCase(sl()));
   sl.registerLazySingleton(() => LastThreeExpensesUseCase(sl()));
-
   sl.registerLazySingleton(() => AddExpensesUseCase(sl()));
   sl.registerFactory(() => ExpensesBloc(sl(), sl(), sl(), sl()));
 
 
   // Register Authentication-related services
-  sl.registerSingleton<AuthFirebaseService>(
-    AuthFirebaseServiceImpl(),
-  );
-  sl.registerSingleton<AuthRepository>(
-    AuthRepositoryImpl(),
-  );
-  sl.registerSingleton<SignInUseCase>(
-    SignInUseCase(),
-  );
-  sl.registerSingleton<SignUpUseCase>(
-  SignUpUseCase(),
-  );
-  sl.registerSingleton<SignOutUseCase>(
-  SignOutUseCase(),
-  );
-  sl.registerSingleton<AccountDeletionUseCase>(
-    AccountDeletionUseCase(),
-  );
+  sl.registerSingleton<AuthFirebaseService>(AuthFirebaseServiceImpl(),);
+  sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(),);
+  sl.registerSingleton<SignInUseCase>(SignInUseCase(),);
+  sl.registerSingleton<SignUpUseCase>(SignUpUseCase(),);
+  sl.registerSingleton<SignOutUseCase>(SignOutUseCase(),);
+  sl.registerSingleton<AccountDeletionUseCase>(AccountDeletionUseCase(),);
 
 
   // Register settings page related services

@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:moneyy/domain/entities/spending/expenses.dart';
+import 'package:moneyy/data/models/expenses/user_expenses.dart';
 import 'package:moneyy/domain/repository/total_spendings/expenses.dart';
 
 class AddExpensesUseCase {
@@ -7,7 +7,7 @@ class AddExpensesUseCase {
 
   AddExpensesUseCase(this.repository);
 
-  Future<Either<String, void>> call(ExpensesEntity expense) {
-    return repository.addExpense(expense);
+  Future<Either> call({ExpensesModel? params}) {
+    return repository.addExpense(params!);
   }
 }

@@ -1,13 +1,19 @@
+// expenses_state.dart
 import 'package:moneyy/domain/entities/spending/expenses.dart';
 
 abstract class ExpensesState {}
 
-class ExpensesLoading extends ExpensesState {}
+class ExpensesLoading extends ExpensesState {
+  final bool isFirstFetch;
+
+  ExpensesLoading({this.isFirstFetch = true});
+}
 
 class ExpensesLoaded extends ExpensesState {
   final List<ExpensesEntity> expenses;
+  final bool hasMore; // Indicates if more expenses are available for lazy loading
 
-  ExpensesLoaded(this.expenses);
+  ExpensesLoaded(this.expenses, {this.hasMore = true});
 }
 
 class ExpensesError extends ExpensesState {
@@ -17,10 +23,7 @@ class ExpensesError extends ExpensesState {
 }
 
 class LastSevenDayExpensesLoaded extends ExpensesState {
-  final Map<String, double> expenses;
+  final Map<String, double> expensesMap;
 
-  LastSevenDayExpensesLoaded(this.expenses);
-
-  @override
-  List<Object> get props => [expenses];
+  LastSevenDayExpensesLoaded(this.expensesMap);
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/bloc/expenses/expenses_bloc.dart';
 import 'package:moneyy/bloc/expenses/expenses_event.dart';
 import 'package:moneyy/bloc/expenses/expenses_state.dart';
@@ -8,61 +9,193 @@ import 'package:moneyy/domain/usecases/expenses/add_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/last_seven_day_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/last_three_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/total_expenses_usecase.dart';
+import 'package:moneyy/presentation/screens/expenses/each_card.dart';
 import 'package:moneyy/presentation/widgets/common_appbar.dart';
 import 'package:moneyy/service_locator.dart';
 
-class SpendingScreen extends StatelessWidget {
+class SpendingScreen extends StatefulWidget {
   const SpendingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  _SpendingScreenState createState() => _SpendingScreenState();
+}
 
-    // Use BlocProvider to provide ExpensesBloc to the widget tree
+class _SpendingScreenState extends State<SpendingScreen> {
+  final ScrollController _scrollController = ScrollController();
+  String searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Set up scroll listener to detect when user reaches bottom for lazy loading
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        // Fetch more expenses when scrolled to bottom
+        BlocProvider.of<ExpensesBloc>(context).add(FetchMoreExpensesEvent());
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Move the BlocProvider higher up in the widget tree
     return BlocProvider(
       create: (context) => ExpensesBloc(
-        sl<TotalExpensesUseCase>(), // Use case for retrieving all expenses
+        sl<TotalExpensesUseCase>(),
         sl<LastThreeExpensesUseCase>(),
-        sl<LastSevenDayExpensesUseCase>(), // Add this if needed for last three expenses
+        sl<LastSevenDayExpensesUseCase>(),
+        sl<AddExpensesUseCase>(),
+      )..add(FetchAllExpensesEvent()),
 
-        sl<AddExpensesUseCase>(), // Use case for adding expenses
-
-      )..add(FetchAllExpensesEvent()), // Dispatch event to fetch all expenses
-
-
+      // The rest of the SpendingScreen is inside the BlocProvider now
       child: Scaffold(
-
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
         appBar: CustomAppBarCommon(
           title: 'View All Expenses',
         ),
 
+        body: Column(
+          children: [
+            // Sticky Search Bar and Filter
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 5.0),
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Search Bar
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).highlightColor.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                      padding:
+                          const EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.search,
+                            color: Theme.of(context).canvasColor.withOpacity(0.5),
+                          ),
+                          const SizedBox(width: 10.0),
+                          Expanded(
+                            child: TextField(
+                              autofocus: false,
+                              onChanged: (value) {
+                                setState(() {
+                                  searchQuery = value;
+                                });
 
-        body: BlocConsumer<ExpensesBloc, ExpensesState>(
-          listener: (context, state) {
-            if (state is ExpensesError) {
-              errorSnackbar(context, state.message);
-            }
-          },
-          builder: (context, state) {
-            if (state is ExpensesLoading) {
-              return const Center(child: CircularProgressIndicator(color: Colors.yellow));
-            } else if (state is ExpensesLoaded) {
-              return ListView.builder(
-                itemCount: state.expenses.length,
-                itemBuilder: (context, index) {
-                  final expense = state.expenses[index];
-                  return ListTile(
-                    title: Text(expense.spendingDescription),
-                    subtitle: Text(expense.spendingCategory),
-                    trailing: Text("\$${expense.spendingAmount.toStringAsFixed(2)}"),
-                  );
+                                // Use parent context to trigger search event
+                                final expensesBloc = context.read<ExpensesBloc>();
+                                expensesBloc.add(SearchExpensesEvent(searchQuery));
+                              },
+                              autocorrect: false,
+                              enableSuggestions: false,
+                              style: GoogleFonts.montserrat(
+                                  color: Theme.of(context).canvasColor,
+                                  fontWeight: FontWeight.w600),
+                              decoration: InputDecoration(
+                                hintText: 'Search..',
+                                hintStyle: GoogleFonts.montserrat(
+                                  color: Theme.of(context)
+                                      .primaryColorDark
+                                      .withOpacity(0.7),
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  // Filter Icon
+                  IconButton(
+                    icon: Icon(
+                      Icons.sort,
+                      color: Theme.of(context).canvasColor,
+                      size: 35,
+                    ),
+                    onPressed: () {
+                      // Filter logic can go here
+                    },
+                  ),
+                ],
+              ),
+            ),
+
+            // Expenses List with Lazy Loading
+            Expanded(
+              child: BlocConsumer<ExpensesBloc, ExpensesState>(
+                listener: (context, state) {
+                  if (state is ExpensesError) {
+                    errorSnackbar(context, state.message);
+                  }
                 },
-              );
-            } else if (state is ExpensesError) {
-              return Center(child: Text(state.message));
-            }
-            return const Center(child: Text('No Expenses Found'));
-          },
+                builder: (context, state) {
+                  if (state is ExpensesLoading && state.isFirstFetch) {
+                    return Center(
+                        child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Theme.of(context).canvasColor));
+                  } else if (state is ExpensesLoaded) {
+                    final expenses = state.expenses;
+
+                    if (expenses.isEmpty) {
+                      return const Center(child: Text('No Expenses Found'));
+                    }
+
+                    return ListView.builder(
+                      controller: _scrollController,
+                      itemCount: expenses.length + (state.hasMore ? 1 : 0), // +1 for lazy loading indicator
+                      itemBuilder: (context, index) {
+                        if (index < expenses.length) {
+                          final expense = expenses[index];
+                          return TransactionCard(
+                            transaction: expense,
+                            onUpdate: () {
+    // Update logic
+  },
+  onDelete: () {
+    // Refresh the expenses list or state after deletion
+  },
+                          );
+
+                        } else {
+                          // Display loading indicator when fetching more
+                          return Center(
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Theme.of(context).canvasColor,
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  } else if (state is ExpensesError) {
+                    return Center(child: Text('Error in loading expenses'));
+                  }
+
+                  return const Center(child: Text('No Expenses Found'));
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

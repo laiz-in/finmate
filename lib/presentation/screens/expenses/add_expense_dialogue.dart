@@ -1,9 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
 import 'package:moneyy/common/widgets/success_snackbar.dart';
+import 'package:moneyy/data/models/expenses/user_expenses.dart';
+import 'package:moneyy/domain/usecases/expenses/add_expense_usecase.dart';
+import 'package:moneyy/service_locator.dart';
 
 
 class AddSpendingBottomSheet extends StatefulWidget {
@@ -17,8 +19,13 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
   String _spendingCategory = 'Groceries';
   String _spendingDescription = '';
   DateTime? _spendingDate = DateTime.now();
+  final DateTime? _createdAt = DateTime.now();
+
   final TextEditingController _dateController = TextEditingController();
   bool _isLoading = false;
+  
+
+
 
 
   final List<String> _categories = [
@@ -27,6 +34,7 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
     'Food',
     'Entertainment',
     'Transport',
+    'Bills',
     'Other'
   ];
 
@@ -55,10 +63,10 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 15.0),
+      padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 10.0),
       decoration: BoxDecoration(
         
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.all(
         Radius.circular(20)
         ),
@@ -99,7 +107,7 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
                   fontWeight: FontWeight.w500,
                 ),
                 filled: true,
-                fillColor: Theme.of(context).highlightColor,
+                fillColor: Theme.of(context).cardColor,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12.0)),
                   borderSide: BorderSide.none,
@@ -110,6 +118,9 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter an amount';
+                }
+                else if (num.tryParse(value!)! >999999){
+                  return 'Maximum expense can be added is 999999';
                 }
                 try {
                   _spendingAmount = double.parse(value);
@@ -133,14 +144,14 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
               decoration: InputDecoration(
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 filled: true,
-                fillColor: Theme.of(context).highlightColor,
+                fillColor: Theme.of(context).cardColor,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12.0)),
                   borderSide: BorderSide.none,
                 ),
                 contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
               ),
-              dropdownColor: Theme.of(context).scaffoldBackgroundColor,
+              dropdownColor: Theme.of(context).cardColor,
               borderRadius: BorderRadius.all(Radius.circular(15)),
               items: _categories.map((category) {
                 return DropdownMenuItem<String>(
@@ -181,6 +192,7 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
                 color: Theme.of(context).canvasColor,
                 fontSize: 17,
                 fontWeight: FontWeight.w600,
+              
               ),
               decoration: InputDecoration(
                 hintText: 'Description',
@@ -190,7 +202,7 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
                   fontWeight: FontWeight.w500,
                 ),
                 filled: true,
-                fillColor: Theme.of(context).highlightColor,
+                fillColor: Theme.of(context).cardColor,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12.0)),
                   borderSide: BorderSide.none,
@@ -217,7 +229,7 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
               ),
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Theme.of(context).highlightColor,
+                fillColor: Theme.of(context).cardColor,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(12.0)),
                   borderSide: BorderSide.none,
@@ -235,7 +247,7 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
               },
             ),
             
-            SizedBox(height: 15),
+            SizedBox(height: 20),
             
             // Add button
             Row(
@@ -256,7 +268,7 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
                   },
                 ),
       
-                SizedBox(width: 10,),
+                SizedBox(width: 15,),
       
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
@@ -264,18 +276,26 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.0),
                     ),
-                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 27.0),
+                    padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 30.0),
                   ),
                   child: _isLoading
                       ?Center(
-                        child: SizedBox(
-                          height: 20,width: 20,
-                          child: CircularProgressIndicator(
-                            color: Theme.of(context).scaffoldBackgroundColor,strokeWidth: 2,),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 13.0,right: 13,top: 3),
+                          child: SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: Center(  // Center the CircularProgressIndicator
+                                    child: CircularProgressIndicator(
+                                      color: Theme.of(context).scaffoldBackgroundColor,
+                                      strokeWidth: 2,
+                                    ),
+                                  ),
+                                ),
                         ),
                       )
                       : Text(
-                          '  Add +  ',
+                          'Add +',
                           style: GoogleFonts.poppins(
                             fontSize: 16,
                             color: Theme.of(context).scaffoldBackgroundColor,
@@ -286,60 +306,45 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
 
                   
                   onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
+                    if (_formKey.currentState!.validate())
+                    {
+                      // set the state
                       setState(() {
                         _isLoading = true;
                       });
                       
-                      final user = FirebaseAuth.instance.currentUser;
-                      if (user != null) {
-                        try {
-                          final userDocRef = FirebaseFirestore.instance.collection("users").doc(user.uid);
-                          final userDocSnapshot = await userDocRef.get();
-                          final currentTotalSpending = userDocSnapshot.get('totalSpending') ?? 0.0;
-                          final newTotalSpending = currentTotalSpending + _spendingAmount;
+                      var result = await sl<AddExpensesUseCase>().call(
+                          params: ExpensesModel(
+                            uidOfTransaction: "",
+                            spendingAmount: _spendingAmount,
+                            spendingCategory: _spendingCategory,
+                            spendingDate: _spendingDate!,
+                            spendingDescription: _spendingDescription,
+                            createdAt: _createdAt!,
+                          ),
+                        );
 
-                          await userDocRef.update({'totalSpending': newTotalSpending});
-                          final newSpendingRef = FirebaseFirestore.instance
-                              .collection("users")
-                              .doc(user.uid)
-                              .collection("spendings")
-                              .doc(); // Create a DocumentReference with a generated ID
+                      result.fold(
+                          //ERROR
+                          (l) {
+                            setState(() {
+                              _isLoading = false; // Hide animation on error
+                            });
+                            errorSnackbar(context, l.toString());
+                          },
 
-                          await newSpendingRef.set({
-                            'spendingAmount': _spendingAmount,
-                            'spendingCategory': _spendingCategory,
-                            'spendingDescription': _spendingDescription,
-                            'spendingDate': _spendingDate,
-                            'createdAt': FieldValue.serverTimestamp(),
-                            'uidOfTransaction': newSpendingRef.id, // Store the generated document ID
-                          });
-                          
-                          if (mounted){
-                          successSnackbar(context, 'Spending added successfully!');
-
-                          Navigator.of(context).pop();
-                          }
-
-
-                        } catch (e) {
-                          errorSnackbar(context,"Error adding spending: $e");
-                        } finally {
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        }
-                      } else {
-                        errorSnackbar(context, 'User not logged in!');
-                        setState(() {
-                          _isLoading = false;
-                        });
-                      }
+                          // SUCCESS
+                          (r) {
+                            setState(() {
+                              _isLoading = false; // Hide animation on success
+                            });
+                            successSnackbar(context, "Expense added succesfully");
+                            Navigator.of(context).pop();
+                          },
+                        );
                     }
-                  },
-                  
+                  }
                 ),
-      
       
               ],
             ),

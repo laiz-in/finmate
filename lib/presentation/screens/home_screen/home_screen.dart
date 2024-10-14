@@ -6,7 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/bloc/home_screen/home_screen_bloc.dart';
 import 'package:moneyy/bloc/home_screen/home_screen_event.dart';
 import 'package:moneyy/bloc/home_screen/home_screen_state.dart';
+import 'package:moneyy/core/colors/colors.dart';
 import 'package:moneyy/domain/entities/auth/user.dart';
+import 'package:moneyy/presentation/routes/routes.dart';
 import 'package:moneyy/presentation/screens/expenses/add_expense_dialogue.dart';
 import 'package:moneyy/presentation/screens/home_screen/widgets/appbar/app_bar_widget.dart';
 import 'package:moneyy/presentation/screens/home_screen/widgets/loading_screen/loading_screen.dart';
@@ -137,9 +139,10 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         },
-        backgroundColor: Theme.of(context).cardColor,
+        
+        backgroundColor: AppColors.foregroundColor,
         elevation: 5,
-        child: Icon(Icons.add, color: Theme.of(context).primaryColor, size: 35),
+        child: Icon(Icons.add, color: Colors.white, size: 40),
       ),
     );
   }
@@ -163,7 +166,7 @@ Widget _transactionHeading(context) {
         ),
         TextButton(
           onPressed: () {
-          // Navigator.pushNamed(context, '/TransactionScreen');
+            Navigator.pushNamed(context, AppRoutes.spendingScreen);
           },
           child: Row(
             children: [

@@ -45,6 +45,10 @@ class GraphCardWidgetState extends State<GraphCardWidget> {
     final monthlyLimitPercentage = (widget.totalSpending / widget.monthlyLimit) * 100;
 
     double dailySpendingPercentageForGraph = dailySpendingPercentage > 100 ? 1.0 : dailySpendingPercentage / 100;
+    double monthlyLimitPercentageForGraph = monthlyLimitPercentage > 100 ? 1.0 : monthlyLimitPercentage / 100;
+
+
+
 
     return Padding(
       padding: const EdgeInsets.only(top: 25),
@@ -64,22 +68,25 @@ class GraphCardWidgetState extends State<GraphCardWidget> {
             borderRadius: BorderRadius.all(Radius.circular(25)),
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _buildCircularIndicator(
                     context: context,
                     title: 'Monthly Limit',
-                    percentage: monthlyLimitPercentage,
+                    percentage: monthlyLimitPercentageForGraph,
                     amount: '${widget.totalSpending.toStringAsFixed(2)}/${
-                      widget.monthlyLimit.toStringAsFixed(2)}',
+                      widget.monthlyLimit.toStringAsFixed(0)}',
                   ),
                   _buildCircularIndicator(
                     context: context,
                     title: 'Daily Limit',
-                    percentage: dailySpendingPercentageForGraph * 100,
-                    amount: '${todaySpending.toStringAsFixed(2)}/${widget.dailyLimit.toStringAsFixed(2)}',
+                    percentage: dailySpendingPercentageForGraph,
+                    amount: '${todaySpending.toStringAsFixed(2)}/${widget.dailyLimit.toStringAsFixed(0)}',
                   ),
                 ],
               ),
@@ -106,7 +113,7 @@ class GraphCardWidgetState extends State<GraphCardWidget> {
           Text(
             title,
             style: GoogleFonts.poppins(
-              color: Theme.of(context).canvasColor.withOpacity(0.8),
+              color: Theme.of(context).canvasColor.withOpacity(0.6),
               fontWeight: FontWeight.w500,
               fontSize: 12,
             ),
@@ -115,13 +122,13 @@ class GraphCardWidgetState extends State<GraphCardWidget> {
           CircularPercentIndicator(
             radius: 40.0,
             lineWidth: 7.0,
-            percent: (percentage / 100),
+            percent: percentage,
             center: Text(
-              '${percentage.toStringAsFixed(0)}%',
+              '${(percentage*100).toStringAsFixed(0)}%',
               style: GoogleFonts.poppins(
-                color: Theme.of(context).canvasColor,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
+                color: Theme.of(context).canvasColor.withOpacity(0.7),
+                fontSize: 15,
+                fontWeight: FontWeight.w500,
               ),
             ),
             circularStrokeCap: CircularStrokeCap.round,

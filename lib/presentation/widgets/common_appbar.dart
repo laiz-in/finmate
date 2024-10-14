@@ -19,7 +19,7 @@ class CustomAppBarCommon extends StatelessWidget implements PreferredSizeWidget 
       elevation: 0,
       toolbarHeight: 90,
       iconTheme: IconThemeData(
-        color: Theme.of(context).cardColor,
+        color: Theme.of(context).canvasColor,
         size: 30,
       ),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -30,7 +30,7 @@ class CustomAppBarCommon extends StatelessWidget implements PreferredSizeWidget 
           style: GoogleFonts.poppins(
             fontSize: 17,
             fontWeight: FontWeight.w500,
-            color: Theme.of(context).cardColor,
+            color: Theme.of(context).canvasColor,
           ),
         ),
       ),

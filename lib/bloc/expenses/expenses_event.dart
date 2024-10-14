@@ -1,16 +1,16 @@
-import 'package:moneyy/domain/entities/spending/expenses.dart';
-
+// expenses_event.dart
 abstract class ExpensesEvent {}
 
 class FetchAllExpensesEvent extends ExpensesEvent {}
 
-class FetchLastThreeExpensesEvent extends ExpensesEvent {}
+class FetchMoreExpensesEvent extends ExpensesEvent {} // New event for lazy loading
 
-class FetchLastSevenDayExpensesEvent extends ExpensesEvent {} // New event
+class AddExpenseEvent extends ExpensesEvent {}
 
+class SearchExpensesEvent extends ExpensesEvent {
+  final String query; // Search query
 
-class AddExpenseEvent extends ExpensesEvent {
-  final ExpensesEntity expense;
-
-  AddExpenseEvent(this.expense);
+  SearchExpensesEvent(this.query);
 }
+
+class FetchLastSevenDayExpensesEvent extends ExpensesEvent {}

@@ -57,7 +57,7 @@ class ExpensesRepositoryImpl implements ExpensesRepository {
 
   // TO ADD AN EXPENSE
   @override
-  Future<Either<String, void>> addExpense(ExpensesEntity expense) async {
+  Future<Either> addExpense(ExpensesModel expense) async {
     try {
       final ExpensesModel model = ExpensesModel(
         uidOfTransaction: expense.uidOfTransaction,

@@ -103,6 +103,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       child: Container(
+        width: double.infinity,
         padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
         decoration: BoxDecoration(
           boxShadow: [
@@ -121,28 +122,23 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
           children: recentExpenses.isEmpty
               ? [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0.0, 0, 0, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "oopss!",
-                          style: GoogleFonts.montserrat(
-                            fontSize: 25,
-                            fontWeight: FontWeight.w600,
-                            color: Theme.of(context).cardColor.withOpacity(0.6),
+                    padding: const EdgeInsets.fromLTRB(0.0, 10, 0, 10),
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon( Icons.hourglass_disabled,color: Theme.of(context).canvasColor.withOpacity(0.6),size: 40,),
+                          Text(
+                            "no transactions found",
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).canvasColor.withOpacity(0.6),
+                            ),
                           ),
-                        ),
-                        Text(
-                          "no transactions found",
-                          style: GoogleFonts.poppins(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                            color: Theme.of(context).cardColor.withOpacity(0.6),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ]
@@ -158,7 +154,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                           children: [
                             // Amount text
                             Expanded(
-                              flex: 3, // 30% of the width
+                              flex:4, // 30% of the width
                               child: Row(
                                 children: [
                                   Icon(
@@ -167,6 +163,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                                   ),
                                   Text(
                                     '₹${transaction.spendingAmount.toStringAsFixed(1)}',
+                                    overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.montserrat(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
@@ -177,7 +174,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                               ),
                             ),
                             Expanded(
-                              flex: 7, // 70% of the width
+                              flex: 6, // 70% of the width
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -190,7 +187,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                                       style: GoogleFonts.poppins(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w500,
-                                        color: Theme.of(context).canvasColor,
+                                        color: Theme.of(context).canvasColor.withOpacity(0.7),
                                       ),
                                     ),
                                   ),
@@ -202,6 +199,8 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         Text(
+                                          overflow: TextOverflow.ellipsis,
+
                                           timeAgo(transaction.spendingDate),
                                           style: GoogleFonts.poppins(
                                             fontSize: 12,

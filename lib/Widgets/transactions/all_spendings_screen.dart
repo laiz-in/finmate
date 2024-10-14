@@ -124,51 +124,60 @@ class _AllSpendingsState extends State<AllSpendings> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-  child: Container(
-    decoration: BoxDecoration(
-      color: Theme.of(context).cardColor.withOpacity(0.4),
-      borderRadius: BorderRadius.circular(20.0),
-    ),
-    padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
-    child: Row(
-      children: [
-        Icon(
-          Icons.search,
-          color: Theme.of(context).primaryColorDark.withOpacity(0.5),
-        ),
-        SizedBox(width: 10.0), // Add some spacing between the icon and the text field
-        Expanded(
-          child: TextField(
-            autofocus: false,
-            onChanged: (value) {
-              setState(() {
-                filteredTransactions = transactions
-                    .where((transaction) => transaction.spendingDescription
-                        .toLowerCase()
-                        .contains(value.toLowerCase()))
-                    .toList();
-              });
-            },
-            autocorrect: false,
-            enableSuggestions: false,
-            style: GoogleFonts.montserrat(
-                color: Theme.of(context).cardColor,
-                fontWeight: FontWeight.w600),
-            decoration: InputDecoration(
-              hintText: 'Search..',
-              hintStyle: GoogleFonts.montserrat(
-                  color: Theme.of(context).primaryColorDark.withOpacity(0.7),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 15),
-              border: InputBorder.none,
-            ),
-          ),
-        ),
-      ],
-    ),
-  ),
-),
+                child: Container(
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).cardColor.withOpacity(0.4),
+                            borderRadius: BorderRadius.circular(20.0),
+                            ),
+                        padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 8.0),
+                        child: Row(
+                        children: [
+                        
+                        // search icon
+                        Icon(
+                          Icons.search,
+                          color: Theme.of(context).primaryColorDark.withOpacity(0.5),
+                        ),
+
+                        // search box
+                        SizedBox(width: 10.0), // Add some spacing between the icon and the text field
+                        Expanded(
+                        child: TextField(
+                                        autofocus: false,
+                                        onChanged: (value) {
+                                                    setState(() {
+                                                    filteredTransactions = transactions
+                                                    .where((transaction) => transaction.spendingDescription
+                                                    .toLowerCase()
+                                                    .contains(value.toLowerCase()))
+                                                    .toList();
+                                                  });
+                                                },
+                                        autocorrect: false,
+                                        enableSuggestions: false,
+                                        style: GoogleFonts.montserrat(
+                                                color: Theme.of(context).cardColor,
+                                                fontWeight: FontWeight.w600),
+
+                                        decoration: InputDecoration(
+                                                  hintText: 'Search..',
+                                                  hintStyle: GoogleFonts.montserrat(
+                                                            color: Theme.of(context).primaryColorDark.withOpacity(0.7),
+                                                            fontWeight: FontWeight.w600,
+                                                            fontSize: 15),
+                                                            border: InputBorder.none,
+                                                            ),
+                                        ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                
                 SizedBox(width: 15),
+
+                // filter icon
                 IconButton(
                   icon: Icon(Icons.sort, color: Theme.of(context).cardColor,size: 35,),
                   onPressed: () {
@@ -184,9 +193,13 @@ class _AllSpendingsState extends State<AllSpendings> {
                     );
                   },
                 ),
+
+
               ],
             ),
           ),
+
+          
           SizedBox(height: 15,),
           Expanded(
             child: RefreshIndicator(

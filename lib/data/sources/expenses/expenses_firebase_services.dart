@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:moneyy/data/models/expenses/user_expenses.dart';
 
@@ -13,37 +14,37 @@ class ExpensesFirebaseService {
   }
 
   // ADD EXPENSE
-  Future<void> addExpense(ExpensesModel expense) async {
+  Future<Either> addExpense(ExpensesModel expense) async {
     try {
-      final String? userId = _getCurrentUserId();
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+            final userDocRef = FirebaseFirestore.instance.collection("users").doc(user.uid);
+            final userDocSnapshot = await userDocRef.get();
+            final currentTotalSpending = userDocSnapshot.get('totalSpending') ?? 0.0;
+            final newTotalSpending = currentTotalSpending + expense.spendingAmount;
 
-      if (userId == null) {
-        throw Exception("User is not logged in");
-      }
-      print("===================================================");
-      print(expense.createdAt);
-      print(expense.uidOfTransaction);
-      print(expense.spendingAmount);
-      print(expense.spendingCategory);
-      print(expense.spendingDescription);
-      print(expense.spendingDate);
+            await userDocRef.update({'totalSpending': newTotalSpending});
+            final newSpendingRef = FirebaseFirestore.instance
+                .collection("users")
+                .doc(user.uid)
+                .collection("spendings")
+                .doc(); // Create a DocumentReference with a generated ID
 
-
-
-
-    print("===================================================");
-
-      // Adding the expense to Firestore
-      await _firestore
-          .collection('users')
-          .doc(userId) // The current user's ID
-          .collection('spendings')
-          .doc(expense.uidOfTransaction) // Use uidOfTransaction as the document ID for the expense
-          .set(expense.toJson());
-
-
+            await newSpendingRef.set({
+              'spendingAmount': expense.spendingAmount,
+              'spendingCategory': expense.spendingCategory,
+              'spendingDescription': expense.spendingDescription,
+              'spendingDate': expense.spendingDate,
+              'createdAt': FieldValue.serverTimestamp(),
+              'uidOfTransaction': newSpendingRef.id, // Store the generated document ID
+            });
+            return Right("success");
+          }
+          else{
+            return Left("User not found");
+          }
     } catch (e) {
-      throw Exception("Failed to add expense: $e");
+      return Left("error while adding ");
     }
   }
 
@@ -114,7 +115,7 @@ String _formatDayWithSuffix(int day) {
 
 
   // FETCH ALL EXPENSES
-  Future<List<ExpensesModel>> fetchAllExpenses() async {
+Future<List<ExpensesModel>> fetchAllExpenses() async {
     try {
       final String? userId = _getCurrentUserId();
 

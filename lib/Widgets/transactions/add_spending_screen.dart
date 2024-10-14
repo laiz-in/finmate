@@ -27,7 +27,8 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
     'Food',
     'Entertainment',
     'Transport',
-    'Other'
+    'Bills'
+    'Other',
   ];
 
  // function to select the date
