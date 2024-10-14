@@ -14,7 +14,7 @@ class UpdateSpendingDialog extends StatefulWidget {
   final String transactionId;
   final Function(double, String, String, DateTime) onSubmit;
 
-  UpdateSpendingDialog({
+  const UpdateSpendingDialog({super.key,
     required this.initialAmount,
     required this.initialCategory,
     required this.initialDescription,
@@ -41,6 +41,7 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
     'Food',
     'Entertainment',
     'Transport',
+    'Bills'
     'Other'
   ];
 
@@ -72,8 +73,8 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 10.0),
-      contentPadding: EdgeInsets.all(25.0),
+      insetPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+      contentPadding: EdgeInsets.fromLTRB(20.0,10,20,10),
       
       shape: RoundedRectangleBorder(
         
@@ -85,9 +86,9 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
       // Title text
       title: Text(
         'Edit your expense',
-        style: GoogleFonts.montserrat(
+        style: GoogleFonts.poppins(
           fontSize: 18,
-          color: Theme.of(context).cardColor,
+          color: Theme.of(context).canvasColor,
           fontWeight: FontWeight.w700,
         ),
       ),
@@ -104,21 +105,21 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
               // Amounr field
               TextFormField(
                 initialValue: _spendingAmount.toString(),
-                style: GoogleFonts.montserrat(
-                  color: Theme.of(context).cardColor,
+                style: GoogleFonts.poppins(
+                  color: Theme.of(context).canvasColor,
                   fontSize: 17,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.never,
                   labelText: '0.00',
-                  labelStyle: GoogleFonts.montserrat(
+                  labelStyle: GoogleFonts.poppins(
                     fontSize: 17,
-                    color: Theme.of(context).cardColor,
+                    color: Theme.of(context).canvasColor,
                     fontWeight: FontWeight.w500,
                   ),
                   filled: true,
-                  fillColor: Theme.of(context).cardColor.withOpacity(0.3),
+                  fillColor: Theme.of(context).cardColor,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(12.0)),
                     borderSide: BorderSide.none,
@@ -144,21 +145,21 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
               DropdownButtonFormField<String>(
                 
                 value: _spendingCategory,
-                style: GoogleFonts.montserrat(
-                  color: Theme.of(context).primaryColor,
-                  fontWeight: FontWeight.w700,
+                style: GoogleFonts.poppins(
+                  color: Theme.of(context).canvasColor,
+                  fontWeight: FontWeight.w500,
                   fontSize: 17,
                 ),
                 decoration: InputDecoration(
                   labelText: 'Category',
-                  labelStyle: GoogleFonts.montserrat(
+                  labelStyle: GoogleFonts.poppins(
                     fontSize: 17,
-                    color:Theme.of(context).primaryColor,
+                    color:Theme.of(context).canvasColor,
                     fontWeight: FontWeight.w500,
                   ),
                   floatingLabelBehavior: FloatingLabelBehavior.never,
                   filled: true,
-                  fillColor: Theme.of(context).cardColor.withOpacity(0.3),
+                  fillColor: Theme.of(context).cardColor,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(12.0)),
                     borderSide: BorderSide.none,
@@ -180,10 +181,10 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                         padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
                         child: Text(
                           category,
-                          style: GoogleFonts.montserrat(
-                            color: Theme.of(context).cardColor,
+                          style: GoogleFonts.poppins(
+                            color: Theme.of(context).canvasColor,
                             fontSize: 17,
-                            fontWeight: FontWeight.w700,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -202,20 +203,20 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
               // Description field
               TextFormField(
                 initialValue: _spendingDescription,
-                style: GoogleFonts.montserrat(
-                  color: Theme.of(context).cardColor,
+                style: GoogleFonts.poppins(
+                  color: Theme.of(context).canvasColor,
                   fontSize: 17,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration(
                   hintText: 'Description',
-                  hintStyle: GoogleFonts.montserrat(
+                  hintStyle: GoogleFonts.poppins(
                     fontSize: 17,
-                    color: Theme.of(context).cardColor,
-                    fontWeight: FontWeight.w700,
+                    color: Theme.of(context).canvasColor,
+                    fontWeight: FontWeight.w500,
                   ),
                   filled: true,
-                  fillColor: Theme.of(context).cardColor.withOpacity(0.3),
+                  fillColor: Theme.of(context).cardColor,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(12.0)),
                     borderSide: BorderSide.none,

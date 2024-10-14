@@ -281,7 +281,7 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
                   child: _isLoading
                       ?Center(
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 13.0,right: 13,top: 3),
+                          padding: const EdgeInsets.only(left: 16.0,right: 16,top:3,bottom:3),
                           child: SizedBox(
                                   height: 20,
                                   width: 20,

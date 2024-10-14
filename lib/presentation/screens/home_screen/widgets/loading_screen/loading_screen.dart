@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -15,32 +14,7 @@ class ShimmerScreen extends StatelessWidget {
       scrolledUnderElevation:0,
       automaticallyImplyLeading: false,
       // Title text
-      title:
-      Container(
-        padding: EdgeInsets.fromLTRB(5,8,0,0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-                'Hold on !',
-                style: GoogleFonts.poppins(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).canvasColor.withOpacity(0.5),
-                ),
-              ),
-            Text(
-              "let me load",
-              style: GoogleFonts.poppins(
-                fontSize: 22,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).canvasColor,
-              ),
-            ),
-          
-          ],
-        ),
-      ),
+      
       // Action button
       actions: [IconButton(
         icon: Icon(Icons.notification_add_outlined, color:Theme.of(context).canvasColor,size: 25,),
@@ -61,7 +35,7 @@ class ShimmerScreen extends StatelessWidget {
     
     backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Padding(
-        padding: EdgeInsets.fromLTRB(15,0,15,15),
+        padding: EdgeInsets.fromLTRB(15,0,15,0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

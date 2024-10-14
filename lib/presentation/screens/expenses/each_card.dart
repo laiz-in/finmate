@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:moneyy/Widgets/transactions/update_spending_screen.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
 import 'package:moneyy/common/widgets/success_snackbar.dart';
 import 'package:moneyy/domain/entities/spending/expenses.dart';
 import 'package:moneyy/firebase/firebase_utils.dart' as firebase_utils;
+import 'package:moneyy/presentation/screens/expenses/update_expense.dart';
 
 class TransactionCard extends StatefulWidget {
   final ExpensesEntity transaction;
@@ -131,7 +131,7 @@ class TransactionCardState extends State<TransactionCard> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Divider(color: Color.fromARGB(255, 212, 214, 212)),
+                  Divider(color: Theme.of(context).canvasColor.withOpacity(0.3)),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,10 +146,10 @@ class TransactionCardState extends State<TransactionCard> {
                       ),
                       Text(
                         timeAgo(widget.transaction.spendingDate),
-                        style: GoogleFonts.montserrat(
+                        style: GoogleFonts.poppins(
                           fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).cardColor.withOpacity(0.5),
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).canvasColor.withOpacity(0.5),
                         ),
                       ),
                     ],
@@ -157,6 +157,7 @@ class TransactionCardState extends State<TransactionCard> {
                 ],
               ),
             ),
+
             if (_expanded) ...[
               SizedBox(height: 10.0),
               Row(
@@ -292,7 +293,7 @@ class TransactionCardState extends State<TransactionCard> {
                         ),
                       ),
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
+                        backgroundColor: WidgetStateProperty.all<Color>(
                           Color.fromARGB(255, 136, 182, 221),
                         ),
                         elevation: WidgetStateProperty.all<double>(0),

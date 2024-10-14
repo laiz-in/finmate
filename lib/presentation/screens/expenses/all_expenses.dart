@@ -77,7 +77,7 @@ class _SpendingScreenState extends State<SpendingScreen> {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Theme.of(context).highlightColor.withOpacity(0.2),
+                        color: Theme.of(context).highlightColor,
                         borderRadius: BorderRadius.circular(20.0),
                       ),
                       padding:
@@ -91,6 +91,7 @@ class _SpendingScreenState extends State<SpendingScreen> {
                           const SizedBox(width: 10.0),
                           Expanded(
                             child: TextField(
+                              cursorColor: Theme.of(context).canvasColor.withOpacity(0.5),
                               autofocus: false,
                               onChanged: (value) {
                                 setState(() {
@@ -103,17 +104,17 @@ class _SpendingScreenState extends State<SpendingScreen> {
                               },
                               autocorrect: false,
                               enableSuggestions: false,
-                              style: GoogleFonts.montserrat(
+                              style: GoogleFonts.poppins(
                                   color: Theme.of(context).canvasColor,
-                                  fontWeight: FontWeight.w600),
+                                  fontWeight: FontWeight.w400),
                               decoration: InputDecoration(
-                                hintText: 'Search..',
-                                hintStyle: GoogleFonts.montserrat(
+                                hintText: ' Search..',
+                                hintStyle: GoogleFonts.poppins(
                                   color: Theme.of(context)
-                                      .primaryColorDark
+                                      .canvasColor.withOpacity(0.2)
                                       .withOpacity(0.7),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
                                 ),
                                 border: InputBorder.none,
                               ),

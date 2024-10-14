@@ -9,7 +9,7 @@ class AppTheme {
     canvasColor: AppColors.foregroundColor,
     hintColor: AppColors.backgroundColor,
     primaryColorDark: AppColors.foregroundColor,
-    highlightColor: const Color.fromARGB(255, 196, 194, 194),
+    highlightColor: Color.fromARGB(255, 210, 216, 214),
   );
 
   static final darkTheme = ThemeData(

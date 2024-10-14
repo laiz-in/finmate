@@ -58,7 +58,7 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).cardColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         backgroundColor:Theme.of(context).scaffoldBackgroundColor,
         iconTheme: IconThemeData(color:Theme.of(context).canvasColor),
