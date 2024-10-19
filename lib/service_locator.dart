@@ -23,6 +23,7 @@ import 'package:moneyy/domain/usecases/expenses/add_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/last_seven_day_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/last_three_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/total_expenses_usecase.dart';
+import 'package:moneyy/domain/usecases/expenses/update_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/settings/reset_daily_limit.dart';
 import 'package:moneyy/domain/usecases/settings/reset_monthly_limit.dart';
 import 'package:moneyy/domain/usecases/settings/send_feedback.dart';
@@ -33,6 +34,7 @@ Future<void> initializeDependencies() async {
 
   // spendings related
   sl.registerLazySingleton(() => LastSevenDayExpensesUseCase(sl()));
+  sl.registerLazySingleton(() => UpdateExpensesUseCase(sl()));
   sl.registerLazySingleton(() => ExpensesFirebaseService());
   sl.registerLazySingleton<ExpensesRepository>(() => ExpensesRepositoryImpl(sl()));
   sl.registerLazySingleton(() => TotalExpensesUseCase(sl()));

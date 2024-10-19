@@ -54,7 +54,7 @@ class _LoadingDotsState extends State<LoadingDots> with SingleTickerProviderStat
         
         '.',
         style: GoogleFonts.poppins(
-          color: Color(0xFF4C7766),
+          color: Color.fromARGB(255, 244, 245, 244),
           fontSize: 45,
           fontWeight: FontWeight.w700,
         ),

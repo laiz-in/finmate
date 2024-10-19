@@ -1,12 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
+import 'package:moneyy/common/widgets/success_snackbar.dart';
+import 'package:moneyy/data/models/expenses/user_expenses.dart';
+import 'package:moneyy/domain/usecases/expenses/update_expense_usecase.dart';
+import 'package:moneyy/service_locator.dart';
 import 'package:moneyy/styles/themes.dart';
-import 'package:moneyy/ui/succes_snackbar.dart';
 
 class UpdateSpendingDialog extends StatefulWidget {
+  final String uidOfTransaction;
+  final DateTime initialcreatedAt;
   final double initialAmount;
   final String initialCategory;
   final String initialDescription;
@@ -14,13 +17,17 @@ class UpdateSpendingDialog extends StatefulWidget {
   final String transactionId;
   final Function(double, String, String, DateTime) onSubmit;
 
+
   const UpdateSpendingDialog({super.key,
+  required this.uidOfTransaction,
+  required this.initialcreatedAt,
     required this.initialAmount,
     required this.initialCategory,
     required this.initialDescription,
     required this.initialDate,
     required this.transactionId,
     required this.onSubmit,
+
   });
 
   @override
@@ -34,6 +41,7 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
   late String _spendingDescription;
   late DateTime _spendingDate;
   final TextEditingController _dateController = TextEditingController();
+  bool isloading = false;
 
   final List<String> _categories = [
     'Groceries',
@@ -41,7 +49,7 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
     'Food',
     'Entertainment',
     'Transport',
-    'Bills'
+    'Bills',
     'Other'
   ];
 
@@ -73,8 +81,9 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      insetPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
-      contentPadding: EdgeInsets.fromLTRB(20.0,10,20,10),
+
+      insetPadding: EdgeInsets.fromLTRB(5,20,0,10),
+      contentPadding: EdgeInsets.fromLTRB(23,10,23,10),
       
       shape: RoundedRectangleBorder(
         
@@ -87,9 +96,9 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
       title: Text(
         'Edit your expense',
         style: GoogleFonts.poppins(
-          fontSize: 18,
+          fontSize: 17,
           color: Theme.of(context).canvasColor,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w500,
         ),
       ),
       
@@ -100,21 +109,21 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              SizedBox(height: 5),
+              SizedBox(height: 10),
 
-              // Amounr field
+              // Amount field
               TextFormField(
                 initialValue: _spendingAmount.toString(),
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontSize: 17,
+                  fontSize: 15,
                   fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.never,
                   labelText: '0.00',
                   labelStyle: GoogleFonts.poppins(
-                    fontSize: 17,
+                    fontSize: 15,
                     color: Theme.of(context).canvasColor,
                     fontWeight: FontWeight.w500,
                   ),
@@ -125,6 +134,7 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                     borderSide: BorderSide.none,
                   ),
                   contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+                  
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -148,12 +158,12 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
                   fontWeight: FontWeight.w500,
-                  fontSize: 17,
+                  fontSize: 15,
                 ),
                 decoration: InputDecoration(
                   labelText: 'Category',
                   labelStyle: GoogleFonts.poppins(
-                    fontSize: 17,
+                    fontSize: 15,
                     color:Theme.of(context).canvasColor,
                     fontWeight: FontWeight.w500,
                   ),
@@ -183,7 +193,7 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                           category,
                           style: GoogleFonts.poppins(
                             color: Theme.of(context).canvasColor,
-                            fontSize: 17,
+                            fontSize: 15,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -205,16 +215,12 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                 initialValue: _spendingDescription,
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontSize: 17,
+                  fontSize: 15,
                   fontWeight: FontWeight.w500,
+                  decoration: TextDecoration.none
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Description',
-                  hintStyle: GoogleFonts.poppins(
-                    fontSize: 17,
-                    color: Theme.of(context).canvasColor,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  
                   filled: true,
                   fillColor: Theme.of(context).cardColor,
                   border: OutlineInputBorder(
@@ -235,15 +241,15 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
 
               // Date field
               TextFormField(
-                style: GoogleFonts.montserrat(
-                  color: Theme.of(context).cardColor,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w700,
+                style: GoogleFonts.poppins(
+                  color: Theme.of(context).canvasColor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration(
                   
                   filled: true,
-                  fillColor:Theme.of(context).cardColor.withOpacity(0.3),
+                  fillColor:Theme.of(context).cardColor,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(12.0)),
                     borderSide: BorderSide.none,
@@ -261,98 +267,131 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                 },
               ),
 
+            SizedBox(height: 8,)
             ],
           ),
         ),
       ),
+
       actions: <Widget>[
 
-        // Cancel button
-        TextButton(
-          child: Text(
-            'Cancel',
-            style: GoogleFonts.montserrat(
-              fontSize: 15,
-              fontWeight: FontWeight.w600,
-              color: AppColors.myOrange,
-            ),
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        
-        // Update button
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor:Theme.of(context).cardColor, // Background color
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0), // Set the border radius
-            ),
-            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 25.0), // Optional padding
-          ),
-          child: Text(
-            'Update',
-            style: GoogleFonts.montserrat(
-              fontSize: 16,
-              color: Theme.of(context).primaryColor,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+        Container(
+          width: double.infinity,
           
-          onPressed: () async {
-            if (_formKey.currentState!.validate()) {
-              // Update Firebase instance
-              final user = FirebaseAuth.instance.currentUser;
-              if (user != null) {
-                // Fetch the existing spending data
-                final spendingRef = FirebaseFirestore.instance
-                    .collection("users")
-                    .doc(user.uid)
-                    .collection("spendings")
-                    .doc(widget.transactionId);
-                final spendingSnapshot = await spendingRef.get();
-                final currentAmount = spendingSnapshot.get('spendingAmount') ?? 0.0;
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+            
+            // Cancel button
+            Expanded(
+              child: Container(
+                color: Colors.transparent,
+                child: TextButton(
+                child: Text(
+                  'Cancel',
+                  style: GoogleFonts.poppins(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.myOrange,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                ),
+              ),
+            ),
 
-                // Update the spending data
-                await spendingRef.update({
-                  'spendingAmount': _spendingAmount,
-                  'spendingCategory': _spendingCategory,
-                  'spendingDescription': _spendingDescription,
-                  'date': _spendingDate,
-                });
 
-                // Update total_spending
-                final userDocRef = FirebaseFirestore.instance.collection("users").doc(user.uid);
-                final userDocSnapshot = await userDocRef.get();
-                final currentTotalSpending = userDocSnapshot.get('totalSpending') ?? 0.0;
-                final newTotalSpending = currentTotalSpending - currentAmount + _spendingAmount;
-                await userDocRef.update({'totalSpending': newTotalSpending});
+            // Update button
+            Expanded(
+              child: Container(
+                width: 150,height: 50,
+                color: Colors.transparent,
+                child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:Theme.of(context).canvasColor, // Background color
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0), // Set the border radius
+                  ),
+                  padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 28.0), // Optional padding
+                ),
+                child:isloading
+                                      ? SizedBox(
+                                        width: 20,height: 20,
+                                        child: Center(
+                                            child:CircularProgressIndicator(
+                                              color: Theme.of(context).scaffoldBackgroundColor,strokeWidth: 2,
+                                            )
+                                          ),
+                                      )
+                                      : Center(
+                                          child: Text(
+                                            'Update',
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 16,
+                                              color: Theme.of(context).scaffoldBackgroundColor,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                
+                
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      isloading = true;
+                    });
+                    final updatedExpense = ExpensesModel(
+                      uidOfTransaction: widget.uidOfTransaction,
+                      spendingDescription: _spendingDescription,
+                      spendingCategory: _spendingCategory,
+                      spendingAmount: _spendingAmount,
+                      spendingDate: _spendingDate,
+                      createdAt: widget.initialcreatedAt,
+                    );
+                           
+                    final updateExpensesUseCase = sl<UpdateExpensesUseCase>();
+                           
+                    final result = await updateExpensesUseCase.call(uidOfTransaction: widget.transactionId,updatedExpense: updatedExpense,);
+                     
+                    result.fold(
+                      (failureMessage) {
+                        if(mounted){
+                        errorSnackbar(context, failureMessage);}
+                        setState(() {
+                          isloading =false;
+                        });
+                           
+                      },
+                      (successMessage) {
+                        if(mounted){
+                        successSnackbar(context, successMessage);}
+                        setState(() {
+                          isloading =false;
+                        });
+                        widget.onSubmit(_spendingAmount, _spendingCategory, _spendingDescription, _spendingDate);
+                        Navigator.of(context).pop();
+                      },
+                    );
+                      // Clear form fields
+                      setState(() {
+                        _spendingAmount = 0.0;
+                        _spendingCategory = 'Groceries';
+                        _spendingDescription = '';
+                        _spendingDate = DateTime.now();
+                        _dateController.text = "${_spendingDate.toLocal()}".split(' ')[0];
+                      });
+                  }
+                },
+                       ),
+              ),
+            ),
+            ]
+          ),
 
-                // Execute the onSubmit callback
-                widget.onSubmit(_spendingAmount, _spendingCategory, _spendingDescription, _spendingDate);
 
-                // Show success message
-                Navigator.of(context).pop();
-                successSnackbar(context, 'Spending has been updated');
-
-                // Clear form fields
-                setState(() {
-                  _spendingAmount = 0.0;
-                  _spendingCategory = 'Groceries';
-                  _spendingDescription = '';
-                  _spendingDate = DateTime.now();
-                  _dateController.text = "${_spendingDate.toLocal()}".split(' ')[0];
-                });
-              } else {
-                // Show error message
-                Navigator.of(context).pop();
-                errorSnackbar(context, "Could not update spending");
-              }
-            }
-          },
-        ),
-      
+        )
       ],
     );
   }

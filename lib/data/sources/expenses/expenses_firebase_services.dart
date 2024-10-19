@@ -13,6 +13,62 @@ class ExpensesFirebaseService {
     return currentUser?.uid;
   }
 
+
+
+  Future<Either<String,String>> updateExpense(String uidOfTransaction,ExpensesModel updateExpense) async{
+    try{
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+            // get the user collection datas
+            final userDocRef = FirebaseFirestore.instance.collection("users").doc(user.uid);
+            final userDocSnapshot = await userDocRef.get();
+
+            // find the current total spending
+            final currentTotalSpending = userDocSnapshot.get('totalSpending') ?? 0.0;
+
+            // get the specific spending collection
+            final spendingRef = FirebaseFirestore.instance
+                    .collection("users")
+                    .doc(user.uid)
+                    .collection("spendings")
+                    .doc(uidOfTransaction);
+            final spendingSnapshot = await spendingRef.get();
+            
+            final currentAmount = spendingSnapshot.get('spendingAmount') ?? 0.0;
+
+            final newTotalSpending = currentTotalSpending - currentAmount + updateExpense.spendingAmount;
+            await userDocRef.update({'totalSpending': newTotalSpending});
+
+            // update the certain expense
+            final newSpendingRef = FirebaseFirestore.instance
+                .collection("users")
+                .doc(user.uid)
+                .collection("spendings")
+                .doc(uidOfTransaction);
+
+
+            await newSpendingRef.update({
+              'spendingAmount': updateExpense.spendingAmount,
+              'spendingCategory': updateExpense.spendingCategory,
+              'spendingDescription': updateExpense.spendingDescription,
+              'spendingDate': updateExpense.spendingDate,
+              'createdAt': FieldValue.serverTimestamp(),
+              'uidOfTransaction': uidOfTransaction,
+            }
+            );
+            return Right("succesfully updated");
+        }
+      else{
+        return Left("user is not found");
+      }
+    }catch (e){
+      return Left("failed to update in firebase functions");
+    }
+
+  }
+
+
+
   // ADD EXPENSE
   Future<Either> addExpense(ExpensesModel expense) async {
     try {

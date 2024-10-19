@@ -32,6 +32,7 @@ class ExpensesRepositoryImpl implements ExpensesRepository {
   }
 
 
+
   // FETCH LAST 3 EXPENSES
   @override
   Future<Either<String, List<ExpensesEntity>>> fetchLastThreeExpenses() async {
@@ -75,7 +76,27 @@ class ExpensesRepositoryImpl implements ExpensesRepository {
   }
   
 
-  // FETCH LAST 7 DAY EXPENSES IN TOTAL
+  // TO UPDATE THE EXPENSE
+  @override
+  Future<Either<String,String>> updateExpense(String uidOfTransaction, ExpensesModel updatedExpense) async {
+    try{
+      final ExpensesModel model = ExpensesModel(
+        uidOfTransaction: updatedExpense.uidOfTransaction,
+        spendingDescription: updatedExpense.spendingDescription,
+        spendingCategory: updatedExpense.spendingCategory,
+        spendingAmount: updatedExpense.spendingAmount,
+        spendingDate: updatedExpense.spendingDate,
+        createdAt: updatedExpense.createdAt,
+      );
+      await _firebaseService.updateExpense(uidOfTransaction, model);
+      return Right("Expense updated succesfully");
+    } catch(e){
+      return Left("Failed to update the expense");
+    }
+  }
+
+
+  // FETCH LAST 15 DAY EXPENSES IN TOTAL
   @override
   Future<Either<String, Map<String, double>>> fetchLastSevenDayExpenses() async {
     try {

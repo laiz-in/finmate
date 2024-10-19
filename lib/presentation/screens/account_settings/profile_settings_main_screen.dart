@@ -121,13 +121,13 @@ showDialog(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
                         Text("Update your email",
-                        style: GoogleFonts.poppins(fontSize: 16,color: Theme.of(context).primaryColorDark
+                        style: GoogleFonts.poppins(fontSize: 15,color: Theme.of(context).canvasColor
                         ,fontWeight: FontWeight.w500),),
-                        Icon(Icons.arrow_forward_ios,color: Theme.of(context).primaryColorDark.withOpacity(0.5),size: 20,),
+                        Icon(Icons.arrow_forward_ios,color: Theme.of(context).canvasColor.withOpacity(0.5),size: 17,),
                       ],
                     )
                     ),
-                    Divider(color: Theme.of(context).primaryColorDark.withOpacity(0.6),),
+                    Divider(color: Theme.of(context).canvasColor.withOpacity(0.2),),
 
 
 
@@ -139,13 +139,13 @@ showDialog(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children:[
                                   Text("Update your password",
-                                  style: GoogleFonts.poppins(fontSize: 16,color: Theme.of(context).primaryColorDark
+                                  style: GoogleFonts.poppins(fontSize: 15,color: Theme.of(context).canvasColor
                                   ,fontWeight: FontWeight.w500),),
-                        Icon(Icons.arrow_forward_ios,color: Theme.of(context).primaryColorDark.withOpacity(0.5),size: 20,),
+                        Icon(Icons.arrow_forward_ios,color: Theme.of(context).canvasColor.withOpacity(0.5),size: 17,),
                                   ],
                                 )
                     ),
-                    Divider(color: Theme.of(context).primaryColorDark.withOpacity(0.6),),
+                    Divider(color: Theme.of(context).canvasColor.withOpacity(0.2),),
 
 
 
@@ -157,13 +157,13 @@ showDialog(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
                         Text("Reset your daily limit",
-                        style: GoogleFonts.poppins(fontSize: 16,color: Theme.of(context).primaryColorDark
+                        style: GoogleFonts.poppins(fontSize: 15,color: Theme.of(context).canvasColor
                         ,fontWeight: FontWeight.w500),),
-                        Icon(Icons.arrow_forward_ios,color: Theme.of(context).primaryColorDark.withOpacity(0.5),size: 20,),
+                        Icon(Icons.arrow_forward_ios,color: Theme.of(context).canvasColor.withOpacity(0.5),size: 17,),
                       ],
                     )
                     ),
-                    Divider(color: Theme.of(context).primaryColorDark.withOpacity(0.6),),
+                    Divider(color: Theme.of(context).canvasColor.withOpacity(0.2),),
 
 
 
@@ -173,18 +173,20 @@ showDialog(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
                         Text("Reset your monthly limit",
-                        style: GoogleFonts.poppins(fontSize: 16,color: Theme.of(context).primaryColorDark
+                        style: GoogleFonts.poppins(fontSize: 15,color: Theme.of(context).canvasColor
                         ,fontWeight: FontWeight.w500),),
-                        Icon(Icons.arrow_forward_ios,color: Theme.of(context).primaryColorDark.withOpacity(0.5),size: 20,),
+                        Icon(Icons.arrow_forward_ios,color: Theme.of(context).canvasColor.withOpacity(0.5),size: 17,),
                       ],
                     )
                     ),
-                    Divider(color: Theme.of(context).primaryColorDark.withOpacity(0.6),),
+                    Divider(color: Theme.of(context).canvasColor.withOpacity(0.2),),
 
 
 
                     // Textb button to send feedback
-                    TextButton(onPressed: (){Navigator.pushNamed(
+                    TextButton(
+                      
+                      onPressed: (){Navigator.pushNamed(
                                               context,
                                               AppRoutes.sendFeedbackScreen,
                                             );},
@@ -192,13 +194,13 @@ showDialog(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
                         Text("Send your feedback",
-                        style: GoogleFonts.poppins(fontSize: 16,color: Theme.of(context).primaryColorDark
+                        style: GoogleFonts.poppins(fontSize: 15,color: Theme.of(context).canvasColor
                         ,fontWeight: FontWeight.w500),),
-                        Icon(Icons.arrow_forward_ios,color: Theme.of(context).primaryColorDark.withOpacity(0.5),size: 20,),
+                        Icon(Icons.arrow_forward_ios,color: Theme.of(context).canvasColor.withOpacity(0.5),size: 17,),
                       ],
                     )
                     ),
-                    Divider(color: Theme.of(context).primaryColorDark.withOpacity(0.6),),
+                    Divider(color: Theme.of(context).canvasColor.withOpacity(0.2),),
 
 
 
@@ -211,7 +213,7 @@ showDialog(
                           Text(
                             "Dark mode",
                             style: GoogleFonts.poppins(
-                              fontSize: 16,
+                              fontSize: 15,
                               color: Theme.of(context).primaryColorDark,
                               fontWeight: FontWeight.w500,
                             ),

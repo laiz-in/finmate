@@ -188,10 +188,10 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
             // Description field
             TextFormField(
               cursorColor: Theme.of(context).canvasColor.withOpacity(0.4),
-              style: GoogleFonts.montserrat(
+              style: GoogleFonts.poppins(
                 color: Theme.of(context).canvasColor,
                 fontSize: 17,
-                fontWeight: FontWeight.w600,
+                fontWeight: FontWeight.w500,
               
               ),
               decoration: InputDecoration(

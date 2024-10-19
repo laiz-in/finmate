@@ -103,6 +103,8 @@ Future<List<CustomTransaction>> getAllSpendings(context,String userId) async {
   }
 }
 
+
+
 // Function to delete a transaction
 Future<void> deleteTransaction(context,String userId, String transactionId) async {
   try {

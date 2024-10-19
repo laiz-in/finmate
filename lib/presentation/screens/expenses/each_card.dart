@@ -1,11 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:moneyy/common/widgets/error_snackbar.dart';
-import 'package:moneyy/common/widgets/success_snackbar.dart';
 import 'package:moneyy/domain/entities/spending/expenses.dart';
-import 'package:moneyy/firebase/firebase_utils.dart' as firebase_utils;
+import 'package:moneyy/presentation/screens/expenses/delete_expense_button.dart';
 import 'package:moneyy/presentation/screens/expenses/update_expense.dart';
 
 class TransactionCard extends StatefulWidget {
@@ -88,6 +85,9 @@ class TransactionCardState extends State<TransactionCard> {
           children: [
 
             ListTile(
+              splashColor: Colors.transparent,
+
+              hoverColor: Colors.transparent,
               contentPadding: EdgeInsets.zero,
               onTap: _toggleExpanded,
 
@@ -105,48 +105,68 @@ class TransactionCardState extends State<TransactionCard> {
                   ),
                 ],
               ),
+
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
+                    overflow:TextOverflow.ellipsis,
                     '₹${widget.transaction.spendingAmount.toStringAsFixed(2)}',
                     style: GoogleFonts.montserrat(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).canvasColor,
                     ),
-                    overflow: TextOverflow.ellipsis,
                   ),
                   IconButton(
-                    icon: Icon(
-                      _expanded ? Icons.arrow_downward : Icons.arrow_forward_ios_sharp,
-                      size: 17,
-                      color: Theme.of(context).canvasColor.withOpacity(0.9),
-                    ),
+                    highlightColor:Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    splashRadius:null,
+                    icon: _expanded
+                          ? Transform.rotate(
+                              angle: 1.5708, // Rotate 90 degrees to make the arrow point downward
+                              child: Icon(
+                                Icons.arrow_forward_ios_sharp,
+                                size: 17,
+                                color: Theme.of(context).canvasColor.withOpacity(0.9),
+                              ),
+                            )
+                          : Icon(
+                              Icons.arrow_forward_ios_sharp,
+                              size: 17,
+                              color: Theme.of(context).canvasColor.withOpacity(0.9),
+                            ),
                     onPressed: _toggleExpanded,
                   ),
                 ],
               ),
+              
               subtitle: Column(
+              
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Divider(color: Theme.of(context).canvasColor.withOpacity(0.3)),
+                  Divider(color: Theme.of(context).canvasColor.withOpacity(0.1)),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
+                        maxLines: 3,
+                        overflow:TextOverflow.ellipsis,
                         widget.transaction.spendingDescription,
                         style: GoogleFonts.poppins(
                           fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).canvasColor.withOpacity(0.7),
+                          fontWeight: FontWeight.w500,
+                          color: Theme.of(context).canvasColor.withOpacity(0.8),
                         ),
                       ),
                       Text(
+                        overflow: TextOverflow.ellipsis,
                         timeAgo(widget.transaction.spendingDate),
                         style: GoogleFonts.poppins(
+                        
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
                           color: Theme.of(context).canvasColor.withOpacity(0.5),
@@ -160,152 +180,57 @@ class TransactionCardState extends State<TransactionCard> {
 
             if (_expanded) ...[
               SizedBox(height: 10.0),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            backgroundColor: Theme.of(context).primaryColorDark,
-                            elevation: 15,
-                            title: Center(
-                              child: Text(
-                                'Are you sure you want to delete this expense?',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.montserrat(
-                                  color: Color.fromARGB(255, 197, 81, 73),
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15,
-                                ),
-                              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom:8.0),
+                child: Row(
+                  children: [
+                
+                  // button to delete
+                  DeleteExpenseButton(uidOfTransaction: widget.transaction.uidOfTransaction),
+                
+                  
+                    SizedBox(width: 7.0),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => UpdateSpendingDialog(
+                              
+                              initialcreatedAt:widget.transaction.createdAt,
+                              initialAmount: widget.transaction.spendingAmount,
+                              initialCategory: widget.transaction.spendingCategory,
+                              initialDescription: widget.transaction.spendingDescription,
+                              initialDate: widget.transaction.spendingDate,
+                              transactionId: widget.transaction.uidOfTransaction,
+                              onSubmit: (amount, category, description, date) {
+                                widget.onUpdate();
+                              }, uidOfTransaction: widget.transaction.uidOfTransaction,
                             ),
-                            actions: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextButton(
-                                    onPressed: () => Navigator.of(context).pop(),
-                                    child: Text(
-                                      'No, cancel',
-                                      style: GoogleFonts.montserrat(
-                                        fontSize: 13,
-                                        color: Color.fromARGB(255, 173, 108, 103),
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () async {
-                                      final userId = FirebaseAuth.instance.currentUser?.uid;
-                                      final transactionId = widget.transaction.uidOfTransaction;
-
-                                      if (userId == null) {
-                                        errorSnackbar(context, 'User not logged in');
-                                        return;
-                                      }
-
-                                      showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (BuildContext context) {
-                                          return Center(
-                                            child: CircularProgressIndicator(
-                                              color: Theme.of(context).primaryColorDark,
-                                            ),
-                                          );
-                                        },
-                                      );
-
-                                      try {
-                                        await firebase_utils.deleteTransaction(context, userId, transactionId);
-                                        Navigator.of(context).pop();
-                                        widget.onDelete();
-                                        successSnackbar(context, "Transaction has been deleted");
-                                      } catch (e) {
-                                        Navigator.of(context).pop();
-                                        errorSnackbar(context, 'Failed to delete: ${e.toString()}');
-                                      } finally {
-                                        if (Navigator.of(context).canPop()) {
-                                          Navigator.of(context).pop();
-                                        }
-                                      }
-                                    },
-                                    child: Text(
-                                      'Yes, delete',
-                                      style: GoogleFonts.montserrat(
-                                        color: Color.fromARGB(255, 248, 245, 245),
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                          );
+                        },
+                        label: Text(
+                          'Update',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
                           ),
-                        );
-                      },
-                      label: Text(
-                        'Delete',
-                        style: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w600,
-                          color: Color.fromARGB(255, 133, 78, 78),
                         ),
-                      ),
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                          Color.fromARGB(255, 248, 214, 214),
-                        ),
-                        elevation: WidgetStateProperty.all<double>(0),
-                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all<Color>(
+                            Color.fromARGB(255, 136, 182, 221),
+                          ),
+                          elevation: WidgetStateProperty.all<double>(0),
+                          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(width: 7.0),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) => UpdateSpendingDialog(
-                            initialAmount: widget.transaction.spendingAmount,
-                            initialCategory: widget.transaction.spendingCategory,
-                            initialDescription: widget.transaction.spendingDescription,
-                            initialDate: widget.transaction.spendingDate,
-                            transactionId: widget.transaction.uidOfTransaction,
-                            onSubmit: (amount, category, description, date) {
-                              widget.onUpdate();
-                            },
-                          ),
-                        );
-                      },
-                      label: Text(
-                        'Edit',
-                        style: GoogleFonts.montserrat(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all<Color>(
-                          Color.fromARGB(255, 136, 182, 221),
-                        ),
-                        elevation: WidgetStateProperty.all<double>(0),
-                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ],
