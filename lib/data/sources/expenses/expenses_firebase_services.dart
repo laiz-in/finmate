@@ -14,7 +14,7 @@ class ExpensesFirebaseService {
   }
 
 
-
+  // TO UPDATE EXPENSE
   Future<Either<String,String>> updateExpense(String uidOfTransaction,ExpensesModel updateExpense) async{
     try{
         final user = FirebaseAuth.instance.currentUser;
@@ -64,9 +64,7 @@ class ExpensesFirebaseService {
     }catch (e){
       return Left("failed to update in firebase functions");
     }
-
   }
-
 
 
   // ADD EXPENSE
@@ -104,11 +102,11 @@ class ExpensesFirebaseService {
     }
   }
 
- // LAST 7 DAYS EXPENSE
+ // LAST 15 DAYS EXPENSE
   Future<Map<String, double>> fetchLastSevenDayExpenses() async {
     try {
     final now = DateTime.now();
-    final fifteenDaysAgo = now.subtract(const Duration(days: 14)); // 15 days back
+    final fifteenDaysAgo = now.subtract(const Duration(days: 15)); // 15 days back
 
     final userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) {
@@ -121,7 +119,7 @@ class ExpensesFirebaseService {
         .doc(userId)
         .collection('spendings')
         .where('spendingDate', isGreaterThanOrEqualTo: Timestamp.fromDate(fifteenDaysAgo))
-        .where('spendingCategory', whereIn: ['Groceries', 'Food', 'Transport']) // Filter by category
+        .where('spendingCategory', whereIn: ['Groceries', 'Food', 'Transport','Stationary','Entertainment']) // Filter by category
         .get();
 
     final expenses = querySnapshot.docs
@@ -153,7 +151,7 @@ class ExpensesFirebaseService {
   }
 }
 
-String _formatDayWithSuffix(int day) {
+  String _formatDayWithSuffix(int day) {
   if (day >= 11 && day <= 13) {
     return '${day}th';
   }
@@ -232,4 +230,53 @@ Future<List<ExpensesModel>> fetchAllExpenses() async {
       throw Exception("Failed to fetch last three expenses: $e");
     }
   }
+
+
+// DELETE THE EXPENSE
+Future<Either<String, String>> deleteExpenses(String uidOfTransaction) async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      // Get the user document reference
+      final userDocRef = FirebaseFirestore.instance.collection("users").doc(user.uid);
+      final userDocSnapshot = await userDocRef.get();
+
+      // Find the current total spending
+      final currentTotalSpending = userDocSnapshot.get('totalSpending') ?? 0.0;
+
+      // Get the specific spending document
+      final spendingRef = FirebaseFirestore.instance
+          .collection("users")
+          .doc(user.uid)
+          .collection("spendings")
+          .doc(uidOfTransaction);
+      final spendingSnapshot = await spendingRef.get();
+
+      // Ensure the spending document exists
+      if (!spendingSnapshot.exists) {
+        return Left("Transaction not found");
+      }
+
+      // Get the spending amount to subtract from total
+      final spendingAmount = spendingSnapshot.get("spendingAmount");
+
+      // Update the total spending
+      final newTotalSpending = currentTotalSpending - spendingAmount;
+      await userDocRef.update({'totalSpending': newTotalSpending});
+
+      // Delete the document from the "spendings" collection
+      await spendingRef.delete();
+
+      return Right("Successfully deleted the expense");
+    } else {
+      return Left("User is not logged in");
+    }
+  } catch (e) {
+    return Left("Failed to delete expense: ${e.toString()}");
+  }
+}
+
+
+
 }

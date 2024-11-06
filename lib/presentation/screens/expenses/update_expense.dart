@@ -275,12 +275,14 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
 
       actions: <Widget>[
 
-        Container(
+        SizedBox(
           width: double.infinity,
           
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+
+            
             
             // Cancel button
             Expanded(
@@ -350,11 +352,11 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                       spendingDate: _spendingDate,
                       createdAt: widget.initialcreatedAt,
                     );
-                           
+
                     final updateExpensesUseCase = sl<UpdateExpensesUseCase>();
-                           
+
                     final result = await updateExpensesUseCase.call(uidOfTransaction: widget.transactionId,updatedExpense: updatedExpense,);
-                     
+
                     result.fold(
                       (failureMessage) {
                         if(mounted){
@@ -362,7 +364,7 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                         setState(() {
                           isloading =false;
                         });
-                           
+                        
                       },
                       (successMessage) {
                         if(mounted){
@@ -384,7 +386,7 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                       });
                   }
                 },
-                       ),
+                      ),
               ),
             ),
             ]

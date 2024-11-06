@@ -29,19 +29,25 @@ class _TitleCardWidgetState extends State<TitleCardWidget> {
     _fetchTodaySpending(); // Fetch the spending when the widget is initialized
   }
 
-  Future<void> _fetchTodaySpending() async {
-    if (widget.userId != null) {
+Future<void> _fetchTodaySpending() async {
+  if (widget.userId != null) {
+    try {
       double total = await firebaseUtils.getTodayTotalSpending(context, widget.userId!);
-      setState(() {
-        todaySpending = total;
-      });
+      if (mounted) {
+        setState(() {
+          todaySpending = total;
+        });
+      }
+    } catch (e) {
+      print("errro while loading totals total soending");
     }
   }
+}
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 15, 0, 7),
+      padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
 
       child: Container(
         decoration: BoxDecoration(
@@ -58,8 +64,15 @@ class _TitleCardWidgetState extends State<TitleCardWidget> {
               offset: Offset(0, 4), // Changes position of shadow
             ),
           ],
-          color: AppColors.foregroundColor,
-          borderRadius: BorderRadius.circular(16.0),
+ gradient: LinearGradient(
+    colors: [
+      AppColors.foregroundColor.withOpacity(0.8),
+      AppColors.foregroundColor,
+      AppColors.foregroundColor.withOpacity(0.3),
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  ),          borderRadius: BorderRadius.circular(16.0),
         ),
 
 

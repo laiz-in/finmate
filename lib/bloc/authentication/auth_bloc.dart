@@ -44,7 +44,7 @@ on<AuthCheckRequested>((event, emit) async {
       try {
         emit(AuthAuthenticated(user: _auth.currentUser!));
       } catch (error) {
-        // Emit appropriate error state (optional)
+        print("error in catch bloc bloc/authentication/auth_bloc.dart LINE NUMBER: 47");
       }
     });
 
@@ -53,7 +53,7 @@ on<AuthCheckRequested>((event, emit) async {
         await _auth.signOut();
         emit(AuthUnauthenticated());
       } catch (error) {
-        // Emit appropriate error state (optional)
+        print("error in catch bloc bloc/authentication/auth_bloc.dart LINE NUMBER: 56");
       }
     });
   }

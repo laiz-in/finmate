@@ -13,7 +13,7 @@ class AppTheme {
   );
 
   static final darkTheme = ThemeData(
-    primaryColor: AppColors.darkBackgroundColor,
+    primaryColor: const Color.fromARGB(255, 22, 22, 22),
     scaffoldBackgroundColor: Colors.black,
     cardColor: Color.fromARGB(255, 56, 56, 56),
     canvasColor: Colors.white.withOpacity(0.7),

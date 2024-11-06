@@ -33,10 +33,12 @@ class GraphCardWidgetState extends State<GraphCardWidget> {
 
   Future<void> _fetchTodaySpending() async {
     double total = await firebaseUtils.getTodayTotalSpending(context, widget.userId);
+     if (mounted) {
     setState(() {
       todaySpending = total;
       isLoading = false; // Update loading state
     });
+  }
   }
 
   @override

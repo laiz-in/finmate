@@ -17,10 +17,14 @@ class ResetPasswordForSettings extends StatefulWidget {
 class _ResetPasswordState extends State<ResetPasswordForSettings> {
   final TextEditingController _emailController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool isloading = false;
 
   // Reset password logic
   Future<void> _resetPassword() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        isloading = true;
+      });
       // Call the use case
       final resetPasswordUseCase = sl<ResetPasswordUseCase>();
 
@@ -28,9 +32,15 @@ class _ResetPasswordState extends State<ResetPasswordForSettings> {
 
       result.fold(
         (failure) {
+          setState(() {
+        isloading = false;
+      });
           errorSnackbar(context, "Unable to send reset password email.");
         },
         (success) {
+          setState(() {
+        isloading = false;
+      });
           // Show success Snackbar and navigate to login
           successSnackbar(context, 'Password reset email has been sent');
           Navigator.pushNamedAndRemoveUntil(
@@ -110,7 +120,17 @@ class _ResetPasswordState extends State<ResetPasswordForSettings> {
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  const SizedBox(width: 10),
+
+                                SizedBox(width: 10),
+                                if (isloading)
+                                      SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          color: Theme.of(context).hintColor,
+                                          strokeWidth: 3,
+                                        ),
+                                      ),
                                 ],
                               ),
                             ),

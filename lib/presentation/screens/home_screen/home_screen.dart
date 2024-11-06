@@ -55,6 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
             return ShimmerScreen();
             // Show shimmer effect while loading
           } else if (state is HomeScreenLoaded) {
+            
             final UserEntity user = state.user;
 
             return Scaffold(
@@ -62,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               body: Center(
                 child: RefreshIndicator(
-                  color: Theme.of(context).primaryColor,
+                  color: Colors.white,
                   backgroundColor: Colors.transparent.withOpacity(0.0),
                   strokeWidth: 2,
                   onRefresh: _fetchUserData,
@@ -129,17 +130,20 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) => Dialog(
-              backgroundColor: Colors.transparent,
-              insetPadding: EdgeInsets.all(25),
-              child: AddSpendingBottomSheet(), // Renamed as AddSpendingDialog for clarity
-            ),
-          );
-        },
-        
+
+      onPressed: () => showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Allows the modal to extend beyond half the screen
+      backgroundColor: Colors.transparent, // Set transparent if you want rounded corners without clipping
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: AddSpendingBottomSheet(),
+        );
+      },
+    ),
         backgroundColor: AppColors.foregroundColor,
         elevation: 5,
         child: Icon(Icons.add, color: Colors.white, size: 40),

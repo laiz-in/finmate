@@ -96,6 +96,18 @@ class ExpensesRepositoryImpl implements ExpensesRepository {
   }
 
 
+  // TO DELETE THE EXPENSE
+  @override
+  Future<Either<String,String>> deleteExpense(String uidOfTransaction) async {
+    try{
+      await _firebaseService.deleteExpenses(uidOfTransaction);
+      return Right("Expense deleted succesfully");
+    } catch(e){
+      return Left("Failed to delete the expense");
+    }
+  }
+
+
   // FETCH LAST 15 DAY EXPENSES IN TOTAL
   @override
   Future<Either<String, Map<String, double>>> fetchLastSevenDayExpenses() async {

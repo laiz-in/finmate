@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class LoadingDots extends StatefulWidget {
   @override
@@ -50,14 +48,10 @@ class _LoadingDotsState extends State<LoadingDots> with SingleTickerProviderStat
           curve: Interval(0.3 * index, 1.0, curve: Curves.easeIn),
         ),
       ),
-      child: Text(
-        
-        '.',
-        style: GoogleFonts.poppins(
-          color: Color.fromARGB(255, 244, 245, 244),
-          fontSize: 45,
-          fontWeight: FontWeight.w700,
-        ),
+      child: Center(
+        child: Icon(Icons.arrow_forward_ios,
+        color: Theme.of(context).scaffoldBackgroundColor,
+        size: 30,),
       ),
     );
   }

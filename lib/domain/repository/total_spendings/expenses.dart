@@ -10,6 +10,9 @@ abstract class ExpensesRepository {
 
   Future<Either> updateExpense(String uidOfTransaction ,ExpensesModel updatedExpense);
 
+  Future<Either> deleteExpense(String uidOfTransaction);
+
+
   Future<Either> addExpense(ExpensesModel expense);
 
   Future<Either<String, Map<String, double>>> fetchLastSevenDayExpenses(); // New method

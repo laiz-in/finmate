@@ -20,6 +20,7 @@ import 'package:moneyy/domain/usecases/auth/sign_in.dart';
 import 'package:moneyy/domain/usecases/auth/sign_out.dart';
 import 'package:moneyy/domain/usecases/auth/sign_up.dart';
 import 'package:moneyy/domain/usecases/expenses/add_expense_usecase.dart';
+import 'package:moneyy/domain/usecases/expenses/delete_expenses_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/last_seven_day_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/last_three_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/total_expenses_usecase.dart';
@@ -35,12 +36,14 @@ Future<void> initializeDependencies() async {
   // spendings related
   sl.registerLazySingleton(() => LastSevenDayExpensesUseCase(sl()));
   sl.registerLazySingleton(() => UpdateExpensesUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteExpensesUseCase(sl()));
+
   sl.registerLazySingleton(() => ExpensesFirebaseService());
   sl.registerLazySingleton<ExpensesRepository>(() => ExpensesRepositoryImpl(sl()));
   sl.registerLazySingleton(() => TotalExpensesUseCase(sl()));
   sl.registerLazySingleton(() => LastThreeExpensesUseCase(sl()));
   sl.registerLazySingleton(() => AddExpensesUseCase(sl()));
-  sl.registerFactory(() => ExpensesBloc(sl(), sl(), sl(), sl()));
+  sl.registerFactory(() => ExpensesBloc(sl(), sl()));
 
 
   // Register Authentication-related services

@@ -108,7 +108,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: const Color.fromARGB(255, 49, 49, 49).withOpacity(0.18),
+              color: Color.fromARGB(255, 37, 37, 37).withOpacity(0.08),
               spreadRadius: 8,
               blurRadius: 15,
               offset: const Offset(0, 4), // changes position of shadow
@@ -129,11 +129,12 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon( Icons.hourglass_disabled,color: Theme.of(context).canvasColor.withOpacity(0.6),size: 40,),
+                          SizedBox(height: 10,),
                           Text(
-                            "no transactions found",
+                            "no expenses found!",
                             style: GoogleFonts.poppins(
                               fontSize: 15,
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w500,
                               color: Theme.of(context).canvasColor.withOpacity(0.6),
                             ),
                           ),

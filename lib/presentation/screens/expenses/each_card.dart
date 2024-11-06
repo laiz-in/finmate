@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:moneyy/common/widgets/error_snackbar.dart';
+import 'package:moneyy/common/widgets/success_snackbar.dart';
 import 'package:moneyy/domain/entities/spending/expenses.dart';
+import 'package:moneyy/domain/usecases/expenses/delete_expenses_usecase.dart';
 import 'package:moneyy/presentation/screens/expenses/delete_expense_button.dart';
 import 'package:moneyy/presentation/screens/expenses/update_expense.dart';
+import 'package:moneyy/service_locator.dart';
 
 class TransactionCard extends StatefulWidget {
   final ExpensesEntity transaction;
@@ -71,7 +75,7 @@ class TransactionCardState extends State<TransactionCard> {
         decoration: BoxDecoration(
           boxShadow: [
       BoxShadow(
-        color: const Color.fromARGB(255, 65, 64, 64).withOpacity(0.1), // Shadow color
+        color: const Color.fromARGB(255, 65, 64, 64).withOpacity(0.13), // Shadow color
         offset: const Offset(0, 4), // Horizontal and vertical offset
         blurRadius: 12.0, // Blur radius
         spreadRadius: 3.0, // Spread radius
@@ -178,17 +182,41 @@ class TransactionCardState extends State<TransactionCard> {
               ),
             ),
 
+
+            // EXPANSION CONTIANS DELETE AND UPDATE BUTTON
             if (_expanded) ...[
               SizedBox(height: 10.0),
               Padding(
                 padding: const EdgeInsets.only(bottom:8.0),
                 child: Row(
                   children: [
+
                 
-                  // button to delete
-                  DeleteExpenseButton(uidOfTransaction: widget.transaction.uidOfTransaction),
+                  // BUTTON TO DELETE EXPENSE
+                  DeleteExpenseButton(
+                    onDeleteConfirmed: () async {
+                      // Execute delete action here
+                      final deleteExpensesUseCase = sl<DeleteExpensesUseCase>();
+                      final result = await deleteExpensesUseCase.call(uidOfTransaction:widget.transaction.uidOfTransaction);
+
+                      result.fold(
+                        (failureMessage) {
+                          errorSnackbar(context, "failed to delete expense");
+                          widget.onDelete();
+                        },
+                        (successMessage) {
+                          successSnackbar(context, "expense has been deleted");
+                          widget.onDelete();
+
+                        },
+                      );
+                    },
+                  ),
                 
-                  
+
+
+
+                  // BUTTON TO UPDATE EXPENSE
                     SizedBox(width: 7.0),
                     Expanded(
                       child: ElevatedButton.icon(
@@ -212,8 +240,9 @@ class TransactionCardState extends State<TransactionCard> {
                         label: Text(
                           'Update',
                           style: GoogleFonts.poppins(
+                            fontSize: 15,
                             color: Colors.white,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                         style: ButtonStyle(
@@ -223,7 +252,7 @@ class TransactionCardState extends State<TransactionCard> {
                           elevation: WidgetStateProperty.all<double>(0),
                           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
+                              borderRadius: BorderRadius.circular(12.0),
                             ),
                           ),
                         ),

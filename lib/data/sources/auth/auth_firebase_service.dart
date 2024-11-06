@@ -86,7 +86,7 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
       {
         message = "you are requesting too many times";
       }else {
-        message ="Unknown error occured";
+        message ="A network error occured";
       }
       return Left(message);
 

@@ -1,29 +1,37 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:moneyy/common/widgets/error_snackbar.dart';
-import 'package:moneyy/common/widgets/success_snackbar.dart';
-import 'package:moneyy/firebase/firebase_utils.dart' as firebase_utils;
 
+class DeleteExpenseButton extends StatefulWidget {
+  final Future<void> Function() onDeleteConfirmed; // Make onDeleteConfirmed async to await operation
 
-class DeleteExpenseButton extends StatelessWidget {
-  final String uidOfTransaction;
-
-  const DeleteExpenseButton({super.key,
-    required this.uidOfTransaction,
+  const DeleteExpenseButton({
+    super.key,
+    required this.onDeleteConfirmed,
   });
 
   @override
+  State<DeleteExpenseButton> createState() => _DeleteExpenseButtonState();
+}
+
+class _DeleteExpenseButtonState extends State<DeleteExpenseButton> {
+  bool _isLoading = false; // Track loading state
+
+  @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ElevatedButton.icon(
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              backgroundColor: Colors.white,
-              elevation: 15,
-              title: Center(
+    return ElevatedButton.icon(
+      onPressed: () async {
+        // Show confirmation dialog
+        final isConfirmed = await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: Colors.white,
+            elevation: 15,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(26.0),
+            ),
+            title: Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: Center(
                 child: Text(
                   'Are you sure you want to delete this expense?',
                   textAlign: TextAlign.center,
@@ -34,91 +42,86 @@ class DeleteExpenseButton extends StatelessWidget {
                   ),
                 ),
               ),
-
-
-              actions: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-
-                    // cancel button
-                    TextButton(
-                      onPressed: () => Navigator.of(context).pop(),
-                      child: Text(
-                        'No, cancel',
-                        style: GoogleFonts.poppins(
-                          fontSize: 13,
-                          color: Color.fromARGB(255, 173, 108, 103),
-                          fontWeight: FontWeight.w600,
-                        ),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Cancel button
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(false), // Return false on cancel
+                    child: Text(
+                      'No, cancel',
+                      style: GoogleFonts.poppins(
+                        fontSize: 13,
+                        color: Color.fromARGB(255, 173, 108, 103),
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-
-                    // proceed to delete button
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-
-                      child: Container(
-                        decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(12)),
-                        color: Color.fromARGB(255, 212, 76, 66),
-
+                  ),
+                  const SizedBox(width: 10),
+                  
+                  // Confirm delete button
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 189, 84, 52),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
                       ),
-                        child: TextButton(
-                          onPressed: () async {
-                            final userId = FirebaseAuth.instance.currentUser?.uid;
-                            final transactionId = uidOfTransaction;
-                            if (userId == null) {
-                              errorSnackbar(context, 'User not logged in');
-                              return;
-                            }
-                        
-                            try {
-                              await firebase_utils.deleteTransaction(
-                                context,
-                                userId,
-                                transactionId,
-                              );
-                              Navigator.of(context).pop();
-                        
-                              successSnackbar(context, "Transaction has been deleted");
-                            } catch (e) {
-                              Navigator.of(context).pop();
-                              errorSnackbar(context, 'Failed to delete: ${e.toString()}');
-                            } finally {
-                              if (Navigator.of(context).canPop()) {
-                                Navigator.of(context).pop();
-                              }
-                            }
-                          },
-                          child: Text(
-                            'Yes, delete',
-                            style: GoogleFonts.poppins(
-                              color: Color.fromARGB(255, 248, 245, 245),
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
+                      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 28.0),
+                    ),
+                    child: Text(
+                      'Delete',
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
-          );
-        },
-        label: Icon(Icons.delete_outlined,size: 25,color: Color.fromARGB(255, 155, 77, 77),),
-        style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all<Color>(
-            Color.fromARGB(255, 248, 214, 214),
+                    onPressed: () {
+                      Navigator.of(context).pop(true); // Return true on confirmation
+                    },
+                  ),
+                ],
+              ),
+            ],
           ),
-          elevation: WidgetStateProperty.all<double>(0),
-          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
+        );
+
+        // Perform delete in parent if confirmed
+        if (isConfirmed == true) {
+          setState(() {
+            _isLoading = true;
+          });
+          await widget.onDeleteConfirmed();
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      },
+      icon: const Icon(Icons.delete_outlined, size: 25, color: Color.fromARGB(255, 155, 77, 77)),
+      label: _isLoading
+          ? const SizedBox(
+              height: 16,
+              width: 16,
+              child: CircularProgressIndicator(
+                color: Color.fromARGB(255, 155, 77, 77),
+                strokeWidth: 2.0,
+              ),
+            )
+          : Text(
+              'Delete',
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                color: const Color.fromARGB(255, 155, 77, 77),
+                fontWeight: FontWeight.w500,
+              ),
             ),
-          ),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: const Color.fromARGB(255, 248, 214, 214),
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
         ),
       ),
     );
