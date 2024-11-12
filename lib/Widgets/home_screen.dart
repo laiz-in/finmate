@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final UserService _userService = UserService();
-  List<CustomTransaction> _transactions = [];
+  // List<CustomTransaction> _transactions = [];
 
   String? userName, userId;
   double? totalSpending,todaySpending,monthlyLimit,dailyLimit, dailyLimitPerecentage,monthlyLimitPercentage;
@@ -657,7 +657,7 @@ Widget _graphCard(context,double? todaySpending, double? totalSpending, double? 
                     radius: 40.0,
                     lineWidth: 7.0,
                     percent: dailySpendingPercentageForGraph,
-                    center: Text('${dailySpendingPercentage?.toStringAsFixed(0)}%',
+                    center: Text('${dailySpendingPercentage.toStringAsFixed(0)}%',
                     style: GoogleFonts.montserrat(color: Theme.of(context).cardColor, fontWeight: FontWeight.w800,fontSize: 18),),
                     circularStrokeCap: CircularStrokeCap.round,
                     progressColor:Theme.of(context).cardColor,

@@ -81,7 +81,7 @@ class SettingsFirebaseServiceImpl extends SettingsFirebaseService {
 
       return Right("Daily limit updated successfully");
     } on FirebaseException catch (e) {
-      return Left("Failed to update daily limit due to firebase exception");
+      return Left("Failed to update daily limit due to firebase exception: :$e");
     } catch (e) {
       return Left("Unexpected error occurred: $e");
     }

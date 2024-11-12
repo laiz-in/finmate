@@ -18,7 +18,7 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
   DateTime? _startDateFilter;
   DateTime? _endDateFilter;
   bool? _sortAscending;
-  int _currentPage = 0;
+  // int _currentPage = 0;
   static const int _itemsPerPage = 20;
 
   ExpensesBloc(

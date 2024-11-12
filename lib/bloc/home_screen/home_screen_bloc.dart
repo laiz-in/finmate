@@ -19,7 +19,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     // Listen to network status changes
     networkSubscription = networkBloc.stream.listen((networkState) {
       if (networkState is NetworkDisconnected) {
-        emit(HomeScreenError('No internet connection.'));
+        // emit(HomeScreenError('No internet connection.'));
       } else if (networkState is NetworkConnected) {
         add(FetchUserData()); // Re-fetch data when internet is back
       }
