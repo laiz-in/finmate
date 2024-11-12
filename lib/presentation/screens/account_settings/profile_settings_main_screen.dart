@@ -114,7 +114,12 @@ showDialog(
 
 
                     // Text button to change email
-                    TextButton(onPressed: () {
+                    TextButton(
+                      style: ButtonStyle(
+                      splashFactory: NoSplash.splashFactory,
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
+                      ),
+                      onPressed: () {
                                       Navigator.pushNamed(context, '/changeEmail');
                                       },
                     child: Row(
@@ -132,7 +137,12 @@ showDialog(
 
 
                     // Text button to update password
-                    TextButton(onPressed: () {
+                    TextButton(
+                      style: ButtonStyle(
+                      splashFactory: NoSplash.splashFactory,
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
+                      ),
+                      onPressed: () {
                                 Navigator.pushNamed(context, AppRoutes.passwordResetScreenForSettings);
                                 },
                                 child: Row(
@@ -150,7 +160,12 @@ showDialog(
 
 
                     // Text button to change daily limit
-                    TextButton(onPressed: () {
+                    TextButton(
+                      
+                      style: ButtonStyle(
+                      splashFactory: NoSplash.splashFactory,
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
+                      ),onPressed: () {
                                       Navigator.pushNamed(context, AppRoutes.changeDailyLimit);
                                       },
                     child: Row(
@@ -162,13 +177,19 @@ showDialog(
                         Icon(Icons.arrow_forward_ios,color: Theme.of(context).canvasColor.withOpacity(0.5),size: 17,),
                       ],
                     )
+                    
                     ),
                     Divider(color: Theme.of(context).canvasColor.withOpacity(0.2),),
 
 
 
                     // Textb button to change monthly limit
-                    TextButton(onPressed: (){Navigator.pushNamed(context, AppRoutes.changeMonthlyLimit);},
+                    TextButton(
+                      style: ButtonStyle(
+                      splashFactory: NoSplash.splashFactory,
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
+                      ),
+                      onPressed: (){Navigator.pushNamed(context, AppRoutes.changeMonthlyLimit);},
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
@@ -185,7 +206,10 @@ showDialog(
 
                     // Textb button to send feedback
                     TextButton(
-                      
+                      style: ButtonStyle(
+                      splashFactory: NoSplash.splashFactory,
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
+                      ),
                       onPressed: (){Navigator.pushNamed(
                                               context,
                                               AppRoutes.sendFeedbackScreen,

@@ -116,7 +116,7 @@ Widget _forgotPasswordLink(BuildContext context){
                         child: Text(
                           "Forgot Password?",
                           style: GoogleFonts.poppins(
-                            color: Colors.white.withOpacity(0.4),
+                          color:AppColors.foregroundColorFaded2.withOpacity(0.5),
                             letterSpacing: 0.5,
                             fontWeight: FontWeight.w500,
                           ),
@@ -136,9 +136,10 @@ Widget _redirectToSignUpLink(BuildContext context){
                       Text(
                         "Don't have an account?",
                         style: GoogleFonts.poppins(
+                          fontSize: 15,
                           color:AppColors.foregroundColorFaded2.withOpacity(0.5),
                           letterSpacing: 0.5,
-                          fontWeight: FontWeight.w500,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
                       SizedBox(width: 5), // Add space between texts
@@ -147,9 +148,9 @@ Widget _redirectToSignUpLink(BuildContext context){
                           Navigator.pushNamed(context, AppRoutes.signUp);
                         },
                         child: Text(
-                          "Sign up",
+                          "Register now",
                           style: GoogleFonts.poppins(
-                            color: Color.fromARGB(255, 185, 221, 193),
+                            color: AppColors.foregroundColorFaded2.withOpacity(0.8),
                             fontWeight: FontWeight.w500,
                             fontSize: 15,
                           ),

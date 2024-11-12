@@ -1,31 +1,27 @@
-// ignore_for_file: unnecessary_string_interpolations
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:moneyy/core/colors/colors.dart';
 
-class FilterDialog extends StatefulWidget {
+class FilterBottomSheet extends StatefulWidget {
   final Function(bool) onSortByAmount;
   final Function(String?) onFilterByCategory;
   final Function(DateTime?, DateTime?) onFilterByDate;
-  final Function() onClearFilters; // Add this line
+  final Function() onClearFilters;
 
-
-  const FilterDialog({
+  const FilterBottomSheet({
     required this.onSortByAmount,
     required this.onFilterByCategory,
     required this.onFilterByDate,
-    required this.onClearFilters, // Also update this line
-
+    required this.onClearFilters,
   });
 
   @override
-  _FilterDialogState createState() => _FilterDialogState();
+  _FilterBottomSheetState createState() => _FilterBottomSheetState();
 }
 
-class _FilterDialogState extends State<FilterDialog> {
+class _FilterBottomSheetState extends State<FilterBottomSheet> {
   String? _category;
   DateTime? _startDate;
   DateTime? _endDate;
@@ -47,15 +43,29 @@ class _FilterDialogState extends State<FilterDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: Theme.of(context).primaryColor,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(26.0),
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
       ),
-      content: SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(30,15,30,30),
+      child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+
+      
+              Center(
+                child: Container(
+                  height: 3,
+                  width:100 ,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).canvasColor.withOpacity(0.3)
+                  ),
+                ),
+              ),
+
+            SizedBox(height: 20,),
             // Sort by amount toggle
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -65,7 +75,7 @@ class _FilterDialogState extends State<FilterDialog> {
                   style: GoogleFonts.poppins(
                       color: Theme.of(context).canvasColor,
                       fontWeight: FontWeight.w500,
-                      fontSize: 16),
+                      fontSize: 14),
                 ),
                 CupertinoSwitch(
                   value: _sortByAmountEnabled,
@@ -84,11 +94,12 @@ class _FilterDialogState extends State<FilterDialog> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _buildSortButton('Low to high', true),
+                  SizedBox(width: 10),
                   _buildSortButton('High to low', false),
                 ],
               ),
-            const SizedBox(height: 10),
 
+            const SizedBox(height: 10),
             Divider(color: Theme.of(context).canvasColor.withOpacity(0.5)),
             const SizedBox(height: 10),
 
@@ -101,7 +112,7 @@ class _FilterDialogState extends State<FilterDialog> {
                   style: GoogleFonts.poppins(
                       color: Theme.of(context).canvasColor,
                       fontWeight: FontWeight.w500,
-                      fontSize: 16),
+                      fontSize: 14),
                 ),
                 CupertinoSwitch(
                   value: _filterByDateEnabled,
@@ -125,6 +136,7 @@ class _FilterDialogState extends State<FilterDialog> {
                       _startDate = picked;
                     });
                   }),
+                  SizedBox(width: 10),
                   _buildDateButton('To', _endDate, (picked) {
                     setState(() {
                       _endDate = picked;
@@ -132,6 +144,7 @@ class _FilterDialogState extends State<FilterDialog> {
                   }),
                 ],
               ),
+            
             const SizedBox(height: 6),
             Divider(color: Theme.of(context).canvasColor.withOpacity(0.5)),
             const SizedBox(height: 6),
@@ -145,7 +158,7 @@ class _FilterDialogState extends State<FilterDialog> {
                   style: GoogleFonts.poppins(
                       color: Theme.of(context).canvasColor,
                       fontWeight: FontWeight.w500,
-                      fontSize: 16),
+                      fontSize: 14),
                 ),
                 CupertinoSwitch(
                   value: _filterByCategoryEnabled,
@@ -159,85 +172,109 @@ class _FilterDialogState extends State<FilterDialog> {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             if (_filterByCategoryEnabled)
               _buildCategoryDropdown(),
-            const SizedBox(height: 10),
+            const SizedBox(height: 7),
             Divider(color: Theme.of(context).canvasColor.withOpacity(0.5)),
+            const SizedBox(height: 12),
+
+            // Clear filters and Apply buttons
+            Row(
+              children: [
+                // Clear filters button container
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Theme.of(context).canvasColor),
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 5,),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: () {
+                            widget.onClearFilters();
+                            Navigator.of(context).pop();
+                          },
+                          child: Text(
+                            'Clear all',
+                            style: GoogleFonts.poppins(
+                              fontSize: 15,
+                              color: Theme.of(context).canvasColor,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          Icons.close,
+                          color: Theme.of(context).canvasColor,
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Spacing between buttons
+                const SizedBox(width: 8),
+
+                // Apply filters button container
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).canvasColor,
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: TextButton(
+                      onPressed: () {
+                        if (_sortByAmountEnabled) {
+                          widget.onSortByAmount(_sortAscending); 
+                        }
+                        if (_filterByCategoryEnabled) {
+                          widget.onFilterByCategory(_category);
+                        }
+                        if (_filterByDateEnabled) {
+                          widget.onFilterByDate(_startDate, _endDate);
+                        }
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(
+                        'Apply',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
-      actions: [
-
-        TextButton(
-    onPressed: () {
-    widget.onClearFilters();
-  Navigator.of(context).pop();
-},
-    child: Text(
-      'Clear Filters', // Add a button for clearing filters
-      style: GoogleFonts.montserrat(
-          color: const Color.fromARGB(255, 202, 109, 109),
-          fontWeight: FontWeight.w600),
-    ),
-  ),
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(
-            'Cancel',
-            style: GoogleFonts.montserrat(
-                color: const Color.fromARGB(255, 202, 109, 109),
-                fontWeight: FontWeight.w600),
-          ),
-        ),
-        ElevatedButton(
-          style: ButtonStyle(
-            backgroundColor:
-                WidgetStateProperty.all(Theme.of(context).cardColor),
-          ),
-          onPressed: () {
-            if (_sortByAmountEnabled) {
-              widget.onSortByAmount(_sortAscending);
-            }
-            if (_filterByCategoryEnabled) {
-              widget.onFilterByCategory(_category);
-            }
-            if (_filterByDateEnabled) {
-              widget.onFilterByDate(_startDate, _endDate);
-            }
-            Navigator.of(context).pop();
-          },
-          child: Text(
-            'Apply',
-            style: GoogleFonts.montserrat(
-                fontSize: 14,
-                color: Theme.of(context).primaryColor,
-                fontWeight: FontWeight.w600),
-          ),
-        ),
-      ],
     );
   }
 
   Widget _buildSortButton(String text, bool ascending) {
     return TextButton(
-      
       onPressed: () {
         setState(() {
           _sortAscending = ascending;
         });
       },
       style: TextButton.styleFrom(
-        
         shape: RoundedRectangleBorder(
-            
-            borderRadius: BorderRadius.circular(50.0),
-          ),
-        
+          borderRadius: BorderRadius.circular(50.0),
+        ),
         backgroundColor: _sortAscending == ascending
             ? Theme.of(context).canvasColor
             : Theme.of(context).canvasColor.withOpacity(0.2),
-        minimumSize: const Size(130, 30),
+        minimumSize: const Size(125, 30),
       ),
       child: Text(
         text,
@@ -252,7 +289,7 @@ class _FilterDialogState extends State<FilterDialog> {
 
   Widget _buildDateButton(String label, DateTime? date, Function(DateTime) onDatePicked) {
     return SizedBox(
-      width: 130.0,
+      width: 125.0,
       height: 30.0,
       child: TextButton(
         onPressed: () async {
@@ -297,7 +334,7 @@ class _FilterDialogState extends State<FilterDialog> {
         padding: const EdgeInsets.fromLTRB(10,8,8,8),
         child: DropdownButton<String>(
           dropdownColor: Theme.of(context).scaffoldBackgroundColor,
-          icon: Icon(Icons.arrow_forward_ios,color: Theme.of(context).scaffoldBackgroundColor,size: 15,),
+          icon: Icon(Icons.arrow_forward_ios,color: Theme.of(context).primaryColor,size: 15,),
           borderRadius: BorderRadius.circular(20),
           value: _category,
           underline: Container(),

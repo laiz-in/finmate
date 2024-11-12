@@ -41,11 +41,12 @@ class ShimmerScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
           
             children: [
-              SizedBox(height: 30,),
-          
+              SizedBox(height: 20,),
+              
+              // FOR TITLE CARD
               Shimmer.fromColors(
-                baseColor: Theme.of(context).highlightColor,
-                highlightColor: Theme.of(context).highlightColor.withOpacity(0.7),
+                baseColor: Theme.of(context).highlightColor.withOpacity(0.7),
+                highlightColor: Theme.of(context).highlightColor.withOpacity(0.6),
                 child: Container(
                   width: double.infinity,
                   height: 205,
@@ -59,9 +60,10 @@ class ShimmerScreen extends StatelessWidget {
           
               SizedBox(height: 32),
           
+              // FOR PERCENTAGE INDICATOR
               Shimmer.fromColors(
-                baseColor:  Theme.of(context).highlightColor,
-                highlightColor: Theme.of(context).highlightColor.withOpacity(0.7),
+                baseColor: Theme.of(context).highlightColor.withOpacity(0.7),
+                highlightColor: Theme.of(context).highlightColor.withOpacity(0.6),
                 child: Container(
                   width: double.infinity,
                   height: 165,
@@ -74,29 +76,30 @@ class ShimmerScreen extends StatelessWidget {
               ),
           
               SizedBox(height: 12,),
-              
-                Shimmer.fromColors(
-                baseColor: Theme.of(context).highlightColor,
-                highlightColor:  Theme.of(context).highlightColor.withOpacity(0.7),
-                child: Container(
-                  width: double.infinity,
-                  height: 120,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(15)),
-                    color:  Theme.of(context).highlightColor,
-                    shape: BoxShape.rectangle,
-                  ),
-                ),
-              ),
+
+            // FOR BAR CHART
+           Shimmer.fromColors(
+  baseColor: Theme.of(context).highlightColor.withOpacity(0.7),
+  highlightColor: Theme.of(context).highlightColor.withOpacity(0.6),
+  child: Container(
+    width: double.infinity,
+    height: 120,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.all(Radius.circular(15)),
+      color: Theme.of(context).highlightColor,
+    ),
+  ),
+),
+
           
-              SizedBox(height: 37,),
+          SizedBox(height: 37,),
           
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Shimmer.fromColors(
           
-                baseColor: Theme.of(context).highlightColor,
+                baseColor: Theme.of(context).highlightColor.withOpacity(0.8),
                 highlightColor: Theme.of(context).highlightColor.withOpacity(0.7),
                 child: Container(
                   width:150,
@@ -111,8 +114,8 @@ class ShimmerScreen extends StatelessWidget {
           
               Shimmer.fromColors(
                 
-                baseColor: Theme.of(context).highlightColor,
-                highlightColor: Theme.of(context).highlightColor.withOpacity(0.7),
+                baseColor: Theme.of(context).highlightColor.withOpacity(0.7),
+                highlightColor: Theme.of(context).highlightColor.withOpacity(0.6),
                 child: Container(
                   width: 100,
                   height: 15,
@@ -130,8 +133,8 @@ class ShimmerScreen extends StatelessWidget {
               SizedBox(height: 17,),
           
               Shimmer.fromColors(
-                baseColor: Theme.of(context).highlightColor,
-                highlightColor: Theme.of(context).highlightColor.withOpacity(0.7),
+                baseColor: Theme.of(context).highlightColor.withOpacity(0.7),
+                highlightColor: Theme.of(context).highlightColor.withOpacity(0.6),
                 child: Container(
                   width: double.infinity,
                   height: 175,

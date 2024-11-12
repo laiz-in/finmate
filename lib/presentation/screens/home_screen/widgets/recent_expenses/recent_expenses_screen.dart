@@ -163,7 +163,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                                     color: Colors.red.shade200,
                                   ),
                                   Text(
-                                    '₹${transaction.spendingAmount.toStringAsFixed(1)}',
+                                    transaction.spendingAmount.toStringAsFixed(1),
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.montserrat(
                                       fontSize: 18,
@@ -186,8 +186,8 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                                       transaction.spendingDescription,
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.poppins(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w400,
                                         color: Theme.of(context).canvasColor.withOpacity(0.7),
                                       ),
                                     ),

@@ -22,7 +22,7 @@ class EmailField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10.0, 20, 10.0, 20.0),
+      padding: const EdgeInsets.fromLTRB(10.0, 20, 10.0, 5.0),
       child: TextFormField(
         controller: emailController,
         cursorColor: Colors.white.withOpacity(0.7),
@@ -45,7 +45,7 @@ class EmailField extends StatelessWidget {
           labelStyle: GoogleFonts.poppins(
             color: Colors.white.withOpacity(0.5),
             fontSize: 16,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w400,
           ),
           floatingLabelBehavior: FloatingLabelBehavior.never,
           border: OutlineInputBorder(
@@ -53,21 +53,21 @@ class EmailField extends StatelessWidget {
               color: Color.fromARGB(255, 134, 168, 163),
               width: 0,
             ),
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15)),
           ),
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(
               color: Color.fromARGB(255, 134, 168, 163),
               width: 0,
             ),
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15)),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Colors.white.withOpacity(0.5),
               width: 1,
             ),
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15)),
           ),
         ),
         validator: _validateEmail,

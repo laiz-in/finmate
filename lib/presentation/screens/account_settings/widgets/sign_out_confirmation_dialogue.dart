@@ -18,32 +18,50 @@ class _SignOutConfirmationDialogState extends State<SignOutConfirmationDialog> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(0),
 
 
       child: AlertDialog(
+        contentPadding: EdgeInsets.zero,
         backgroundColor: Colors.white,
         elevation: 15,
 
         // Log out confirmation text
-        title: Padding(
-          padding: const EdgeInsets.only(bottom: 20),
-          child: Center(
-            child: Text(
-              'Are you sure you want to log out?',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
-                color: const Color.fromARGB(255, 197, 81, 73),
-                fontWeight: FontWeight.w600,
-                fontSize: 15,
+        title: Column(
+          children: [
+
+            Padding(
+              padding: const EdgeInsets.all(5),
+              child: Center(
+                child: Text(
+                  'Are you sure you want to log out?',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    color: const Color.fromARGB(255, 197, 81, 73),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                  ),
+                ),
               ),
             ),
-          ),
+          
+          SizedBox(height: 8,),
+
+          SizedBox(
+                width: double.infinity, // This will make the Divider expand to the full width
+                child: Divider(
+                  endIndent: 0,
+                  indent: 0,
+                  color: Colors.red.withOpacity(0.3),
+                  height: 1, // Adjust thickness as needed
+                ),
+              ),          ],
         ),
 
 
         
         actions: [
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -67,6 +85,7 @@ class _SignOutConfirmationDialogState extends State<SignOutConfirmationDialog> {
 
               // Proceed button
               Container(
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(12)),
                   color: Color.fromARGB(255, 212, 76, 66),

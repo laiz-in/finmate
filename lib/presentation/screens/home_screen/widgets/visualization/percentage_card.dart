@@ -123,7 +123,7 @@ class GraphCardWidgetState extends State<GraphCardWidget> {
           SizedBox(height: 10),
           CircularPercentIndicator(
             radius: 40.0,
-            lineWidth: 7.0,
+            lineWidth: 9.0,
             percent: percentage,
             center: Text(
               '${(percentage*100).toStringAsFixed(0)}%',

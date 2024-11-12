@@ -41,7 +41,7 @@ class PasswordField extends StatelessWidget {
           labelStyle: GoogleFonts.poppins(
             color: Colors.white.withOpacity(0.5),
             fontSize: 16,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w400,
           ),
           floatingLabelBehavior: FloatingLabelBehavior.never,
           border: OutlineInputBorder(
@@ -49,21 +49,21 @@ class PasswordField extends StatelessWidget {
               color: Color.fromARGB(255, 134, 168, 163),
               width: 0,
             ),
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15),bottomRight: Radius.circular(15)),
           ),
           enabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(
               color: Color.fromARGB(255, 134, 168, 163),
               width: 0,
             ),
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15),bottomRight: Radius.circular(15)),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Colors.white.withOpacity(0.5),
               width: 1,
             ),
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15),bottomRight: Radius.circular(15)),
           ),
         ),
         validator: _validatePassword,

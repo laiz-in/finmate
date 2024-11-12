@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
+import 'package:moneyy/core/colors/colors.dart';
 import 'package:moneyy/data/models/auth/signin_user_req.dart';
 import 'package:moneyy/domain/usecases/auth/sign_in.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
-import 'package:moneyy/presentation/screens/user_auth/widgets/loading_dots.dart';
 import 'package:moneyy/service_locator.dart';
 
 class LoginButtonWidget extends StatefulWidget {
@@ -69,12 +69,12 @@ class LoginButtonWidgetState extends State<LoginButtonWidget> {
           height: 65,
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.8),
+            color: Colors.white.withOpacity(0.7),
             borderRadius: BorderRadius.circular(15.0),
           ),
           child: Center(
             child: isLoading
-                ? Center(child: LoadingDots()) // Show loading animation
+                ? Center(child: CircularProgressIndicator(color: AppColors.foregroundColor,strokeWidth: 2,)) // Show loading animation
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

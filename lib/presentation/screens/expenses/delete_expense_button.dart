@@ -24,25 +24,36 @@ class _DeleteExpenseButtonState extends State<DeleteExpenseButton> {
         final isConfirmed = await showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
+            buttonPadding: EdgeInsets.all(0),
             backgroundColor: Colors.white,
             elevation: 15,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(26.0),
             ),
-            title: Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: Center(
-                child: Text(
-                  'Are you sure you want to delete this expense?',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
-                    color: Color.fromARGB(255, 197, 81, 73),
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15,
+
+
+            title: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Center(
+                    child: Text(
+                      'Are you sure you want to delete this expense?',
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.poppins(
+                        color: Color.fromARGB(255, 197, 81, 73),
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+
+                Divider(color: Colors.red.withOpacity(0.2),endIndent: 0,)
+              ],
             ),
+
+
             actions: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

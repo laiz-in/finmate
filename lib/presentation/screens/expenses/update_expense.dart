@@ -151,6 +151,35 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
               ),
               SizedBox(height: 15),
 
+              // Description field
+              TextFormField(
+                initialValue: _spendingDescription,
+                style: GoogleFonts.poppins(
+                  color: Theme.of(context).canvasColor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  decoration: TextDecoration.none
+                ),
+                decoration: InputDecoration(
+                  
+                  filled: true,
+                  fillColor: Theme.of(context).cardColor,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                    borderSide: BorderSide.none,
+                  ),
+                  contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a description';
+                  }
+                  _spendingDescription = value;
+                  return null;
+                },
+              ),
+              SizedBox(height: 15),
+
               // Dropdown to select category
               DropdownButtonFormField<String>(
                 
@@ -207,35 +236,6 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                   });
                 },
                 isExpanded: true,
-              ),
-              SizedBox(height: 15),
-
-              // Description field
-              TextFormField(
-                initialValue: _spendingDescription,
-                style: GoogleFonts.poppins(
-                  color: Theme.of(context).canvasColor,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w500,
-                  decoration: TextDecoration.none
-                ),
-                decoration: InputDecoration(
-                  
-                  filled: true,
-                  fillColor: Theme.of(context).cardColor,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a description';
-                  }
-                  _spendingDescription = value;
-                  return null;
-                },
               ),
               SizedBox(height: 15),
 

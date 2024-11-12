@@ -52,7 +52,7 @@ class TransactionCardState extends State<TransactionCard> {
       case 'stationary':
         return Icons.shopping_cart;
       case 'groceries':
-        return Icons.local_grocery_store;
+        return Icons.store;
       case 'others':
         return Icons.category;
       default:
@@ -69,7 +69,7 @@ class TransactionCardState extends State<TransactionCard> {
 
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        margin: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0),
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
         padding: const EdgeInsets.fromLTRB(15, 0, 10, 0.0),
       
         decoration: BoxDecoration(
@@ -82,13 +82,14 @@ class TransactionCardState extends State<TransactionCard> {
       ),
     ],
           color: Theme.of(context).hintColor,
-          borderRadius: BorderRadius.circular(25.0),
+          borderRadius: BorderRadius.circular(20.0),
         ),
 
         child: Column(
           children: [
 
             ListTile(
+              
               splashColor: Colors.transparent,
 
               hoverColor: Colors.transparent,
@@ -115,14 +116,15 @@ class TransactionCardState extends State<TransactionCard> {
                 children: [
                   Text(
                     overflow:TextOverflow.ellipsis,
-                    '₹${widget.transaction.spendingAmount.toStringAsFixed(2)}',
+                    widget.transaction.spendingAmount.toStringAsFixed(2),
                     style: GoogleFonts.montserrat(
-                      fontSize: 18,
+                      fontSize: 20,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).canvasColor,
                     ),
                   ),
                   IconButton(
+                    padding: EdgeInsets.zero,
                     highlightColor:Colors.transparent,
                     hoverColor: Colors.transparent,
                     splashColor: Colors.transparent,
@@ -132,14 +134,14 @@ class TransactionCardState extends State<TransactionCard> {
                               angle: 1.5708, // Rotate 90 degrees to make the arrow point downward
                               child: Icon(
                                 Icons.arrow_forward_ios_sharp,
-                                size: 17,
-                                color: Theme.of(context).canvasColor.withOpacity(0.9),
+                                size: 15,
+                                color: Theme.of(context).canvasColor.withOpacity(0.7),
                               ),
                             )
                           : Icon(
                               Icons.arrow_forward_ios_sharp,
-                              size: 17,
-                              color: Theme.of(context).canvasColor.withOpacity(0.9),
+                              size: 15,
+                              color: Theme.of(context).canvasColor.withOpacity(0.7),
                             ),
                     onPressed: _toggleExpanded,
                   ),
@@ -152,6 +154,7 @@ class TransactionCardState extends State<TransactionCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Divider(color: Theme.of(context).canvasColor.withOpacity(0.1)),
+
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,9 +166,10 @@ class TransactionCardState extends State<TransactionCard> {
                         style: GoogleFonts.poppins(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
-                          color: Theme.of(context).canvasColor.withOpacity(0.8),
+                          color: Theme.of(context).canvasColor.withOpacity(0.7),
                         ),
                       ),
+                      SizedBox(height: 3,),
                       Text(
                         overflow: TextOverflow.ellipsis,
                         timeAgo(widget.transaction.spendingDate),

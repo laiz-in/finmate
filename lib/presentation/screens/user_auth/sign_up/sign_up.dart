@@ -67,6 +67,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         
                         // first name field
                         _buildTextField(
+                          TL: 15.0,
+                          BL: 0.0,
+                          BR: 0.0,
+                          TR: 15.0,
                           controller: _firstNameController,
                           label: 'First name',
                           icon: Icons.person,
@@ -80,6 +84,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           
                         // last name field
                         _buildTextField(
+                          TL: 0.0,
+                          BL: 0.0,
+                          BR: 0.0,
+                          TR: 0.0,
                           controller: _lastNameController,
                           label: 'Last name',
                           icon: Icons.person,
@@ -93,6 +101,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         
                         // Email field
                         _buildTextField(
+                          TL: 0.0,
+                          BL: 0.0,
+                          BR: 0.0,
+                          TR: 0.0,
                           controller: _emailController,
                           label: 'Email',
                           icon: Icons.email,
@@ -109,6 +121,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         
                         // password field
                         _buildTextField(
+                          TL: 0.0,
+                          BL: 0.0,
+                          BR: 0.0,
+                          TR: 0.0,
                           controller: _passwordController,
                           label: 'Password',
                           icon: Icons.lock,
@@ -126,6 +142,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         
                         // confirm password field
                         _buildTextField(
+                          TL: 0.0,
+                          BL: 15.0,
+                          BR: 15.0,
+                          TR: 0.0,
                           controller: _confirmPasswordController,
                           label: 'Confirm password',
                           icon: Icons.lock,
@@ -164,7 +184,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
 
 
-// Sign up header
+// HEADER FOR SIGN UP
   Widget _buildSignUpHeader() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20,0,15,20),
@@ -197,7 +217,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
- // Input decorations
+ // INPUT FIELD DECORATIONS
   InputDecoration _inputDecoration(String label, IconData icon) {
     return InputDecoration(
       filled: true,
@@ -225,15 +245,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(15.0),
         borderSide: const BorderSide(
-          color: Color.fromARGB(255, 209, 211, 216),
-          width: 1,
+          color: Color.fromARGB(255, 134, 168, 163),
+          width: 0,
         ),
       ),
     );
   }
 
-  // Text fields
+  // INPPUT FIELD CONTAINERS
   Widget _buildTextField({
+    required double TL,TR,BL,BR,
     required TextEditingController controller,
     required String label,
     required IconData icon,
@@ -241,11 +262,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
     required String? Function(String?) validator,
   }) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(15,10,15,5),
+      padding: const EdgeInsets.fromLTRB(15,2,15,5),
       
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(15)),
+          color: Color.fromARGB(255, 134, 168, 163),
+          borderRadius: BorderRadius.only(topLeft: Radius.circular(TL),topRight: Radius.circular(TR),
+          bottomLeft: Radius.circular(BL),bottomRight: Radius.circular(BR)),
         ),
         child: TextFormField(
           controller: controller,
@@ -265,6 +288,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  // SIGN IN REDIRECT TEXT
   Widget _buildSignInPrompt(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 70.0, top: 30),

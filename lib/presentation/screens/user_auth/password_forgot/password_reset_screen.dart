@@ -4,7 +4,6 @@ import 'package:moneyy/common/widgets/success_snackbar.dart';
 import 'package:moneyy/domain/usecases/auth/password_reset.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
 import 'package:moneyy/presentation/screens/user_auth/widgets/email_field.dart';
-import 'package:moneyy/presentation/screens/user_auth/widgets/loading_dots.dart';
 import 'package:moneyy/service_locator.dart'; // To get the use case instance
 import 'package:moneyy/ui/error_snackbar.dart';
 
@@ -102,17 +101,19 @@ class _ResetPasswordState extends State<ResetPassword> {
                       InkWell(
                         onTap: _resetPassword,
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(25.0, 10, 25, 20),
+                          padding: const EdgeInsets.fromLTRB(25.0, 5, 25, 20),
                           child: Container(
                             height: 63,
                             width: double.infinity,
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.7),
-                              borderRadius: BorderRadius.circular(15.0),
+                              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15),bottomRight: Radius.circular(15)),
                             ),
                             child: Center(
                               child:  isLoading
-                ? Center(child: LoadingDots()) // Show loading animation
+                ? Center(child: CircularProgressIndicator(
+                  color: Theme.of(context).canvasColor,strokeWidth: 3,
+                )) // Show loading animation
                 : Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [

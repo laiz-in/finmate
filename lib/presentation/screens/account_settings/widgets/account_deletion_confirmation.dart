@@ -26,19 +26,26 @@ class _AccountDeletionConfirmationDialogState
         elevation: 15,
 
         // Account deletion confirmation heading
-        title: Padding(
-          padding: const EdgeInsets.only(bottom: 20),
-          child: Center(
-            child: Text(
-              'Do you want to delete your account? All data will be cleared.',
-              textAlign: TextAlign.start,
-              style: GoogleFonts.poppins(
-                color: const Color.fromARGB(255, 214, 76, 66),
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
+        title: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: Center(
+                child: Text(
+                  'Do you want to delete your account? All data will be cleared.',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    color: const Color.fromARGB(255, 214, 76, 66),
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14
+                    ,
+                  ),
+                ),
               ),
             ),
-          ),
+
+            Divider(color: Colors.red.withOpacity(0.3),endIndent: 0,indent: 0,)
+          ],
         ),
 
         actions: [
@@ -49,7 +56,7 @@ class _AccountDeletionConfirmationDialogState
 
               // Cancel button
               Container(
-                padding: const EdgeInsets.only(left: 15),
+                padding: const EdgeInsets.only(left: 5),
                 color: Colors.transparent,
                 child: TextButton(
                   onPressed: () => Navigator.of(context).pop(),
@@ -58,7 +65,7 @@ class _AccountDeletionConfirmationDialogState
                     style: GoogleFonts.poppins(
                       fontSize: 13,
                       color: const Color.fromARGB(255, 235, 125, 117),
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ),
@@ -66,6 +73,7 @@ class _AccountDeletionConfirmationDialogState
 
               // Proceed button
               Container(
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(12)),
                   color: Color.fromARGB(255, 212, 76, 66),
@@ -82,7 +90,7 @@ class _AccountDeletionConfirmationDialogState
                         width: 20,
                         child: CircularProgressIndicator(
                             color: Colors.white,
-                            strokeWidth: 3,
+                            strokeWidth: 2,
                           ),
                       ) // Show loading indicator
                       : Text(

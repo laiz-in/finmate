@@ -175,7 +175,7 @@ Widget _transactionHeading(context) {
           child: Row(
             children: [
               Text(
-                'See all',
+                'View all',
                 style: GoogleFonts.poppins(
                   fontSize: 15,
                   fontWeight: FontWeight.w500,

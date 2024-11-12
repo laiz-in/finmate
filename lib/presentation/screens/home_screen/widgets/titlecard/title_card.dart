@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/core/colors/colors.dart';
 import 'package:moneyy/firebase/firebase_utils.dart' as firebaseUtils;
+import 'package:moneyy/presentation/routes/routes.dart';
 
 class TitleCardWidget extends StatefulWidget {
   final double? totalSpending;
@@ -189,6 +190,9 @@ Future<void> _fetchTodaySpending() async {
                         label: 'Insights',
                         onPressed: () {
                           // Navigator.pushNamed(context, '/AllStatistics');
+                          
+            Navigator.pushNamed(context, AppRoutes.shimmerScreen);
+          
                         },
                       ),
                     ],

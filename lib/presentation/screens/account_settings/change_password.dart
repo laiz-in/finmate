@@ -181,7 +181,7 @@ Widget _emailField(BuildContext context, emailController){
                         padding:EdgeInsets.fromLTRB(20.0, 20, 20, 0),
                         child: TextFormField(
                           controller: emailController,
-                          cursorColor: Colors.white.withOpacity(0.5),
+                          cursorColor: Theme.of(context).canvasColor,
                           style: GoogleFonts.poppins(
                             color: Theme.of(context).canvasColor,
                             fontWeight: FontWeight.w500,
