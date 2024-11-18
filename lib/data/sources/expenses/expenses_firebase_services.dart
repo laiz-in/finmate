@@ -169,35 +169,43 @@ class ExpensesFirebaseService {
 
 
   // FETCH ALL EXPENSES
-Future<List<ExpensesModel>> fetchAllExpenses() async {
-    try {
-      final String? userId = _getCurrentUserId();
-
-      if (userId == null) {
-        throw Exception("User is not logged in");
-      }
-
-      // Fetch all documents from the 'spendings' subcollection
-      final QuerySnapshot snapshot = await _firestore
-          .collection('users')
-          .doc(userId)
-          .collection('spendings')
-          .orderBy('spendingDate', descending: true) // Optional: sort by date
-          .get();
-
-      // Map documents to ExpensesModel
-      final List<ExpensesModel> expenses = snapshot.docs.map((doc) {
-        return ExpensesModel.fromJson(
-          doc.data() as Map<String, dynamic>, 
-          doc.id, // Use the document ID as uidOfTransaction
-        );
-      }).toList();
-
-      return expenses;
-    } catch (e) {
-      throw Exception("Failed to fetch expenses: $e");
+Future<List<ExpensesModel>> fetchAllExpenses({DateTime? lastSpendingDate, required int pageSize}) async {
+  try {
+    final String? userId = _getCurrentUserId();
+    if (userId == null) {
+      throw Exception("User is not logged in");
     }
+
+    // Start building the query
+    Query query = _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('spendings')
+        .orderBy('spendingDate', descending: true)
+        .limit(pageSize);
+
+    // Use startAfter based on lastSpendingDate if provided
+    if (lastSpendingDate != null) {
+      query = query.startAfter([lastSpendingDate]);
+    }
+
+    // Fetch documents from the 'spendings' subcollection with pagination
+    final QuerySnapshot snapshot = await query.get();
+
+    // Map documents to ExpensesModel
+    final List<ExpensesModel> expenses = snapshot.docs.map((doc) {
+      return ExpensesModel.fromJson(
+        doc.data() as Map<String, dynamic>,
+        doc.id,
+      );
+    }).toList();
+
+    return expenses;
+  } catch (e) {
+    throw Exception("Failed to fetch expenses: $e");
   }
+}
+
 
   // LAST 3 EXPENSES
   Future<List<ExpensesModel>> fetchLastThreeExpenses() async {

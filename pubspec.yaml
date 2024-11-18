@@ -57,6 +57,8 @@ dependencies:
   flutter_svg:
   get_it:
   dartz: ^0.10.1
+  vs_scrollbar: ^1.0.0
+
 
 
 

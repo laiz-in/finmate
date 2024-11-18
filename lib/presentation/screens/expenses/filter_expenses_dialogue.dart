@@ -126,7 +126,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             if (_filterByDateEnabled)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -145,7 +145,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 ],
               ),
             
-            const SizedBox(height: 6),
+            const SizedBox(height:12),
             Divider(color: Theme.of(context).canvasColor.withOpacity(0.5)),
             const SizedBox(height: 6),
 
@@ -267,10 +267,13 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           _sortAscending = ascending;
         });
       },
+      
       style: TextButton.styleFrom(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50.0),
+          
+          borderRadius: BorderRadius.circular(10.0),
         ),
+        
         backgroundColor: _sortAscending == ascending
             ? Theme.of(context).canvasColor
             : Theme.of(context).canvasColor.withOpacity(0.2),
@@ -290,7 +293,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   Widget _buildDateButton(String label, DateTime? date, Function(DateTime) onDatePicked) {
     return SizedBox(
       width: 125.0,
-      height: 30.0,
+      height: 32.0,
       child: TextButton(
         onPressed: () async {
           DateTime? picked = await showDatePicker(
@@ -306,7 +309,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         style: TextButton.styleFrom(
           backgroundColor: Theme.of(context).canvasColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50.0),
+            borderRadius: BorderRadius.circular(10.0),
           ),
         ),
         child: Text(
@@ -328,47 +331,63 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
       decoration: BoxDecoration(
         border: Border.all(color: Theme.of(context).canvasColor,width: 1),
         color: Theme.of(context).primaryColor,
-        borderRadius: BorderRadius.circular(50),
+        borderRadius: BorderRadius.circular(15),
       ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(10,8,8,8),
-        child: DropdownButton<String>(
-          dropdownColor: Theme.of(context).scaffoldBackgroundColor,
-          icon: Icon(Icons.arrow_forward_ios,color: Theme.of(context).primaryColor,size: 15,),
-          borderRadius: BorderRadius.circular(20),
-          value: _category,
-          underline: Container(),
-          style: GoogleFonts.poppins(color: Theme.of(context).primaryColor),
-          hint: Text(
-            'Select Category',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.poppins(
-                color: Theme.of(context).canvasColor,
-                fontSize: 15,
-                fontWeight: FontWeight.w500),
-          ),
-          items: categories.map((String category) {
-            return DropdownMenuItem<String>(
-              value: category,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0.0, 0, 0, 0),
-                child: Text(
-                  category,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10,8,8,8),
+              child: DropdownButton<String>(
+                dropdownColor: Theme.of(context).scaffoldBackgroundColor,
+                icon: Icon(Icons.arrow_forward_ios,color: Theme.of(context).primaryColor,size: 15,),
+                borderRadius: BorderRadius.circular(20),
+                value: _category,
+                underline: Container(),
+                style: GoogleFonts.poppins(color: Theme.of(context).primaryColor),
+                hint: Text(
+                  'Select Category',
+                  textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
-                    color: Theme.of(context).canvasColor,
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w500,
-                  ),
+                      color: Theme.of(context).canvasColor,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500),
                 ),
+                items: categories.map((String category) {
+                  return DropdownMenuItem<String>(
+                    value: category,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 0, 0, 0),
+                      child: Text(
+                        category,
+                        style: GoogleFonts.poppins(
+                          color: Theme.of(context).canvasColor,
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _category = newValue == 'All Categories' ? null : newValue;
+                  });
+                },
               ),
-            );
-          }).toList(),
-          onChanged: (String? newValue) {
-            setState(() {
-              _category = newValue == 'All Categories' ? null : newValue;
-            });
-          },
-        ),
+            ),
+          ),
+
+        Transform.rotate(
+          angle: 1.5708, // 90 degrees in radians
+          child: Icon(
+            Icons.arrow_forward_ios,
+            size: 17,
+            color: Theme.of(context).canvasColor,
+          ),
+        ),          SizedBox(width: 10,)
+        ],
       ),
     );
   }

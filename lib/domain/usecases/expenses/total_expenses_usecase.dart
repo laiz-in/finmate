@@ -7,7 +7,7 @@ class TotalExpensesUseCase {
 
   TotalExpensesUseCase(this.repository);
 
-  Future<Either<String, List<ExpensesEntity>>> call() {
-    return repository.fetchAllExpenses();
+  Future<Either<String, List<ExpensesEntity>>> call({required int page,required int pageSize}) {
+    return repository.fetchAllExpenses(page, pageSize);
   }
 }

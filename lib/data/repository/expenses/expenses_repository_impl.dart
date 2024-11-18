@@ -12,9 +12,9 @@ class ExpensesRepositoryImpl implements ExpensesRepository {
 
   // FETCH ALL EXPENSES
   @override
-  Future<Either<String, List<ExpensesEntity>>> fetchAllExpenses() async {
+  Future<Either<String, List<ExpensesEntity>>> fetchAllExpenses(page,pageSize) async {
     try {
-      final List<ExpensesModel> expensesModels = await _firebaseService.fetchAllExpenses();
+      final List<ExpensesModel> expensesModels = await _firebaseService.fetchAllExpenses(pageSize:pageSize);
       final List<ExpensesEntity> expensesEntities = expensesModels.map((model) {
         return ExpensesEntity(
           uidOfTransaction: model.uidOfTransaction,

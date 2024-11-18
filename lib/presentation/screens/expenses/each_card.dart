@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:moneyy/common/widgets/error_snackbar.dart';
-import 'package:moneyy/common/widgets/success_snackbar.dart';
 import 'package:moneyy/domain/entities/spending/expenses.dart';
-import 'package:moneyy/domain/usecases/expenses/delete_expenses_usecase.dart';
 import 'package:moneyy/presentation/screens/expenses/delete_expense_button.dart';
 import 'package:moneyy/presentation/screens/expenses/update_expense.dart';
-import 'package:moneyy/service_locator.dart';
 
 class TransactionCard extends StatefulWidget {
   final ExpensesEntity transaction;
@@ -199,21 +195,7 @@ class TransactionCardState extends State<TransactionCard> {
                   // BUTTON TO DELETE EXPENSE
                   DeleteExpenseButton(
                     onDeleteConfirmed: () async {
-                      // Execute delete action here
-                      final deleteExpensesUseCase = sl<DeleteExpensesUseCase>();
-                      final result = await deleteExpensesUseCase.call(uidOfTransaction:widget.transaction.uidOfTransaction);
-
-                      result.fold(
-                        (failureMessage) {
-                          errorSnackbar(context, "failed to delete expense");
                           widget.onDelete();
-                        },
-                        (successMessage) {
-                          successSnackbar(context, "expense has been deleted");
-                          widget.onDelete();
-
-                        },
-                      );
                     },
                   ),
                 

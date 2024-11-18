@@ -103,7 +103,7 @@ Future<void> _selectDate(BuildContext context) async {
               ),
               
               SizedBox(height: 10,),
-      
+
               // Title add +
               Padding(
                 padding: const EdgeInsets.fromLTRB(5, 8, 5, 20),
@@ -118,20 +118,21 @@ Future<void> _selectDate(BuildContext context) async {
               ),
       
               // Amount field
-              TextFormField(
+                TextFormField(
                 cursorColor: Theme.of(context).canvasColor.withOpacity(0.4),
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
                   fontSize: 17,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration(
+                  errorStyle: GoogleFonts.poppins(),
                   floatingLabelBehavior: FloatingLabelBehavior.never,
                   labelText: '0.00',
                   labelStyle: GoogleFonts.poppins(
                     fontSize: 17,
                     color: Theme.of(context).canvasColor,
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w500,
                   ),
                   filled: true,
                   fillColor: Theme.of(context).cardColor,
@@ -163,22 +164,23 @@ Future<void> _selectDate(BuildContext context) async {
               ),
       
               SizedBox(height: 15),
-      
+
               // Description field
               TextFormField(
                 cursorColor: Theme.of(context).canvasColor.withOpacity(0.4),
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
                   fontSize: 17,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                 
                 ),
                 decoration: InputDecoration(
+                  errorStyle: GoogleFonts.poppins(),
                   hintText: 'Description',
                   hintStyle: GoogleFonts.poppins(
                     fontSize: 17,
                     color: Theme.of(context).canvasColor,
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.w500,
                   ),
                   filled: true,
                   fillColor: Theme.of(context).cardColor,
@@ -204,10 +206,11 @@ Future<void> _selectDate(BuildContext context) async {
                 value: _spendingCategory,
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                   fontSize: 17,
                 ),
                 decoration: InputDecoration(
+                  errorStyle: GoogleFonts.poppins(),
                   floatingLabelBehavior: FloatingLabelBehavior.never,
                   filled: true,
                   fillColor: Theme.of(context).cardColor,
@@ -235,7 +238,7 @@ Future<void> _selectDate(BuildContext context) async {
                           style: GoogleFonts.poppins(
                             color: Theme.of(context).canvasColor,
                             fontSize: 17,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ),
@@ -257,9 +260,10 @@ Future<void> _selectDate(BuildContext context) async {
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
                   fontSize: 17,
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration(
+                  errorStyle: GoogleFonts.poppins(),
                   filled: true,
                   fillColor: Theme.of(context).cardColor,
                   border: OutlineInputBorder(
@@ -303,7 +307,7 @@ Future<void> _selectDate(BuildContext context) async {
                           setState(() {
                             _isLoading = true;
                           });
-      
+                          
                           var result = await sl<AddExpensesUseCase>().call(
                             params: ExpensesModel(
                               uidOfTransaction: "",
@@ -334,12 +338,15 @@ Future<void> _selectDate(BuildContext context) async {
                       },
                       child: _isLoading
                           ? Center(
-                              child: SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  color: Theme.of(context).scaffoldBackgroundColor,
-                                  strokeWidth: 2,
+                              child: Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: SizedBox(
+                                  height: 25,
+                                  width: 25,
+                                  child: CircularProgressIndicator(
+                                    color: Theme.of(context).scaffoldBackgroundColor,
+                                    strokeWidth: 2,
+                                  ),
                                 ),
                               ),
                             )

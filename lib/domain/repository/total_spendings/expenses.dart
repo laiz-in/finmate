@@ -4,7 +4,7 @@ import 'package:moneyy/domain/entities/spending/expenses.dart';
 
 abstract class ExpensesRepository {
 
-  Future<Either<String, List<ExpensesEntity>>> fetchAllExpenses();
+  Future<Either<String, List<ExpensesEntity>>> fetchAllExpenses(int page, int pageSize);
 
   Future<Either<String, List<ExpensesEntity>>> fetchLastThreeExpenses();
 

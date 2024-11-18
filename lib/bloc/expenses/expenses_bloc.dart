@@ -1,8 +1,9 @@
-import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moneyy/domain/entities/spending/expenses.dart';
 import 'package:moneyy/domain/usecases/expenses/add_expense_usecase.dart';
+import 'package:moneyy/domain/usecases/expenses/delete_expenses_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/total_expenses_usecase.dart';
+import 'package:moneyy/service_locator.dart';
 
 import 'expenses_event.dart';
 import 'expenses_state.dart';
@@ -10,7 +11,6 @@ import 'expenses_state.dart';
 class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
   final TotalExpensesUseCase _totalExpensesUseCase;
   final AddExpensesUseCase _addExpensesUseCase;
-
   List<ExpensesEntity> _allExpenses = [];
   bool _hasMore = true;
   String _searchQuery = '';
@@ -18,15 +18,16 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
   DateTime? _startDateFilter;
   DateTime? _endDateFilter;
   bool? _sortAscending;
-  // int _currentPage = 0;
-  static const int _itemsPerPage = 20;
+  int _currentPage = 1;
+  static int _pageSize = 30;
+
 
   ExpensesBloc(
     this._totalExpensesUseCase,
     this._addExpensesUseCase,
   ) : super(ExpensesLoading()) {
     on<FetchAllExpensesEvent>(_onFetchAllExpenses);
-    on<FetchMoreExpensesEvent>(_onFetchMoreExpenses);
+    on<LoadMoreExpensesEvent>(_onLoadMoreExpenses);
     on<AddExpenseEvent>(_onAddExpense);
     on<SearchExpensesEvent>(_onSearchExpenses);
     on<ClearFiltersEvent>(_onClearFilters);
@@ -35,10 +36,32 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
     on<FilterByDateRangeEvent>(_onFilterByDateRange);
     on<RefreshExpensesEvent>(_onRefreshExpenses);
     on<ResetExpensesEvent>(_onResetExpenses);
+    on<DeleteExpenseEvent>(_onDeleteExpenses);
   }
 
-  // Reset all expenses
-  void _onResetExpenses(ResetExpensesEvent event, Emitter<ExpensesState> emit) {
+// DELETING AN EXPENSE
+void _onDeleteExpenses(DeleteExpenseEvent event, Emitter<ExpensesState> emit) async {
+  final deleteExpensesUseCase = sl<DeleteExpensesUseCase>();
+  final result = await deleteExpensesUseCase.call(uidOfTransaction: event.expenseId);
+
+  result.fold(
+    (failureMessage) {
+      emit(ExpensesError(failureMessage));
+    },
+    (successMessage) {
+      // Remove the deleted expense locally from _allExpenses
+      _allExpenses = _allExpenses
+          .where((expense) => expense.uidOfTransaction != event.expenseId)
+          .toList();
+
+      // Re-apply filters and emit the updated list without showing the loading indicator
+      emit(ExpensesLoaded(_applyFilters(), hasMore: _hasMore));
+    },
+  );
+}
+
+// RESET ALL EXPENSES
+void _onResetExpenses(ResetExpensesEvent event, Emitter<ExpensesState> emit) {
     _allExpenses.clear();
     _hasMore = true;
     _searchQuery = '';
@@ -50,9 +73,8 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
   }
 
 
-
-  // Apply filters and sort by amount
-  List<ExpensesEntity> _applyFilters() {
+// APPLYING DIFFERENT FILTERS
+List<ExpensesEntity> _applyFilters() {
     var expenses = List<ExpensesEntity>.from(_allExpenses);
 
     if (_categoryFilter != null && _categoryFilter != 'All Categories') {
@@ -94,39 +116,61 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
     return expenses;
   }
 
-
-
-
-  // Fetch all expenses
-  void _onFetchAllExpenses(FetchAllExpensesEvent event, Emitter<ExpensesState> emit) async {
-    emit(ExpensesLoading());
-    final result = await _totalExpensesUseCase();
-    _processExpensesResult(result, emit);
-  }
-
-  // Load more expenses
-  void _onFetchMoreExpenses(FetchMoreExpensesEvent event, Emitter<ExpensesState> emit) async {
-    if (!_hasMore) return;
-    emit(ExpensesLoading(isFirstFetch: false));
-    final result = await _totalExpensesUseCase();
-    _processExpensesResult(result, emit, isLoadingMore: true);
-  }
-
-  // Process fetched expenses result
-  void _processExpensesResult(Either<String, List<ExpensesEntity>> result, Emitter<ExpensesState> emit, {bool isLoadingMore = false}) {
+// TO FETCH ALL EXPENSES (Initial Load - 30 items)
+Future<void> _onFetchAllExpenses(
+  FetchAllExpensesEvent event,
+  Emitter<ExpensesState> emit,
+) async {
+  emit(ExpensesLoading(isFirstFetch: true));
+  try {
+    _currentPage = 1; // Reset to the first page
+    _pageSize = 30;  // Set page size to 30 initially
+    final result = await _totalExpensesUseCase(page: _currentPage, pageSize: _pageSize);
     result.fold(
-      (error) => emit(ExpensesError(error)),
+      (failure) => emit(ExpensesError(failure)), // Emit error on failure
       (expenses) {
-        if (!isLoadingMore) _allExpenses.clear();
-        _allExpenses.addAll(expenses);
-        _hasMore = expenses.length >= _itemsPerPage;
-        emit(ExpensesLoaded(_applyFilters(), hasMore: _hasMore));
+        _allExpenses = List.from(expenses); // Replace with the new data
+        final hasMore = expenses.length == _pageSize;
+        emit(ExpensesLoaded(_allExpenses, hasMore: hasMore));
       },
     );
+  } catch (e) {
+    emit(ExpensesError(e.toString())); // Emit error if an exception occurs
   }
+}
+
+// LOAD MORE EXPENSES (Add 30 more items on each click)
+Future<void> _onLoadMoreExpenses(
+  LoadMoreExpensesEvent event,
+  Emitter<ExpensesState> emit,
+) async {
+  try {
+    emit(ExpensesLoading(isFirstFetch: false)); // Emit loading for "load more"
+    print(_currentPage);
+    print(_pageSize);
+    _currentPage++; // Increment page for the next fetch
+    _pageSize += 30; // Increase page size by 30 for subsequent loads
+    print(_currentPage);
+    print(_pageSize);
+
+    final result = await _totalExpensesUseCase(page: _currentPage, pageSize: _pageSize);
+    result.fold(
+      (failure) => emit(ExpensesError(failure)), // Emit error on failure
+      (expenses) {
+        _allExpenses = List.from(expenses); // Replace with the new data
+        final hasMore = expenses.length == _pageSize;
+        emit(ExpensesLoaded(_allExpenses, hasMore: hasMore));
+      },
+    );
+  } catch (e) {
+    _currentPage--; // Revert page increment if an exception occurs
+    emit(ExpensesError(e.toString()));
+  }
+}
+
 
   // Add a new expense
-  void _onAddExpense(AddExpenseEvent event, Emitter<ExpensesState> emit) async {
+  Future<void> _onAddExpense(AddExpenseEvent event, Emitter<ExpensesState> emit) async {
     emit(ExpensesLoading(isFirstFetch: false));
     final result = await _addExpensesUseCase();
     result.fold(
@@ -157,9 +201,7 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
 
   // Sort by amount
   void _onSortByAmount(SortByAmountEvent event, Emitter<ExpensesState> emit) {
-
     _sortAscending = event.ascending;
-
     emit(ExpensesLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
@@ -177,9 +219,22 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
   }
 
   // Refresh expenses
-  void _onRefreshExpenses(RefreshExpensesEvent event, Emitter<ExpensesState> emit) async {
-    emit(ExpensesLoading(isFirstFetch: false));
-    final result = await _totalExpensesUseCase();
-    _processExpensesResult(result, emit);
-  }
+void _onRefreshExpenses(RefreshExpensesEvent event, Emitter<ExpensesState> emit) async {
+  emit(ExpensesLoading(isFirstFetch: true));
+    try {
+      _currentPage = 1;
+      final result = await _totalExpensesUseCase(page: _currentPage, pageSize: _pageSize);
+      result.fold(
+        (failure) => emit(ExpensesError(failure)),
+        (expenses) {
+          _allExpenses = expenses;
+          final hasMore = expenses.length == _pageSize;
+          emit(ExpensesLoaded(_allExpenses, hasMore: hasMore));
+        }
+      );
+    } catch (e) {
+      emit(ExpensesError(e.toString()));
+    }
+}
+
 }

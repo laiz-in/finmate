@@ -20,8 +20,6 @@ class _BorrowedCardState extends State<BorrowedCard> {
   
   bool isPaid = false;
 
-  @override
-
   void _showDeleteConfirmationDialog() {
     showDialog(
       context: context,
