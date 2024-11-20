@@ -84,7 +84,7 @@ class BillsFirebaseService {
 
 
   // FETCH ALL BILLS
-  Future<List<BillModel>> fetchAllBills({DateTime? lastAddedDate, required int pageSize}) async {
+Future<List<BillModel>> fetchAllBills({DateTime? lastAddedDate, required int pageSize}) async {
         try {
         final user = FirebaseAuth.instance.currentUser;
           if (user != null) {
@@ -127,9 +127,32 @@ class BillsFirebaseService {
   // DELETE THE EXPENSE
   Future<Either<String, String>> deleteBill(String uidOfBill) async {
   try {
-    return right("sucecess");
-  } catch (e) {
-    return Left("Failed to delete expense: ${e.toString()}");
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+
+      // Get the specific spending document
+      final billRef = FirebaseFirestore.instance
+          .collection("users")
+          .doc(user.uid)
+          .collection("bills")
+          .doc(uidOfBill);
+      final billSnapshot = await billRef.get();
+
+      // Ensure the spending document exists
+      if (!billSnapshot.exists) {
+        return Left("bill not found");
+      }
+
+
+      // Delete the document from the "bills" collection
+      await billRef.delete();
+
+      return Right("Successfully deleted the bill");
+    } else {
+      return Left("User is not logged in");
+    }  } catch (e) {
+    return Left("Failed to delete bill: ${e.toString()}");
   }
 }
 

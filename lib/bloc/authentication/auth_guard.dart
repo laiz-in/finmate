@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moneyy/bloc/network/network_bloc.dart';
-import 'package:moneyy/bloc/network/network_state.dart';
 import 'package:moneyy/presentation/screens/connection_lost_screen/conection_lost_screen.dart';
 import 'package:moneyy/presentation/screens/home_screen/home_screen.dart';
 import 'package:moneyy/presentation/screens/splash/splash.dart';
@@ -15,10 +14,10 @@ class AuthGuard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NetworkBloc, NetworkState>(
-      builder: (context, networkState) {
-        // First check the network state
-        if (networkState is NetworkDisconnected) {
+    return BlocBuilder<ConnectivityCubit, bool>(
+      builder: (context, isConnected) {
+        // Check the network connection status
+        if (!isConnected) {
           return NoInternetScreen(); // Show NoInternetScreen when disconnected
         }
 
@@ -27,14 +26,12 @@ class AuthGuard extends StatelessWidget {
           builder: (context, authState) {
             if (authState is AuthLoading) {
               return SplashScreen();
-            }
-            else if (authState is AuthAuthenticated) {
+            } else if (authState is AuthAuthenticated) {
               return HomeScreen();
-            }
-            else if (authState is AuthUnauthenticated) {
+            } else if (authState is AuthUnauthenticated) {
               return LoginScreen();
-            } else{
-              return NoInternetScreen();
+            } else {
+              return NoInternetScreen(); // Fallback in case of unexpected state
             }
           },
         );

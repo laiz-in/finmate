@@ -3,25 +3,30 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moneyy/bloc/home_screen/home_screen_event.dart';
 import 'package:moneyy/bloc/home_screen/home_screen_state.dart';
-import 'package:moneyy/bloc/network/network_bloc.dart';
-import 'package:moneyy/bloc/network/network_state.dart';
+import 'package:moneyy/bloc/network/network_bloc.dart'; // Use the correct path
+import 'package:moneyy/common/widgets/error_snackbar.dart';
 import 'package:moneyy/data/repository/home/home_repository.dart';
+import 'package:moneyy/main.dart';
 
 class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
   final UserRepository userRepository;
-  final NetworkBloc networkBloc;
-  late final StreamSubscription networkSubscription;
+  final ConnectivityCubit connectivityCubit;
+
+  late final StreamSubscription connectivitySubscription;
 
   HomeScreenBloc({
     required this.userRepository,
-    required this.networkBloc,
+    required this.connectivityCubit,
   }) : super(HomeScreenLoading()) {
-    // Listen to network status changes
-    networkSubscription = networkBloc.stream.listen((networkState) {
-      if (networkState is NetworkDisconnected) {
-        // emit(HomeScreenError('No internet connection.'));
-      } else if (networkState is NetworkConnected) {
-        add(FetchUserData()); // Re-fetch data when internet is back
+    // Listen to connectivity changes
+    connectivitySubscription = connectivityCubit.stream.listen((isConnected) {
+      if (!isConnected) {
+        // Show a popup when disconnected
+        Future.microtask(() {
+          _showNoInternetPopup();
+        });
+      } else {
+        add(FetchUserData()); // Re-fetch data when back online
       }
     });
 
@@ -38,9 +43,16 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     });
   }
 
+  void _showNoInternetPopup() {
+    final context = navigatorKey.currentContext;
+    if (context != null) {
+        errorSnackbar(context, "You are currently in offline mode") ;
+    }
+  }
+
   @override
   Future<void> close() {
-    networkSubscription.cancel(); // Clean up the subscription
+    connectivitySubscription.cancel(); // Clean up the subscription
     return super.close();
   }
 }

@@ -1,36 +1,16 @@
-import 'dart:async';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moneyy/domain/usecases/connectivity/connectivity_usecase.dart';
 
-import 'package:bloc/bloc.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+class ConnectivityCubit extends Cubit<bool> {
+  final GetConnectivityStatus getConnectivityStatus;
 
-import 'network_event.dart';
-import 'network_state.dart';
-
-class NetworkBloc extends Bloc<NetworkEvent, NetworkState> {
-  final Connectivity _connectivity = Connectivity();
-  late StreamSubscription _connectivitySubscription;
-
-  NetworkBloc() : super(NetworkInitial()) {
-    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((result) {
-      if (result == ConnectivityResult.none) {
-        add(NetworkStatusChanged(false)); // Disconnected
-      } else {
-        add(NetworkStatusChanged(true)); // Connected
-      }
-    });
-
-    on<NetworkStatusChanged>((event, emit) {
-      if (event.isConnected) {
-        emit(NetworkConnected());
-      } else {
-        emit(NetworkDisconnected());
-      }
-    });
+  ConnectivityCubit(this.getConnectivityStatus) : super(false) {
+    _monitorConnectivity();
   }
 
-  @override
-  Future<void> close() {
-    _connectivitySubscription.cancel();
-    return super.close();
+  void _monitorConnectivity() {
+    getConnectivityStatus().listen((isConnected) {
+      emit(isConnected);
+    });
   }
 }
