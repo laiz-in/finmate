@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/bloc/expenses/expenses_bloc.dart';
 import 'package:moneyy/bloc/expenses/expenses_event.dart';
 import 'package:moneyy/bloc/expenses/expenses_state.dart';
+import 'package:moneyy/common/widgets/basicAppbar.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
 import 'package:moneyy/core/colors/colors.dart';
 import 'package:moneyy/presentation/screens/expenses/add_expense_dialogue.dart';
@@ -87,6 +88,8 @@ class SpendingScreenState extends State<SpendingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
+
       body: SafeArea(
         child: Column(
           children: [
@@ -119,17 +122,7 @@ class SpendingScreenState extends State<SpendingScreen> {
   }
 
   Widget _buildAppBar() {
-    return AppBar(
-      toolbarHeight: 40,
-      scrolledUnderElevation: 0,
-      elevation: 0,
-      iconTheme: IconThemeData(color: Theme.of(context).canvasColor),
-      title: Text('All expenses',
-          style: GoogleFonts.poppins(
-              fontSize: 18, color: Theme.of(context).canvasColor)),
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      titleSpacing: 0,
-    );
+    return CommonAppBar(heading: "All expenses");
   }
 
   Widget _buildQuickFilterRow() {
@@ -382,7 +375,7 @@ class SpendingScreenState extends State<SpendingScreen> {
                         child: Text(
                           'Load More',
                           style: GoogleFonts.poppins(
-                            color:Theme.of(context).canvasColor.withOpacity(0.7),
+                            color:Theme.of(context).canvasColor.withOpacity(0.7 ),
                             fontWeight: FontWeight.w500,
                             fontSize: 14,
                           ),

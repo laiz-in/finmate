@@ -191,7 +191,7 @@ Future<void> _fetchTodaySpending() async {
                         onPressed: () {
                           // Navigator.pushNamed(context, '/AllStatistics');
                           
-            Navigator.pushNamed(context, AppRoutes.shimmerScreen);
+            Navigator.pushNamed(context, AppRoutes.billScreen);
           
                         },
                       ),

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:moneyy/bloc/authentication/auth_bloc.dart';
 import 'package:moneyy/bloc/authentication/auth_event.dart';
+import 'package:moneyy/bloc/bills/bills_bloc.dart';
 import 'package:moneyy/bloc/expenses/expenses_bloc.dart';
 import 'package:moneyy/bloc/home_screen/home_screen_bloc.dart';
 import 'package:moneyy/bloc/network/network_bloc.dart';
@@ -11,12 +12,13 @@ import 'package:moneyy/bloc/themes/theme_cubit.dart';
 import 'package:moneyy/config/firebase_options.dart';
 import 'package:moneyy/core/colors/theme.dart';
 import 'package:moneyy/data/repository/home/home_repository.dart';
+import 'package:moneyy/domain/usecases/bills/add_bill_usecase.dart';
+import 'package:moneyy/domain/usecases/bills/total_bills_usecase.dart';
 import 'package:moneyy/domain/usecases/connectivity/connectivity_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/add_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/total_expenses_usecase.dart';
 import 'package:moneyy/firebase_initializer.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
-import 'package:moneyy/presentation/screens/connection_lost_screen/conection_lost_screen.dart';
 import 'package:moneyy/presentation/screens/splash/splash.dart';
 import 'package:moneyy/service_locator.dart';
 import 'package:path_provider/path_provider.dart';
@@ -25,17 +27,19 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  FirebaseInitializer.enableOfflinePersistence();
 
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: getFirebaseOptions(),
   );
+
 
   // Initialize Hydrated Storage
   final storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
   );
+    FirebaseInitializer.enableOfflinePersistence('https://console.firebase.google.com/project/finmate-d9f70/database/finmate-d9f70-default-rtdb/data/~2F');
+
 
   await initializeDependencies();
 
@@ -56,6 +60,13 @@ void main() async {
           create: (context) => ExpensesBloc(
             sl<TotalExpensesUseCase>(),
             sl<AddExpensesUseCase>(),
+          ),
+        ),
+
+        BlocProvider(
+          create: (context) => BillsBloc(
+            sl<TotalBillsUsecase>(),
+            sl<AddBillUsecase>(),
           ),
         ),
 
@@ -91,18 +102,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<ConnectivityCubit, bool>(
       listener: (context, isConnected) {
-        if (!isConnected) {
-          print("NETWORK IS NOT CONNECTED IN MAIN.DART");
-          // Navigate to the NoInternetScreen when disconnected
-          Future.microtask(() {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (context) => NoInternetScreen(),
-              ),
-            );
-          });
-        }
       },
+
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
           return MaterialApp(

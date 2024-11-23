@@ -16,8 +16,10 @@ class AuthGuard extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ConnectivityCubit, bool>(
       builder: (context, isConnected) {
+        print("CAME TO AUTH GUARD");
         // Check the network connection status
         if (!isConnected) {
+          print("came to no internet screen");
           return NoInternetScreen(); // Show NoInternetScreen when disconnected
         }
 
@@ -25,10 +27,13 @@ class AuthGuard extends StatelessWidget {
         return BlocBuilder<AuthBloc, AuthState>(
           builder: (context, authState) {
             if (authState is AuthLoading) {
+              print("AUTH LAODING");
               return SplashScreen();
             } else if (authState is AuthAuthenticated) {
+              print("AUTHENTICATED");
               return HomeScreen();
             } else if (authState is AuthUnauthenticated) {
+              print("NOT AUTHENTICATED");
               return LoginScreen();
             } else {
               return NoInternetScreen(); // Fallback in case of unexpected state

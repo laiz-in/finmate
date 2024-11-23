@@ -7,7 +7,7 @@ abstract class BillsEvent {}
 // TOTAL 8 EVENTS
 
 // TO FETCH ALL BILLS
-class FetchAllBills extends BillsEvent {}
+class FetchAllBillsEvent extends BillsEvent {}
 
 // TO LAOD MORE BILLS ON
 class LoadMoreBillsEvent extends BillsEvent {}
@@ -20,8 +20,8 @@ class AddBillEvent extends BillsEvent {
 
 // WHEN DELETING A BILL
 class DeleteBillsEvent extends BillsEvent {
-  final String bilId;
-  DeleteBillsEvent(this.bilId);
+  final String billId;
+  DeleteBillsEvent(this.billId);
 }
 
 // WHEN SEARCHING A BILL

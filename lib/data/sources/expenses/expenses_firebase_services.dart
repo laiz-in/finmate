@@ -169,6 +169,7 @@ class ExpensesFirebaseService {
 
 
   // FETCH ALL EXPENSES
+  
 Future<List<ExpensesModel>> fetchAllExpenses({DateTime? lastSpendingDate, required int pageSize}) async {
   try {
     final String? userId = _getCurrentUserId();

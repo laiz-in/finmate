@@ -1,15 +1,19 @@
-import 'package:firebase_database/firebase_database.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:moneyy/domain/repository/connectivity/connectivity_service.dart';
 
-
 class ConnectivityService implements IConnectivityService {
-  final DatabaseReference connectedRef = FirebaseDatabase.instance.ref(".info/connected");
+  final Connectivity _connectivity = Connectivity();
 
   @override
   Stream<bool> get onConnectivityChanged {
-    return connectedRef.onValue.map((event) {
-      final connected = event.snapshot.value as bool? ?? false;
-      return connected;
+    return _connectivity.onConnectivityChanged.map((ConnectivityResult result) {
+      print("Network connectivity changed: $result");
+
+      // Return `true` if connected to Wi-Fi or Mobile, `false` otherwise
+      final isConnected = result != ConnectivityResult.none;
+      print("Is device connected? $isConnected");
+
+      return isConnected;
     });
   }
 }

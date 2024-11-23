@@ -72,7 +72,6 @@ void _onResetExpenses(ResetExpensesEvent event, Emitter<ExpensesState> emit) {
     add(FetchAllExpensesEvent());
   }
 
-
 // APPLYING DIFFERENT FILTERS
 List<ExpensesEntity> _applyFilters() {
     var expenses = List<ExpensesEntity>.from(_allExpenses);
@@ -146,12 +145,9 @@ Future<void> _onLoadMoreExpenses(
 ) async {
   try {
     emit(ExpensesLoading(isFirstFetch: false)); // Emit loading for "load more"
-    print(_currentPage);
-    print(_pageSize);
     _currentPage++; // Increment page for the next fetch
     _pageSize += 30; // Increase page size by 30 for subsequent loads
-    print(_currentPage);
-    print(_pageSize);
+
 
     final result = await _totalExpensesUseCase(page: _currentPage, pageSize: _pageSize);
     result.fold(
@@ -168,9 +164,8 @@ Future<void> _onLoadMoreExpenses(
   }
 }
 
-
-  // Add a new expense
-  Future<void> _onAddExpense(AddExpenseEvent event, Emitter<ExpensesState> emit) async {
+// Add a new expense
+Future<void> _onAddExpense(AddExpenseEvent event, Emitter<ExpensesState> emit) async {
     emit(ExpensesLoading(isFirstFetch: false));
     final result = await _addExpensesUseCase();
     result.fold(
@@ -182,14 +177,14 @@ Future<void> _onLoadMoreExpenses(
     );
   }
 
-  // Search for expenses
-  void _onSearchExpenses(SearchExpensesEvent event, Emitter<ExpensesState> emit) {
+// Search for expenses
+void _onSearchExpenses(SearchExpensesEvent event, Emitter<ExpensesState> emit) {
     _searchQuery = event.query;
     emit(ExpensesLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-  // Clear filters
-  void _onClearFilters(ClearFiltersEvent event, Emitter<ExpensesState> emit) {
+// Clear filters
+void _onClearFilters(ClearFiltersEvent event, Emitter<ExpensesState> emit) {
     _searchQuery = '';
     _categoryFilter = null;
     _startDateFilter = null;
@@ -199,26 +194,26 @@ Future<void> _onLoadMoreExpenses(
     emit(ExpensesLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-  // Sort by amount
-  void _onSortByAmount(SortByAmountEvent event, Emitter<ExpensesState> emit) {
+// Sort by amount
+void _onSortByAmount(SortByAmountEvent event, Emitter<ExpensesState> emit) {
     _sortAscending = event.ascending;
     emit(ExpensesLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-  // Filter by category
-  void _onFilterByCategory(FilterByCategoryEvent event, Emitter<ExpensesState> emit) {
+// Filter by category
+void _onFilterByCategory(FilterByCategoryEvent event, Emitter<ExpensesState> emit) {
     _categoryFilter = event.category;
     emit(ExpensesLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-  // Filter by date range
-  void _onFilterByDateRange(FilterByDateRangeEvent event, Emitter<ExpensesState> emit) {
+// Filter by date range
+void _onFilterByDateRange(FilterByDateRangeEvent event, Emitter<ExpensesState> emit) {
     _startDateFilter = event.startDate;
     _endDateFilter = event.endDate;
     emit(ExpensesLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-  // Refresh expenses
+// Refresh expenses
 void _onRefreshExpenses(RefreshExpensesEvent event, Emitter<ExpensesState> emit) async {
   emit(ExpensesLoading(isFirstFetch: true));
     try {

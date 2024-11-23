@@ -5,6 +5,7 @@ import 'package:moneyy/presentation/screens/account_settings/change_monthly_limi
 import 'package:moneyy/presentation/screens/account_settings/change_password.dart';
 import 'package:moneyy/presentation/screens/account_settings/profile_settings_main_screen.dart';
 import 'package:moneyy/presentation/screens/account_settings/send_feedback.dart';
+import 'package:moneyy/presentation/screens/bills/all_bills.dart';
 import 'package:moneyy/presentation/screens/expenses/all_expenses.dart';
 import 'package:moneyy/presentation/screens/home_screen/home_screen.dart'; // Import main screen
 import 'package:moneyy/presentation/screens/home_screen/widgets/loading_screen/loading_screen.dart';
@@ -25,6 +26,8 @@ class AppRoutes {
   static const String sendFeedbackScreen = "/SendFeedbackScreen";
   static const String spendingScreen = '/SpendingScreen';
   static const String shimmerScreen = '/ShimmerScreen';
+    static const String billScreen = '/BillScreen';
+
 
 
 
@@ -36,6 +39,9 @@ class AppRoutes {
 
       case shimmerScreen:
         return MaterialPageRoute(builder: (_) => ShimmerScreen());
+
+       case billScreen:
+        return MaterialPageRoute(builder: (_) => BillScreen());
 
       case signUp:
         return MaterialPageRoute(builder: (_) => SignUpScreen());

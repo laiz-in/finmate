@@ -18,12 +18,19 @@ class SplashScreenState extends State<SplashScreen> {
 
   // Function to navigate to home after delay
   Future<void> _navigateToHome() async {
+    print("GOING TO AUTH GUARD FROM SPLASH.DART");
+
     await Future.delayed(const Duration(seconds: 3));
+    print("going to check if the mountes is true or false");
     if (mounted) {
+      print("mounted is true , so navigating AUTH GUARD");
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const AuthGuard()),
       );
+    }
+    else{
+      print("mounted is false");
     }
   }
 

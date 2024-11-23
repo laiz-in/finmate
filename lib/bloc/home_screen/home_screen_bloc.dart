@@ -21,10 +21,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     // Listen to connectivity changes
     connectivitySubscription = connectivityCubit.stream.listen((isConnected) {
       if (!isConnected) {
-        // Show a popup when disconnected
-        Future.microtask(() {
-          _showNoInternetPopup();
-        });
+        emit(HomeScreenError("OH NO INTERNET"));
       } else {
         add(FetchUserData()); // Re-fetch data when back online
       }
