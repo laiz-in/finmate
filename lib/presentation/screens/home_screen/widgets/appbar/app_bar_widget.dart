@@ -42,7 +42,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           icon: Icon(
-            Icons.notification_add_outlined,
+            Icons.notifications_outlined,
             color: Theme.of(context).canvasColor,
             size: 25,
           ),

@@ -53,12 +53,15 @@ dependencies:
   shimmer: ^2.0.0
   shared_preferences: ^2.3.2
   hydrated_bloc:
-  path_provider:
   flutter_svg:
   get_it:
   dartz: ^0.10.1
   vs_scrollbar: ^1.0.0
   firebase_database: ^10.5.6
+  firebase_storage: ^11.7.6
+  workmanager: ^0.5.2
+
+
 
 
 

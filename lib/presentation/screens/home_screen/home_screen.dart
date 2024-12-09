@@ -84,10 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
 
                               // TITLE CARD
-                              TitleCardWidget(
-                                totalSpending:user.totalSpending,
-                                userId: user.uid,
-                              ),
+                              TitleCardWidget(totalSpending:user.totalSpending,userId: user.uid,),
 
 
                               //PERCENTAGE INDICATOR
@@ -99,17 +96,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
 
 
-                            // BAR CHART FOR LAST 7 DAYS
-                            SizedBox(height: 10,),
-                            DaywiseBarchart(),
-
-                            // RECENT TRANSACTION HEADING
-                            _transactionHeading(context),
-
-                            RecentExpensesScreen(),
+                              // BAR CHART FOR LAST 7 DAYS
+                              SizedBox(height: 10,),
+                              DaywiseBarchart(),
 
 
-                              // RECENT TRANSACTIONS LIST
+                              // RECENT TRANSACTION HEADING
+                              _transactionHeading(context),
+                            
+                              // RECENT EXPENSES SHOWING
+                              RecentExpensesScreen(),
+
 
                             ],
                           ),

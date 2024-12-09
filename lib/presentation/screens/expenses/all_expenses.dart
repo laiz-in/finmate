@@ -195,7 +195,7 @@ class SpendingScreenState extends State<SpendingScreen> {
 
   Widget _buildSearchAndFilterBar() {
     return Container(
-      padding: EdgeInsets.all(5),
+      padding: EdgeInsets.all(0),
       margin: EdgeInsets.fromLTRB(15, 12, 15, 0),
       decoration: BoxDecoration(
         boxShadow: [
@@ -304,7 +304,7 @@ class SpendingScreenState extends State<SpendingScreen> {
       if (state is ExpensesLoading && state.isFirstFetch) {
         return Center(
           child: CircularProgressIndicator(
-            strokeWidth: 2, 
+            strokeWidth: 2,
             color: Theme.of(context).canvasColor
           )
         );

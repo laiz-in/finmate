@@ -6,16 +6,19 @@ import 'package:moneyy/data/repository/auth/auth_repository_impl.dart';
 import 'package:moneyy/data/repository/bills/bills_repository_impl.dart';
 import 'package:moneyy/data/repository/expenses/expenses_repository_impl.dart';
 import 'package:moneyy/data/repository/home/home_repository.dart'; // Import UserRepository
+import 'package:moneyy/data/repository/income/income_repository_impl.dart';
 import 'package:moneyy/data/repository/settings/settings_repository_impl.dart';
 import 'package:moneyy/data/sources/auth/auth_firebase_service.dart';
 import 'package:moneyy/data/sources/bills/bills_firebase_services.dart';
 import 'package:moneyy/data/sources/connectivity/connectivity_services.dart';
 import 'package:moneyy/data/sources/expenses/expenses_firebase_services.dart';
 import 'package:moneyy/data/sources/home/home_firebase_services.dart'; // Import FirebaseHomeService
+import 'package:moneyy/data/sources/income/income_firebase_services.dart';
 import 'package:moneyy/data/sources/settings/settings_firebase_services.dart';
 import 'package:moneyy/domain/repository/auth/auth.dart';
 import 'package:moneyy/domain/repository/bills/bills.dart';
 import 'package:moneyy/domain/repository/connectivity/connectivity_service.dart';
+import 'package:moneyy/domain/repository/income/income.dart';
 import 'package:moneyy/domain/repository/settings/settings.dart';
 import 'package:moneyy/domain/repository/total_spendings/expenses.dart';
 import 'package:moneyy/domain/usecases/auth/account_deletion.dart';
@@ -35,8 +38,14 @@ import 'package:moneyy/domain/usecases/expenses/last_seven_day_expense_usecase.d
 import 'package:moneyy/domain/usecases/expenses/last_three_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/total_expenses_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/update_expense_usecase.dart';
+import 'package:moneyy/domain/usecases/income/add_income_usecase.dart';
+import 'package:moneyy/domain/usecases/income/delete_income_usecase.dart';
+import 'package:moneyy/domain/usecases/income/last_three_income_usecase.dart';
+import 'package:moneyy/domain/usecases/income/total_income_usecase.dart';
+import 'package:moneyy/domain/usecases/income/update_income_usecase.dart';
 import 'package:moneyy/domain/usecases/settings/reset_daily_limit.dart';
 import 'package:moneyy/domain/usecases/settings/reset_monthly_limit.dart';
+import 'package:moneyy/domain/usecases/settings/reset_profile_picture.dart';
 import 'package:moneyy/domain/usecases/settings/send_feedback.dart';
 
 final sl = GetIt.instance;
@@ -55,6 +64,15 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<IConnectivityService>(() => ConnectivityService());
   sl.registerFactory(() => GetConnectivityStatus(sl<IConnectivityService>()));
 
+ // INCOME RELATED
+  sl.registerLazySingleton(() => UpdateIncomeUseCase(sl()));
+  sl.registerLazySingleton(() => DeleteIncomeUseCase(sl()));
+  sl.registerLazySingleton(() => IncomeFirebaseService());
+  sl.registerLazySingleton<IncomeRepository>(() => IncomeRepositoryImpl(sl()));
+  sl.registerLazySingleton(() => TotalIncomeUseCase(sl()));
+  sl.registerLazySingleton(() => LastThreeIncomeUseCase(sl()));
+  sl.registerLazySingleton(() => AddIncomeUseCase(sl()));
+  // sl.registerFactory(() => IncomeBloc(sl(), sl()));
 
 
   // EXPENSES RELATED
@@ -79,33 +97,15 @@ Future<void> initializeDependencies() async {
 
 
   // Register settings page related services
-  sl.registerSingleton<SettingsRepository>(
-    SettingsRepositoryImpl(),
-  );
+  sl.registerSingleton<SettingsRepository>(SettingsRepositoryImpl());
+  sl.registerSingleton<SettingsFirebaseService>(SettingsFirebaseServiceImpl());
+  sl.registerSingleton<UpdateProfilePictureUseCase>(UpdateProfilePictureUseCase(),);
+  sl.registerSingleton<ResetDailyLimitUseCase>(ResetDailyLimitUseCase(),);
+  sl.registerSingleton<ResetMonthlyLimitUseCase>(ResetMonthlyLimitUseCase(),);
+  sl.registerSingleton<SendFeedbackUseCase>(SendFeedbackUseCase(),);
+  sl.registerSingleton<ResetPasswordUseCase>(ResetPasswordUseCase(),);
+  sl.registerSingleton<ResetEmailUseCase>(ResetEmailUseCase(),);
 
-  sl.registerSingleton<SettingsFirebaseService>
-  (SettingsFirebaseServiceImpl());
-
-
-  sl.registerSingleton<ResetDailyLimitUseCase>(
-    ResetDailyLimitUseCase(),
-  );
-
-  sl.registerSingleton<ResetMonthlyLimitUseCase>(
-    ResetMonthlyLimitUseCase(),
-  );
-
-  sl.registerSingleton<SendFeedbackUseCase>(
-    SendFeedbackUseCase(),
-  );
-
-  sl.registerSingleton<ResetPasswordUseCase>(
-    ResetPasswordUseCase(),
-  );
-
-  sl.registerSingleton<ResetEmailUseCase>(
-    ResetEmailUseCase(),
-  );
   
   // Theme change related services
   sl.registerFactory<ThemeCubit>(() => ThemeCubit(ThemeStorage()));

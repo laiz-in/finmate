@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
 import 'package:moneyy/common/widgets/success_snackbar.dart';
 import 'package:moneyy/data/models/bills/user_bills.dart';
@@ -30,7 +31,8 @@ class _AddBillsBottomSheetState extends State<AddBillsBottomSheet> {
   final TextEditingController _dateController = TextEditingController();
   bool _isLoading = false;
   
- // function to select the date
+  
+// function to select the date
 Future<void> _selectDate(BuildContext context) async {
   final DateTime? pickedDate = await showDatePicker(
     context: context,
@@ -49,7 +51,7 @@ Future<void> _selectDate(BuildContext context) async {
         _billDueDate = pickedDate.add(Duration(minutes: 1));
       }
 
-      _dateController.text = "${pickedDate.toLocal()}".split(' ')[0]; // Display the date only
+        _dateController.text = DateFormat('dd-MM-yyyy').format(_billDueDate!);
     });
   }
 }
@@ -60,6 +62,9 @@ Future<void> _selectDate(BuildContext context) async {
   @override
   void initState() {
     super.initState();
+    if (_billDueDate != null) {
+      _dateController.text = DateFormat('dd-MM-yyyy').format(_billDueDate!);
+    }
   }
 
   @override
@@ -106,7 +111,7 @@ Future<void> _selectDate(BuildContext context) async {
               ),
       
               // Amount field
-                TextFormField(
+              TextFormField(
                 cursorColor: Theme.of(context).canvasColor.withOpacity(0.4),
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
@@ -186,6 +191,8 @@ Future<void> _selectDate(BuildContext context) async {
                   return null;
                 },
               ),
+
+              SizedBox(height: 15),
 
               // Description field
               TextFormField(

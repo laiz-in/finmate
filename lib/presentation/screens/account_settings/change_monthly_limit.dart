@@ -58,13 +58,8 @@ class _ResetMonthlyLimitState extends State<ResetMonthlyLimit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Colors.transparent,
 
-      // APPBAR
-      appBar: AppBar(
-        backgroundColor:Theme.of(context).scaffoldBackgroundColor,
-        iconTheme: IconThemeData(color:Theme.of(context).canvasColor),
-      ),
 
       // BODY
       body: GestureDetector(
@@ -73,12 +68,7 @@ class _ResetMonthlyLimitState extends State<ResetMonthlyLimit> {
         },
         child: Stack(
           children: [
-            // Container
-            Container(
-              decoration: BoxDecoration(
-                color:Theme.of(context).scaffoldBackgroundColor,
-              ),
-            ),
+            
 
             // Align for the email and button Text fields
             Align(
@@ -92,6 +82,17 @@ class _ResetMonthlyLimitState extends State<ResetMonthlyLimit> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                        SizedBox(height: 15,),
+
+                          Center(
+                child: Container(
+                  height: 3,
+                  width:100 ,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).canvasColor.withOpacity(0.3)
+                  ),
+                ),
+              ),
                       SizedBox(height: 40,),
 
                       // Monthly reset heading
@@ -133,7 +134,7 @@ class _ResetMonthlyLimitState extends State<ResetMonthlyLimit> {
                           ),
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            fillColor: Theme.of(context).highlightColor,
+                            fillColor: Theme.of(context).cardColor,
                             filled: true,
                             contentPadding: EdgeInsets.all(16),
                             prefixIcon: Icon(
@@ -178,6 +179,8 @@ class _ResetMonthlyLimitState extends State<ResetMonthlyLimit> {
 
                       // Send button
                       InkWell(
+                        splashColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
                         onTap: _resetMonthlyLimit,
                         child: Padding(
                           padding: EdgeInsets.fromLTRB(20.0, 10, 20, 20),
@@ -227,9 +230,9 @@ class _ResetMonthlyLimitState extends State<ResetMonthlyLimit> {
                           softWrap: true,
                           'Note: Your monthly limit will remain the same until you update it next time',
                           style: GoogleFonts.poppins(
-                                color: Theme.of(context).canvasColor.withOpacity(0.7),
+                                color: Theme.of(context).canvasColor.withOpacity(0.5),
                             fontSize: 12,
-                            fontWeight: FontWeight.w500,
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ),

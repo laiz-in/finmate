@@ -4,26 +4,26 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
 import 'package:moneyy/common/widgets/success_snackbar.dart';
-import 'package:moneyy/data/models/expenses/user_expenses.dart';
-import 'package:moneyy/domain/usecases/expenses/add_expense_usecase.dart';
+import 'package:moneyy/data/models/income/user_income.dart';
+import 'package:moneyy/domain/usecases/income/add_income_usecase.dart';
 import 'package:moneyy/service_locator.dart';
 
 
-class AddSpendingBottomSheet extends StatefulWidget {
+class AddIncomeBottomSheet extends StatefulWidget {
 
-    const AddSpendingBottomSheet({super.key});
+    const AddIncomeBottomSheet({super.key});
 
 
   @override
-  _AddSpendingBottomSheetState createState() => _AddSpendingBottomSheetState();
+  _AddIncomeBottomSheetState createState() => _AddIncomeBottomSheetState();
 }
 
-class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
+class _AddIncomeBottomSheetState extends State<AddIncomeBottomSheet> {
   final _formKey = GlobalKey<FormState>();
-  double _spendingAmount = 0.0;
-  String _spendingCategory = 'Groceries';
-  String _spendingDescription = '';
-  DateTime? _spendingDate = DateTime.now();
+  double _incomeAmount = 0.0;
+  String _incomeCategory = 'Active';
+  String _incomeRemarks = '';
+  DateTime? _incomeDate = DateTime.now();
   final DateTime? _createdAt = DateTime.now();
 
   final TextEditingController _dateController = TextEditingController();
@@ -34,35 +34,30 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
 
 
   final List<String> _categories = [
-    'Groceries',
-    'Stationary',
-    'Food',
-    'Entertainment',
-    'Transport',
-    'Bills',
-    'Other'
+    'Active',
+    'Passive'
   ];
 
- // function to select the date
+// function to select the date
 Future<void> _selectDate(BuildContext context) async {
   final DateTime? pickedDate = await showDatePicker(
     context: context,
-    initialDate: _spendingDate ?? DateTime.now(),
+    initialDate: _incomeDate ?? DateTime.now(),
     firstDate: DateTime(2000),
     lastDate: DateTime(2101),
   );
-  if (pickedDate != null && pickedDate != _spendingDate) {
+  if (pickedDate != null && pickedDate != _incomeDate) {
     setState(() {
       // If the picked date is today, use the current time.
       if (pickedDate.isAtSameMomentAs(DateTime.now().toLocal())) {
-        _spendingDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day,
+        _incomeDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day,
             DateTime.now().hour, DateTime.now().minute, DateTime.now().second);
       } else {
         // Otherwise, set the time to 12:01 AM
-        _spendingDate = pickedDate.add(Duration(minutes: 1));
+        _incomeDate = pickedDate.add(Duration(minutes: 1));
       }
 
-        _dateController.text = DateFormat('dd-MM-yyyy').format(_spendingDate!);
+        _dateController.text = DateFormat('dd-MM-yyyy').format(_incomeDate!);
     });
   }
 }
@@ -72,14 +67,13 @@ Future<void> _selectDate(BuildContext context) async {
   @override
   void initState() {
     super.initState();
-  if (_spendingDate!= null) {
-      _dateController.text = DateFormat('dd-MM-yyyy').format(_spendingDate!);
+  if (_incomeDate!= null) {
+      _dateController.text = DateFormat('dd-MM-yyyy').format(_incomeDate!);
     }  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        // height: (MediaQuery.of(context).size.height)*0.5,
         padding: EdgeInsets.fromLTRB(30, 10, 30, 20),
         decoration: BoxDecoration(
           color: Theme.of(context).primaryColor,
@@ -110,7 +104,7 @@ Future<void> _selectDate(BuildContext context) async {
               Padding(
                 padding: const EdgeInsets.fromLTRB(5, 8, 5, 20),
                 child: Text(
-                  'Add Expense +',
+                  'Add Income +',
                   style: GoogleFonts.poppins(
                     fontSize: 18,
                     color: Theme.of(context).canvasColor,
@@ -157,7 +151,7 @@ Future<void> _selectDate(BuildContext context) async {
                     return 'Maximum expense can be added is 999999';
                   }
                   try {
-                    _spendingAmount = double.parse(value);
+                    _incomeAmount = double.parse(value);
                   } catch (e) {
                     return 'Please enter a valid number';
                   }
@@ -178,7 +172,7 @@ Future<void> _selectDate(BuildContext context) async {
                 ),
                 decoration: InputDecoration(
                   errorStyle: GoogleFonts.poppins(),
-                  hintText: 'Description',
+                  hintText: 'Remarks',
                   hintStyle: GoogleFonts.poppins(
                     fontSize: 17,
                     color: Theme.of(context).canvasColor,
@@ -196,7 +190,7 @@ Future<void> _selectDate(BuildContext context) async {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a description';
                   }
-                  _spendingDescription = value;
+                  _incomeRemarks = value;
                   return null;
                 },
               ),
@@ -205,7 +199,7 @@ Future<void> _selectDate(BuildContext context) async {
       
               // Dropdown to select category
               DropdownButtonFormField<String>(
-                value: _spendingCategory,
+                value: _incomeCategory,
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
                   fontWeight: FontWeight.w500,
@@ -249,7 +243,7 @@ Future<void> _selectDate(BuildContext context) async {
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
-                    _spendingCategory = value!;
+                    _incomeCategory = value!;
                   });
                 },
                 isExpanded: true,
@@ -310,13 +304,13 @@ Future<void> _selectDate(BuildContext context) async {
                             _isLoading = true;
                           });
                           
-                          var result = await sl<AddExpensesUseCase>().call(
-                            params: ExpensesModel(
-                              uidOfTransaction: "",
-                              spendingAmount: _spendingAmount,
-                              spendingCategory: _spendingCategory,
-                              spendingDate: _spendingDate!,
-                              spendingDescription: _spendingDescription,
+                          var result = await sl<AddIncomeUseCase>().call(
+                            params: IncomeModel(
+                              uidOfIncome: "",
+                              incomeAmount: _incomeAmount,
+                              incomeCategory: _incomeCategory,
+                              incomeDate: _incomeDate!,
+                              incomeRemarks: _incomeRemarks,
                               createdAt: _createdAt!,
                             ),
                           );
@@ -332,7 +326,7 @@ Future<void> _selectDate(BuildContext context) async {
                               setState(() {
                                 _isLoading = false;
                               });
-                              successSnackbar(context, "Expense has been added");
+                              successSnackbar(context, "Income has been added");
                               Navigator.of(context).pop();
                             },
                           );
@@ -365,10 +359,7 @@ Future<void> _selectDate(BuildContext context) async {
                 ],
               ),
             ),
-      
-      
-      
-      
+            
             
             ],
           ),

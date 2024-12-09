@@ -156,8 +156,8 @@ Future<void> _fetchTodaySpending() async {
                       // ALL BILLS
                       _buildIconColumn(
                         context,
-                        icon: Icons.receipt,
-                        label: 'Bills',
+                        icon: Icons.graphic_eq,
+                        label: 'Insights',
                         onPressed: () {
                           // Navigator.pushNamed(context, AppRoutes.spendingScreen);
                         },
@@ -176,22 +176,22 @@ Future<void> _fetchTodaySpending() async {
                       // REMINDERS
                       _buildIconColumn(
                         context,
-                        icon: Icons.alarm_add,
-                        label: 'Reminders',
+                        icon: Icons.arrow_downward,
+                        label: 'Income',
                         onPressed: () {
-                          // Navigator.pushNamed(context, '/AllReminders');
+                        Navigator.pushNamed(context, AppRoutes.incomeScreen);
                         },
                       ),
 
                       // INSIGHTS
                       _buildIconColumn(
                         context,
-                        icon: Icons.graphic_eq,
-                        label: 'Insights',
+                        icon: Icons.receipt,
+                        label: 'Bills',
                         onPressed: () {
                           // Navigator.pushNamed(context, '/AllStatistics');
                           
-            Navigator.pushNamed(context, AppRoutes.billScreen);
+                        Navigator.pushNamed(context, AppRoutes.billScreen);
           
                         },
                       ),

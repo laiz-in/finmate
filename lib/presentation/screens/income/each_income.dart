@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:moneyy/domain/entities/bills/bills.dart';
+import 'package:moneyy/domain/entities/income/income.dart';
 import 'package:moneyy/presentation/screens/expenses/delete_expense_button.dart';
+import 'package:moneyy/presentation/screens/income/update_income.dart';
 
-class   BillCard extends StatefulWidget {
-  final BillsEntity bill;
+class IncomeCard extends StatefulWidget {
+  final IncomeEntity transaction;
   final Function onUpdate; // Callback for update
   final Function onDelete; // Callback for delete
 
-  const BillCard({
+  const IncomeCard({
     super.key,
-    required this.bill,
+    required this.transaction,
     required this.onUpdate,
     required this.onDelete,
   });
 
   @override
-  BillCardState createState() => BillCardState();
+  IncomeCardState createState() => IncomeCardState();
 }
 
-class BillCardState extends State<BillCard> {
+class IncomeCardState extends State<IncomeCard> {
   bool _expanded = false;
 
   void _toggleExpanded() {
@@ -34,6 +35,16 @@ class BillCardState extends State<BillCard> {
     return formatter.format(date);
   }
 
+  IconData getIconForCategory(String category) {
+    switch (category.toLowerCase()) {
+      case 'Active':
+        return Icons.mobile_off;
+      case 'Passive':
+        return Icons.notification_add;
+      default:
+        return Icons.add;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +90,7 @@ class BillCardState extends State<BillCard> {
                     size: 20,
                   ),
                   Icon(
-                    Icons.receipt,
+                    getIconForCategory(widget.transaction.incomeCategory),
                     size: 20,
                     color: Colors.red.shade200,
                   ),
@@ -91,7 +102,7 @@ class BillCardState extends State<BillCard> {
                 children: [
                   Text(
                     overflow:TextOverflow.ellipsis,
-                    widget.bill.billAmount.toStringAsFixed(2),
+                    widget.transaction.incomeAmount.toStringAsFixed(2),
                     style: GoogleFonts.montserrat(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
@@ -137,17 +148,7 @@ class BillCardState extends State<BillCard> {
                       Text(
                         maxLines: 3,
                         overflow:TextOverflow.ellipsis,
-                        widget.bill.billDescription,
-                        style: GoogleFonts.poppins(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                          color: Theme.of(context).canvasColor.withOpacity(0.7),
-                        ),
-                      ),
-                      Text(
-                        maxLines: 3,
-                        overflow:TextOverflow.ellipsis,
-                        "Paid status: ${widget.bill.paidStatus.toStringAsFixed(0)}",
+                        widget.transaction.incomeRemarks,
                         style: GoogleFonts.poppins(
                           fontSize: 15,
                           fontWeight: FontWeight.w500,
@@ -157,7 +158,7 @@ class BillCardState extends State<BillCard> {
                       SizedBox(height: 3,),
                       Text(
                         overflow: TextOverflow.ellipsis,
-                        timeAgo(widget.bill.addedDate),
+                        timeAgo(widget.transaction.incomeDate),
                         style: GoogleFonts.poppins(
                         
                           fontSize: 11,
@@ -196,21 +197,21 @@ class BillCardState extends State<BillCard> {
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: () {
-                          // showDialog(
-                          //   context: context,
-                          //   builder: (context) => UpdateSpendingDialog(
+                          showDialog(
+                            context: context,
+                            builder: (context) => UpdateIncomeDialog(
                               
-                          //     initialcreatedAt:widget.transaction.createdAt,
-                          //     initialAmount: widget.transaction.spendingAmount,
-                          //     initialCategory: widget.transaction.spendingCategory,
-                          //     initialDescription: widget.transaction.spendingDescription,
-                          //     initialDate: widget.transaction.spendingDate,
-                          //     transactionId: widget.transaction.uidOfTransaction,
-                          //     onSubmit: (amount, category, description, date) {
-                          //       widget.onUpdate();
-                          //     }, uidOfTransaction: widget.transaction.uidOfTransaction,
-                          //   ),
-                          // );
+                              initialcreatedAt:widget.transaction.createdAt,
+                              initialAmount: widget.transaction.incomeAmount,
+                              initialCategory: widget.transaction.incomeCategory,
+                              initialRemarks: widget.transaction.incomeRemarks,
+                              initialDate: widget.transaction.incomeDate,
+                              incomeId: widget.transaction.uidOfIncome,
+                              onSubmit: (amount, category, description, date) {
+                                widget.onUpdate();
+                              }, uidOfIncome: widget.transaction.uidOfIncome,
+                            ),
+                          );
                         },
                         label: Text(
                           'Update',

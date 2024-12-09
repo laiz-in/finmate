@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserEntity {
@@ -12,7 +11,6 @@ class UserEntity {
   double? monthlyLimit; // Monthly spending limit
   String? uid;
 
-
   UserEntity({
     this.email,
     this.firstName,
@@ -23,25 +21,24 @@ class UserEntity {
     this.dailyLimit,
     this.monthlyLimit,
     this.uid,
-
   });
 
-  //Factory method to create a UserEntity from a Firestore document
+  // Factory method to create a UserEntity from a Firestore document
   factory UserEntity.fromJson(Map<String, dynamic> json) {
     return UserEntity(
       uid: json['uid'],
       email: json['email'],
       firstName: json['firstName'],
       lastName: json['lastName'],
-      createdAt: (json['createdAt'] as Timestamp).toDate(),
+      createdAt: json['createdAt'] != null
+          ? (json['createdAt'] as Timestamp).toDate()
+          : null,
       status: json['status'],
       totalSpending: json['totalSpending']?.toDouble(),
       dailyLimit: json['dailyLimit']?.toDouble(),
       monthlyLimit: json['monthlyLimit']?.toDouble(),
     );
   }
-
-  get todaySpending => null;
 
   // Convert the UserEntity to a JSON map for Firestore
   Map<String, dynamic> toJson() {
@@ -56,5 +53,30 @@ class UserEntity {
       'dailyLimit': dailyLimit,
       'monthlyLimit': monthlyLimit,
     };
+  }
+
+  // Add a copyWith method
+  UserEntity copyWith({
+    String? email,
+    String? firstName,
+    String? lastName,
+    DateTime? createdAt,
+    int? status,
+    double? totalSpending,
+    double? dailyLimit,
+    double? monthlyLimit,
+    String? uid,
+  }) {
+    return UserEntity(
+      email: email ?? this.email,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      createdAt: createdAt ?? this.createdAt,
+      status: status ?? this.status,
+      totalSpending: totalSpending ?? this.totalSpending,
+      dailyLimit: dailyLimit ?? this.dailyLimit,
+      monthlyLimit: monthlyLimit ?? this.monthlyLimit,
+      uid: uid ?? this.uid,
+    );
   }
 }

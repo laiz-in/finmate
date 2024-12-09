@@ -6,6 +6,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/bloc/themes/theme_cubit.dart';
 import 'package:moneyy/core/colors/colors.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
+import 'package:moneyy/presentation/screens/account_settings/change_daily_limit.dart';
+import 'package:moneyy/presentation/screens/account_settings/change_monthly_limit.dart';
+import 'package:moneyy/presentation/screens/account_settings/photo_and_name.dart';
 import 'package:moneyy/presentation/screens/account_settings/widgets/account_deletion_confirmation.dart';
 import 'package:moneyy/presentation/screens/account_settings/widgets/sign_out_confirmation_dialogue.dart';
 
@@ -62,7 +65,7 @@ showDialog(
 
       //App bar
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.0), // Adjust this height as needed
+        preferredSize: Size.fromHeight(60.0), // Adjust this height as needed
         child: AppBar(
           scrolledUnderElevation: 0,
           elevation: 0,
@@ -86,20 +89,24 @@ showDialog(
       ),
 
       body: Padding(
-        padding: const EdgeInsets.fromLTRB(15.0, 15, 20, 15),
+        padding: const EdgeInsets.fromLTRB(15.0, 15, 15, 15),
 
         child: SingleChildScrollView(
           child: Column(
             children: [
+              SizedBox(width: double.infinity,height: 15,),
 
-
+              ProfilePage(),
+              
+              SizedBox(width: double.infinity,height: 18,),
+              
               Container(
                 padding: EdgeInsets.all(15),
                 decoration: BoxDecoration(
                 boxShadow: [
                 BoxShadow(
                   color: Color.fromARGB(255, 68, 67, 67).withOpacity(0.15),
-                  spreadRadius: 3,
+                  spreadRadius: 6,
                   blurRadius: 10,
                   offset: Offset(0, 6), // changes position of shadow
                 ),
@@ -111,7 +118,7 @@ showDialog(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
-
+                    
 
                     // Text button to change email
                     TextButton(
@@ -161,13 +168,30 @@ showDialog(
 
                     // Text button to change daily limit
                     TextButton(
-                      
                       style: ButtonStyle(
                       splashFactory: NoSplash.splashFactory,
                       overlayColor: WidgetStateProperty.all(Colors.transparent),
                       ),onPressed: () {
-                                      Navigator.pushNamed(context, AppRoutes.changeDailyLimit);
-                                      },
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        elevation: 20,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                        ),
+                        builder: (BuildContext context) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
+                                ),
+                                height: (MediaQuery.of(context).size.height*0.9),
+                            
+                                child: ResetDailyLimit(),
+                              );
+                            },
+                      );},
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
@@ -189,7 +213,28 @@ showDialog(
                       splashFactory: NoSplash.splashFactory,
                       overlayColor: WidgetStateProperty.all(Colors.transparent),
                       ),
-                      onPressed: (){Navigator.pushNamed(context, AppRoutes.changeMonthlyLimit);},
+                      onPressed: ()
+                      {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        elevation: 20,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                        ),
+                        builder: (BuildContext context) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
+                                ),
+                                height: (MediaQuery.of(context).size.height*0.9),
+                            
+                                child: ResetMonthlyLimit(),
+                              );
+                            },
+                      );},
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
@@ -268,7 +313,7 @@ showDialog(
               ),
               SizedBox(height: 25),
               
-
+              // LOG OUT AND ACCOUNT DELETE BUTTONS
               Container(
                 padding: EdgeInsets.all(20),
                 width: double.infinity,

@@ -7,6 +7,7 @@ import 'package:moneyy/bloc/authentication/auth_event.dart';
 import 'package:moneyy/bloc/bills/bills_bloc.dart';
 import 'package:moneyy/bloc/expenses/expenses_bloc.dart';
 import 'package:moneyy/bloc/home_screen/home_screen_bloc.dart';
+import 'package:moneyy/bloc/income/income_bloc.dart';
 import 'package:moneyy/bloc/network/network_bloc.dart';
 import 'package:moneyy/bloc/themes/theme_cubit.dart';
 import 'package:moneyy/config/firebase_options.dart';
@@ -17,6 +18,8 @@ import 'package:moneyy/domain/usecases/bills/total_bills_usecase.dart';
 import 'package:moneyy/domain/usecases/connectivity/connectivity_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/add_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/total_expenses_usecase.dart';
+import 'package:moneyy/domain/usecases/income/add_income_usecase.dart';
+import 'package:moneyy/domain/usecases/income/total_income_usecase.dart';
 import 'package:moneyy/firebase_initializer.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
 import 'package:moneyy/presentation/screens/splash/splash.dart';
@@ -38,7 +41,8 @@ void main() async {
   final storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
   );
-    FirebaseInitializer.enableOfflinePersistence('https://console.firebase.google.com/project/finmate-d9f70/database/finmate-d9f70-default-rtdb/data/~2F');
+
+  FirebaseInitializer.enableOfflinePersistence('https://console.firebase.google.com/project/finmate-d9f70/database/finmate-d9f70-default-rtdb/data/~2F');
 
 
   await initializeDependencies();
@@ -67,6 +71,13 @@ void main() async {
           create: (context) => BillsBloc(
             sl<TotalBillsUsecase>(),
             sl<AddBillUsecase>(),
+          ),
+        ),
+
+        BlocProvider(
+          create: (context) => IncomeBloc(
+            sl<TotalIncomeUseCase>(),
+            sl<AddIncomeUseCase>(),
           ),
         ),
 

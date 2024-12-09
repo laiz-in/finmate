@@ -168,8 +168,7 @@ class ExpensesFirebaseService {
   }
 
 
-  // FETCH ALL EXPENSES
-  
+// FETCH ALL EXPENSES
 Future<List<ExpensesModel>> fetchAllExpenses({DateTime? lastSpendingDate, required int pageSize}) async {
   try {
     final String? userId = _getCurrentUserId();
@@ -285,7 +284,6 @@ Future<Either<String, String>> deleteExpenses(String uidOfTransaction) async {
     return Left("Failed to delete expense: ${e.toString()}");
   }
 }
-
 
 
 }
