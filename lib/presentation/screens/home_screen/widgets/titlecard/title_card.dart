@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:moneyy/core/colors/colors.dart';
 import 'package:moneyy/firebase/firebase_utils.dart' as firebaseUtils;
 import 'package:moneyy/presentation/routes/routes.dart';
 
 class TitleCardWidget extends StatefulWidget {
-  final double? totalSpending;
   final String? userId;
   
 
   const TitleCardWidget({
     super.key,
-    required this.totalSpending,
     required this.userId,
   });
 
@@ -21,14 +20,33 @@ class TitleCardWidget extends StatefulWidget {
 
 class _TitleCardWidgetState extends State<TitleCardWidget> {
     double todaySpending=0.0;
+    double thisMonthSpending=0.0;
     String? userId;
 
 
     @override
   void initState() {
     super.initState();
-    _fetchTodaySpending(); // Fetch the spending when the widget is initialized
+    _fetchTodaySpending();
+    _fetchThisMonthSpending(); // Fetch the spending when the widget is initialized
   }
+
+Future<void> _fetchThisMonthSpending() async {
+  if (widget.userId != null) {
+    try {
+      double totalmonthly = await firebaseUtils.getMonthTotalSpending(context, widget.userId!);
+
+      if (mounted) {
+        setState(() {
+          thisMonthSpending = totalmonthly;
+        });
+
+      }
+    } catch (e) {
+      print("error hile loading totals total soending");
+    }
+  }
+}
 
 Future<void> _fetchTodaySpending() async {
   if (widget.userId != null) {
@@ -65,15 +83,15 @@ Future<void> _fetchTodaySpending() async {
               offset: Offset(0, 4), // Changes position of shadow
             ),
           ],
- gradient: LinearGradient(
-    colors: [
-      AppColors.foregroundColor.withOpacity(0.8),
-      AppColors.foregroundColor,
-      AppColors.foregroundColor.withOpacity(0.3),
-    ],
-    begin: Alignment.topLeft,
-    end: Alignment.bottomRight,
-  ),          borderRadius: BorderRadius.circular(16.0),
+            gradient: LinearGradient(
+                colors: [
+                  AppColors.foregroundColor.withOpacity(0.8),
+                  AppColors.foregroundColor,
+                  AppColors.foregroundColor.withOpacity(0.3),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),          borderRadius: BorderRadius.circular(16.0),
         ),
 
 
@@ -96,9 +114,8 @@ Future<void> _fetchTodaySpending() async {
                       ),
                     ),
                     TextSpan(
-                      text: widget.totalSpending != null
-                          ? ' ₹ ${widget.totalSpending!.toStringAsFixed(2)}'
-                          : '',
+                      text: ' ₹ ${thisMonthSpending.toStringAsFixed(1)}',
+
                       style: GoogleFonts.montserrat(
                         fontSize: 28,
                         fontWeight: FontWeight.w700,
@@ -125,7 +142,7 @@ Future<void> _fetchTodaySpending() async {
                       ),
                     ),
                     TextSpan(
-                    text: ' ₹ ${todaySpending.toStringAsFixed(2)}',
+                    text: ' ₹ ${todaySpending.toStringAsFixed(1)}',
                     style: GoogleFonts.montserrat(
                       fontSize: 28,
                       fontWeight: FontWeight.w700,
@@ -152,7 +169,7 @@ Future<void> _fetchTodaySpending() async {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-
+                      
                       // ALL BILLS
                       _buildIconColumn(
                         context,
@@ -162,37 +179,63 @@ Future<void> _fetchTodaySpending() async {
                           // Navigator.pushNamed(context, AppRoutes.spendingScreen);
                         },
                       ),
-
-                      // PERSONAL LIABILITIES
-                      _buildIconColumn(
-                        context,
-                        icon: Icons.person_add,
-                        label: 'Interpersonal',
-                        onPressed: () {
-                          // Navigator.pushNamed(context, '/AllIndividuals');
-                        },
+                  
+                      // INCOME
+                      Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                      
+                        onTap: (){ Navigator.pushNamed(context, AppRoutes.incomeScreen);},
+                        child: Column(
+                          children: [
+                            Icon(Symbols.south_west,color: Colors.green.shade300,size: 30,),
+                      
+                                Text(
+                                "Income",
+                                style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: Theme.of(context).canvasColor,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-
-                      // REMINDERS
-                      _buildIconColumn(
-                        context,
-                        icon: Icons.arrow_downward,
-                        label: 'Income',
-                        onPressed: () {
-                        Navigator.pushNamed(context, AppRoutes.incomeScreen);
-                        },
+                    ),
+                  
+                      // Expenses
+                      Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                      
+                        onTap: (){ Navigator.pushNamed(context, AppRoutes.spendingScreen);},
+                        child: Column(
+                          children: [
+                            Icon(Symbols.north_east_rounded,color: Colors.red.shade200,size: 30,),
+                      
+                                Text(
+                                "Expenses",
+                                style: GoogleFonts.poppins(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: Theme.of(context).canvasColor,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-
+                    ),
+                  
                       // INSIGHTS
                       _buildIconColumn(
                         context,
-                        icon: Icons.receipt,
+                        icon: Symbols.sell_rounded,
                         label: 'Bills',
                         onPressed: () {
                           // Navigator.pushNamed(context, '/AllStatistics');
                           
                         Navigator.pushNamed(context, AppRoutes.billScreen);
-          
+                            
                         },
                       ),
                     ],
@@ -206,29 +249,35 @@ Future<void> _fetchTodaySpending() async {
     );
   }
 
-  Column _buildIconColumn(BuildContext context,
+  Padding _buildIconColumn(BuildContext context,
       {required IconData icon,
       required String label,
       required VoidCallback onPressed}) {
-    return Column(
-      children: [
-        IconButton(
-          icon: Icon(
-            icon,
-            color: Theme.of(context).canvasColor.withOpacity(0.6),
-            size: 25,
-          ),
-          onPressed: onPressed,
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+        hoverColor:Colors.yellow,
+        splashColor: Colors.red,
+        
+        onTap: onPressed,
+        child: Column(
+          children: [
+            Icon(icon,
+                color: Theme.of(context).canvasColor.withOpacity(0.6),
+                size: 30,
+                ),
+      
+                Text(
+                label,
+                style: GoogleFonts.poppins(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).canvasColor,
+              ),
+            ),
+          ],
         ),
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: Theme.of(context).canvasColor,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }

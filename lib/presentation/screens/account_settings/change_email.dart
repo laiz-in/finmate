@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
 import 'package:moneyy/domain/usecases/auth/email_reset.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
@@ -101,7 +102,7 @@ class _ResetEmailState extends State<ResetEmail> {
                             ),
                             SizedBox(width: 10),
                             Icon(
-                              Icons.email,
+                              Symbols.email,
                               color:Theme.of(context).canvasColor,
                               size: 35,
                             ),
@@ -128,7 +129,7 @@ class _ResetEmailState extends State<ResetEmail> {
                             filled: true,
                             contentPadding: EdgeInsets.all(16),
                             prefixIcon: Icon(
-                              Icons.email,
+                              Symbols.email,
                               color:Theme.of(context).canvasColor.withOpacity(0.7),
                             ),
                             label: Text(

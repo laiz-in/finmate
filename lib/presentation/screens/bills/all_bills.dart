@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/bloc/bills/bills_bloc.dart';
 import 'package:moneyy/bloc/bills/bills_event.dart';
 import 'package:moneyy/bloc/bills/bills_state.dart';
+import 'package:moneyy/common/widgets/basicAppbar.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
 import 'package:moneyy/core/colors/colors.dart';
 import 'package:moneyy/presentation/screens/bills/add_bills_dialogue.dart';
@@ -83,17 +84,7 @@ class BillScreenSatate extends State<BillScreen> {
   }
 
   Widget _buildAppBar() {
-    return AppBar(
-      toolbarHeight: 40,
-      scrolledUnderElevation: 0,
-      elevation: 0,
-      iconTheme: IconThemeData(color: Theme.of(context).canvasColor),
-      title: Text('All bills',
-          style: GoogleFonts.poppins(
-              fontSize: 18, color: Theme.of(context).canvasColor)),
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      titleSpacing: 0,
-    );
+    return CommonAppBar(heading: 'All Bills');
   }
 
   // Widget _buildQuickFilterRow() {

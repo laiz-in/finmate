@@ -141,7 +141,7 @@ class _ResetDailyLimitState extends State<ResetDailyLimit> {
                                   color:Theme.of(context).canvasColor.withOpacity(0.7),
                                 ),
                                 label: Text(
-                                  'Enter amount',
+                                  'Enter new daily limit',
                                   style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w400, color: Theme.of(context).canvasColor.withOpacity(0.7)),
                                 ),
                                 floatingLabelBehavior: FloatingLabelBehavior.never,

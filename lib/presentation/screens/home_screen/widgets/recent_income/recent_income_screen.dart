@@ -3,33 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
-import 'package:moneyy/domain/entities/spending/expenses.dart';
-import 'package:moneyy/domain/usecases/expenses/last_three_expense_usecase.dart';
+import 'package:moneyy/domain/entities/income/income.dart';
+import 'package:moneyy/domain/usecases/income/last_three_income_usecase.dart';
 import 'package:moneyy/service_locator.dart';
 
-class RecentExpensesScreen extends StatefulWidget {
-  const RecentExpensesScreen({super.key});
+class RecentIncomeScreen extends StatefulWidget {
+  const RecentIncomeScreen({super.key});
 
   @override
-  State<RecentExpensesScreen> createState() => _RecentExpensesScreenState();
+  State<RecentIncomeScreen> createState() => _RecentIncomeScreenState();
 }
 
-class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
-  late Future<dartz.Either<String, List<ExpensesEntity>>> _recentExpensesFuture;
+class _RecentIncomeScreenState extends State<RecentIncomeScreen> {
+  late Future<dartz.Either<String, List<IncomeEntity>>> _recentIncomeFuture;
 
   @override
   void initState() {
     super.initState();
     // Fetch the recent expenses using LastThreeExpensesUseCase
-    _recentExpensesFuture = sl<LastThreeExpensesUseCase>()();
+    _recentIncomeFuture = sl<LastThreeIncomeUseCase>()();
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-      child: FutureBuilder<dartz.Either<String, List<ExpensesEntity>>>(
-        future: _recentExpensesFuture,
+      child: FutureBuilder<dartz.Either<String, List<IncomeEntity>>>(
+        future: _recentIncomeFuture,
         builder: (context, snapshot) {
 
 
@@ -71,14 +71,14 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                 });
                 return Center(child: Text('Error: $errorMessage'));
               },
-              (recentExpenses) {
+              (recentIncome) {
                 // If data exists, build the recent transaction card
-                return _recentExpensesCard(recentExpenses, context);
+                return _recentIncomeCard(recentIncome, context);
               },
             );
           }
 
-
+          print("no data found");
           return const Center(child: Text('No Data Found'));
         },
       ),
@@ -86,7 +86,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
   }
 
   // Widget to display recent expenses or error messages
-  Widget _recentExpensesCard(List<ExpensesEntity> recentExpenses, BuildContext context) {
+  Widget _recentIncomeCard(List<IncomeEntity> recentIncome, BuildContext context) {
     DateTime now = DateTime.now();
 
     // Function to calculate "time ago"
@@ -120,7 +120,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: recentExpenses.isEmpty
+          children: recentIncome.isEmpty
               ? [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(0.0, 10, 0, 10),
@@ -132,7 +132,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                           Icon( Icons.hourglass_disabled,color: Theme.of(context).canvasColor.withOpacity(0.6),size: 40,),
                           SizedBox(height: 10,),
                           Text(
-                            "no expenses found!",
+                            "no income found!",
                             style: GoogleFonts.poppins(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
@@ -144,9 +144,9 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                     ),
                   ),
                 ]
-              : recentExpenses.asMap().entries.map((entry) {
+              : recentIncome.asMap().entries.map((entry) {
                   int index = entry.key;
-                  ExpensesEntity transaction = entry.value;
+                  IncomeEntity transaction = entry.value;
                   return Column(
                     children: [
                       Padding(
@@ -163,13 +163,13 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                                   Padding(
                                     padding: const EdgeInsets.only(right:8.0),
                                     child: Icon(
-                                      Symbols.north_east_rounded,
-                                      color: Colors.red.shade300,
+                                      Symbols.south_west,
+                                      color: Colors.green.shade300,
                                     ),
                                   ),
             
                                   Text(
-                                    transaction.spendingAmount.toStringAsFixed(1),
+                                    transaction.incomeAmount.toStringAsFixed(1),
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.montserrat(
                                       fontSize: 16,
@@ -189,7 +189,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                                   Expanded(
                                     flex: 1, // 35% of the remaining width
                                     child: Text(
-                                      transaction.spendingDescription,
+                                      transaction.incomeRemarks,
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.poppins(
                                         fontSize: 15,
@@ -208,7 +208,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                                         Text(
                                           overflow: TextOverflow.ellipsis,
 
-                                          timeAgo(transaction.spendingDate),
+                                          timeAgo(transaction.incomeDate),
                                           style: GoogleFonts.poppins(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
@@ -224,7 +224,7 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                           ],
                         ),
                       ),
-                      if (index != recentExpenses.length - 1)
+                      if (index != recentIncome.length - 1)
                         Divider(color: Theme.of(context).canvasColor.withOpacity(0.1),thickness: 1,),
                     ],
                   );

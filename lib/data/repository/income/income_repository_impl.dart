@@ -10,6 +10,52 @@ class IncomeRepositoryImpl implements IncomeRepository {
   IncomeRepositoryImpl(this._firebaseService);
 
 
+
+// FETCH THIS MONTH INCOME
+@override
+Future<Either<String, double>> fetchThisMonthIncome() async {
+  try {
+    final eitherResult = await _firebaseService.fetchThisMonthIncome();
+    return eitherResult.fold(
+      (failure) => Left(failure),
+      (thisMonthIncome) => Right(thisMonthIncome)
+    );
+  } catch (e) {
+    return Left("Error fetching this month's total income: $e");
+  }
+}
+
+
+// FETCH THIS WEEK INCOME
+@override
+Future<Either<String, double>> fetchThisWeekIncome() async {
+  try {
+    final eitherResult = await _firebaseService.fetchThisWeekIncome();
+    return eitherResult.fold(
+      (failure) => Left(failure),
+      (thisWeekIncome) => Right(thisWeekIncome)
+    );
+  } catch (e) {
+    return Left("Error fetching this week's total income: $e");
+  }
+}
+
+
+// FETCH THIS YEAR INCOME
+@override
+Future<Either<String, double>> fetchThisYearIncome() async {
+  try {
+    final eitherResult = await _firebaseService.fetchThisYearIncome();
+    return eitherResult.fold(
+      (failure) => Left(failure),
+      (thisYearIncome) => Right(thisYearIncome)
+    );
+  } catch (e) {
+    return Left("Error fetching this year's total income: $e");
+  }
+}
+
+
   // FETCH ALL INCOME
   @override
   Future<Either<String, List<IncomeEntity>>> fetchAllIncome(page,pageSize) async {

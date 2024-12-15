@@ -13,6 +13,7 @@ import 'package:moneyy/presentation/screens/expenses/add_expense_dialogue.dart';
 import 'package:moneyy/presentation/screens/home_screen/widgets/appbar/app_bar_widget.dart';
 import 'package:moneyy/presentation/screens/home_screen/widgets/loading_screen/loading_screen.dart';
 import 'package:moneyy/presentation/screens/home_screen/widgets/recent_expenses/recent_expenses_screen.dart';
+import 'package:moneyy/presentation/screens/home_screen/widgets/recent_income/recent_income_screen.dart';
 import 'package:moneyy/presentation/screens/home_screen/widgets/titlecard/title_card.dart';
 import 'package:moneyy/presentation/screens/home_screen/widgets/visualization/bar_chart.dart';
 import 'package:moneyy/presentation/screens/home_screen/widgets/visualization/percentage_card.dart';
@@ -84,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             children: [
 
                               // TITLE CARD
-                              TitleCardWidget(totalSpending:user.totalSpending,userId: user.uid,),
+                              TitleCardWidget(userId: user.uid,),
 
 
                               //PERCENTAGE INDICATOR
@@ -107,6 +108,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               // RECENT EXPENSES SHOWING
                               RecentExpensesScreen(),
 
+                              // RECENT INCOME HEADING
+                              _incomeHeading(context),
+                            
+                              // RECENT INCOME SHOWING
+                              RecentIncomeScreen(),
+
 
                             ],
                           ),
@@ -126,25 +133,29 @@ class _HomeScreenState extends State<HomeScreen> {
           return Container(); // Fallback empty container
         },
       ),
-      floatingActionButton: FloatingActionButton(
 
-      onPressed: () => showModalBottomSheet(
-      context: context,
-      isScrollControlled: true, // Allows the modal to extend beyond half the screen
-      backgroundColor: Colors.transparent, // Set transparent if you want rounded corners without clipping
-      builder: (BuildContext context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: AddSpendingBottomSheet(),
-        );
-      },
-    ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true, // Allows the modal to extend beyond half the screen
+                        backgroundColor: Colors.transparent, // Set transparent if you want rounded corners without clipping
+                        builder: (BuildContext context) {
+                          return Padding(
+                            padding: EdgeInsets.only(
+                                bottom: MediaQuery.of(context).viewInsets.bottom,
+                                ),
+                                child: AddSpendingBottomSheet(),
+                              );
+                            },
+                          ),
         backgroundColor: AppColors.foregroundColor,
         elevation: 5,
         child: Icon(Icons.add, color: Colors.white, size: 40),
-      ),
+    ),
+
+
+
     );
   }
 }
@@ -168,6 +179,49 @@ Widget _transactionHeading(context) {
         TextButton(
           onPressed: () {
             Navigator.pushNamed(context, AppRoutes.spendingScreen);
+          },
+          child: Row(
+            children: [
+              Text(
+                'View all',
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).canvasColor,
+                ),
+              ),
+              SizedBox(width: 5,),
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 15,
+                color: Theme.of(context).canvasColor,
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _incomeHeading(context) {
+  return Padding(
+    padding: const EdgeInsets.fromLTRB(5, 5, 0, 5),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          'Recent income',
+          style: GoogleFonts.poppins(
+            fontSize: 15,
+            color: Theme.of(context).canvasColor,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pushNamed(context, AppRoutes.incomeScreen);
           },
           child: Row(
             children: [

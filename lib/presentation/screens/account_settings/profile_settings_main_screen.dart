@@ -348,7 +348,7 @@ showDialog(
                       onPressed: () => _deleteAccount(context),
                       text: 'Delete account',
                       icon: Icons.delete_outline,
-                      backgroundColor: AppColors.myOrange,
+                      backgroundColor:  Colors.red.shade200,
                     ),
                   ],
                 ),

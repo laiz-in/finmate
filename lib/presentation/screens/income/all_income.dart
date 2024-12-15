@@ -122,7 +122,7 @@ class IncomeScreenState extends State<IncomeScreen> {
   }
 
   Widget _buildAppBar() {
-    return CommonAppBar(heading: "All expenses");
+    return CommonAppBar(heading: "All income");
   }
 
   Widget _buildQuickFilterRow() {

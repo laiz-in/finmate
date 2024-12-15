@@ -53,7 +53,7 @@ class GraphCardWidgetState extends State<GraphCardWidget> {
 
 
     return Padding(
-      padding: const EdgeInsets.only(top: 25),
+      padding: const EdgeInsets.only(top: 17),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 0.0),
         child: Container(
@@ -115,7 +115,7 @@ class GraphCardWidgetState extends State<GraphCardWidget> {
           Text(
             title,
             style: GoogleFonts.poppins(
-              color: Theme.of(context).canvasColor.withOpacity(0.6),
+              color: Theme.of(context).canvasColor.withOpacity(0.8),
               fontWeight: FontWeight.w500,
               fontSize: 12,
             ),

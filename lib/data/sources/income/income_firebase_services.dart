@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,7 +15,7 @@ class IncomeFirebaseService {
   }
 
 
-  // TO UPDATE INCOME
+// TO UPDATE INCOME
   Future<Either<String,String>> updateIncome(String uidOfIncome,IncomeModel updateIncome) async{
     try{
         final user = FirebaseAuth.instance.currentUser;
@@ -48,8 +49,7 @@ class IncomeFirebaseService {
     }
   }
 
-
-  // ADD INCOME
+// ADD INCOME
   Future<Either> addIncome(IncomeModel income) async {
     try {
         final user = FirebaseAuth.instance.currentUser;
@@ -78,7 +78,6 @@ class IncomeFirebaseService {
       return Left("error while adding ");
     }
   }
-
 
 // FETCH ALL INCOME
 Future<List<IncomeModel>> fetchAllIncome({DateTime? lastIncomeDate, required int pageSize}) async {
@@ -118,8 +117,7 @@ Future<List<IncomeModel>> fetchAllIncome({DateTime? lastIncomeDate, required int
   }
 }
 
-
-  // LAST 3 INCOME
+// LAST 3 INCOME
   Future<List<IncomeModel>> fetchLastThreeIncome() async {
     try {
       final String? userId = _getCurrentUserId();
@@ -127,13 +125,13 @@ Future<List<IncomeModel>> fetchAllIncome({DateTime? lastIncomeDate, required int
       if (userId == null) {
         throw Exception("User is not logged in");
       }
-
+      
       // Fetch the last 3 documents from the 'spendings' subcollection
       final QuerySnapshot snapshot = await _firestore
           .collection('users')
           .doc(userId)
           .collection('income')
-          .orderBy('IncomeDate', descending: true)
+          .orderBy('incomeDate', descending: true)
           .limit(3)
           .get();
 
@@ -144,13 +142,11 @@ Future<List<IncomeModel>> fetchAllIncome({DateTime? lastIncomeDate, required int
           doc.id, // Use the document ID as uidOfTransaction
         );
       }).toList();
-
       return income;
     } catch (e) {
       throw Exception("Failed to fetch last three income: $e");
     }
   }
-
 
 // DELETE THE INCOME
 Future<Either<String, String>> deleteIncome(String uidOfIncome) async {
@@ -184,6 +180,101 @@ Future<Either<String, String>> deleteIncome(String uidOfIncome) async {
     return Left("Failed to delete income: ${e.toString()}");
   }
 }
+
+// THIS MONTH INCOME
+Future<Either<String,double>> fetchThisMonthIncome() async {
+try {
+    final user = FirebaseAuth.instance.currentUser;
+    if(user!=null){
+    double thisMonthIncome = 0.0;
+    DateTime now = DateTime.now();
+    DateTime startOfMonth = DateTime(now.year, now.month, 1); // 1st of the current month at 12:00 AM
+    DateTime currentTime = now; // Current date and time
+
+    QuerySnapshot incomeSnapshot = await _firestore
+        .collection("users")
+        .doc(user.uid)
+        .collection("income")
+        .where('incomeDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfMonth))
+        .where('incomeDate', isLessThanOrEqualTo: Timestamp.fromDate(currentTime))
+        .get();
+
+    for (var doc in incomeSnapshot.docs) {
+      thisMonthIncome += (doc['incomeAmount'] as num).toDouble();
+    }
+    return Right(thisMonthIncome);
+    }
+    else{
+      return Left("user is not logged in");
+    }
+  } catch (e) {
+    return Left("Failed to fetch this month total");
+  }
+}
+
+// THIS WEEK INCOME
+Future<Either<String, double>> fetchThisWeekIncome() async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      double thisWeekIncome = 0.0;
+      DateTime now = DateTime.now();
+      // Calculate the start of the week (last Thursday)
+      int daysSinceThursday = (now.weekday + 3) % 7; // Ensures Thursday is day 0 of the week
+      DateTime startOfWeek = DateTime(now.year, now.month, now.day).subtract(Duration(days: daysSinceThursday));
+      
+      DateTime currentTime = now; // Current date and time
+
+      QuerySnapshot incomeSnapshot = await _firestore
+          .collection("users")
+          .doc(user.uid)
+          .collection("income")
+          .where('incomeDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfWeek))
+          .where('incomeDate', isLessThanOrEqualTo: Timestamp.fromDate(currentTime))
+          .get();
+
+      for (var doc in incomeSnapshot.docs) {
+        thisWeekIncome += (doc['incomeAmount'] as num).toDouble();
+      }
+      return Right(thisWeekIncome);
+    } else {
+      return Left("User is not logged in");
+    }
+  } catch (e) {
+    return Left("Failed to fetch this week total");
+  }
+}
+
+// THIS YEAR INCOME
+Future<Either<String, double>> fetchThisYearIncome() async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      double thisYearIncome = 0.0;
+      DateTime now = DateTime.now();
+      DateTime startOfYear = DateTime(now.year, 1, 1); // 1st of January of the current year at 12:00 AM
+      DateTime currentTime = now; // Current date and time
+
+      QuerySnapshot incomeSnapshot = await _firestore
+          .collection("users")
+          .doc(user.uid)
+          .collection("income")
+          .where('incomeDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfYear))
+          .where('incomeDate', isLessThanOrEqualTo: Timestamp.fromDate(currentTime))
+          .get();
+
+      for (var doc in incomeSnapshot.docs) {
+        thisYearIncome += (doc['incomeAmount'] as num).toDouble();
+      }
+      return Right(thisYearIncome);
+    } else {
+      return Left("User is not logged in");
+    }
+  } catch (e) {
+    return Left("Failed to fetch this year total");
+  }
+}
+
 
 
 }

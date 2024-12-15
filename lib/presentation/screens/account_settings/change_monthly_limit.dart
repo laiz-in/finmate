@@ -142,7 +142,7 @@ class _ResetMonthlyLimitState extends State<ResetMonthlyLimit> {
                               color:Theme.of(context).canvasColor.withOpacity(0.7),
                             ),
                             label: Text(
-                              'Enter amount',
+                              'Enter new monthly limit',
                               style: GoogleFonts.poppins(fontSize: 15, fontWeight: FontWeight.w400, color: Theme.of(context).canvasColor.withOpacity(0.7)),
                             ),
                             floatingLabelBehavior: FloatingLabelBehavior.never,

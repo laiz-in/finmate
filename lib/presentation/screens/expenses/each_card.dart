@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:moneyy/domain/entities/spending/expenses.dart';
 import 'package:moneyy/presentation/screens/expenses/delete_expense_button.dart';
 import 'package:moneyy/presentation/screens/expenses/update_expense.dart';
@@ -38,17 +39,17 @@ class TransactionCardState extends State<TransactionCard> {
   IconData getIconForCategory(String category) {
     switch (category.toLowerCase()) {
       case 'food':
-        return Icons.fastfood;
+        return Symbols.fastfood;
       case 'transport':
-        return Icons.directions_bus;
+        return Symbols.tram;
       case 'entertainment':
-        return Icons.movie;
+        return Symbols.movie;
       case 'bills':
         return Icons.receipt;
       case 'stationary':
         return Icons.shopping_cart;
       case 'groceries':
-        return Icons.store;
+        return Symbols.grocery;
       case 'others':
         return Icons.category;
       default:
@@ -69,79 +70,80 @@ class TransactionCardState extends State<TransactionCard> {
         padding: const EdgeInsets.fromLTRB(15, 0, 10, 0.0),
       
         decoration: BoxDecoration(
-          boxShadow: [
-      BoxShadow(
-        color: const Color.fromARGB(255, 65, 64, 64).withOpacity(0.13), // Shadow color
-        offset: const Offset(0, 4), // Horizontal and vertical offset
-        blurRadius: 12.0, // Blur radius
-        spreadRadius: 3.0, // Spread radius
-      ),
-    ],
-          color: Theme.of(context).hintColor,
-          borderRadius: BorderRadius.circular(20.0),
-        ),
+                                  boxShadow: [
+                                  BoxShadow(
+                                    color: const Color.fromARGB(255, 65, 64, 64).withOpacity(0.10), // Shadow color
+                                    offset: const Offset(0, 4), // Horizontal and vertical offset
+                                    blurRadius: 12.0, // Blur radius
+                                    spreadRadius: 3.0, // Spread radius
+                                    ),
+                                  ],
+                                  color: Theme.of(context).hintColor,
+                                  borderRadius: BorderRadius.circular(20.0),
+                                  ),
 
-        child: Column(
+          child: Column(
           children: [
 
-            ListTile(
+          ListTile(
+          
+          splashColor: Colors.transparent,
+
+          hoverColor: Colors.transparent,
+          contentPadding: EdgeInsets.zero,
+          onTap: _toggleExpanded,
+
               
-              splashColor: Colors.transparent,
-
-              hoverColor: Colors.transparent,
-              contentPadding: EdgeInsets.zero,
-              onTap: _toggleExpanded,
-
               leading: Column(
                 children: [
+
                   Icon(
-                    Icons.arrow_outward,
-                    color: Colors.red.shade200,
-                    size: 20,
+                    Symbols.north_east,
+                    color: Colors.red.shade300,
+                    size: 30,
                   ),
                   Icon(
                     getIconForCategory(widget.transaction.spendingCategory),
-                    size: 20,
-                    color: Colors.red.shade200,
+                    size: 25,
+                    color: Colors.red.shade300,
                   ),
                 ],
               ),
-
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    overflow:TextOverflow.ellipsis,
-                    widget.transaction.spendingAmount.toStringAsFixed(2),
-                    style: GoogleFonts.montserrat(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).canvasColor,
+              
+              title: Container(
+                decoration: BoxDecoration(
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      overflow:TextOverflow.ellipsis,
+                      widget.transaction.spendingAmount.toStringAsFixed(2),
+                      style: GoogleFonts.montserrat(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).canvasColor,
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    highlightColor:Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    splashRadius:null,
-                    icon: _expanded
-                          ? Transform.rotate(
-                              angle: 1.5708, // Rotate 90 degrees to make the arrow point downward
-                              child: Icon(
-                                Icons.arrow_forward_ios_sharp,
-                                size: 15,
-                                color: Theme.of(context).canvasColor.withOpacity(0.7),
-                              ),
-                            )
-                          : Icon(
-                              Icons.arrow_forward_ios_sharp,
-                              size: 15,
-                              color: Theme.of(context).canvasColor.withOpacity(0.7),
-                            ),
-                    onPressed: _toggleExpanded,
-                  ),
-                ],
+                  GestureDetector(
+                  onTap: _toggleExpanded,
+                  child: _expanded
+                      ? Transform.rotate(
+                          angle: 1.5708, // Rotate 90 degrees
+                          child: Icon(
+                            Icons.arrow_forward_ios_sharp,
+                            size: 15,
+                            color: Theme.of(context).canvasColor.withOpacity(0.7),
+                          ),
+                        )
+                      : Icon(
+                          Icons.arrow_forward_ios_sharp,
+                          size: 15,
+                          color: Theme.of(context).canvasColor.withOpacity(0.7),
+                        ),
+                ),
+                  ],
+                ),
               ),
               
               subtitle: Column(
@@ -227,17 +229,18 @@ class TransactionCardState extends State<TransactionCard> {
                           'Update',
                           style: GoogleFonts.poppins(
                             fontSize: 15,
-                            color: Colors.white,
+                            color: Color.fromARGB(255, 1, 45, 88),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
-                            Color.fromARGB(255, 136, 182, 221),
+                            Color.fromARGB(255, 208, 223, 235),
                           ),
                           elevation: WidgetStateProperty.all<double>(0),
                           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
+                              
                               borderRadius: BorderRadius.circular(12.0),
                             ),
                           ),

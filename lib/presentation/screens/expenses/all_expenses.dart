@@ -356,7 +356,7 @@ class SpendingScreenState extends State<SpendingScreen> {
                       _fetchExpenses();
                     },
                   );
-                } 
+                }
                 
                 // Display "Load More" button
                 else if (state.hasMore && searchQuery.isEmpty&& expenses.length >=30)

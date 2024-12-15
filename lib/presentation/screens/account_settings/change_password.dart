@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:moneyy/common/widgets/success_snackbar.dart';
 import 'package:moneyy/domain/usecases/auth/password_reset.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
@@ -194,7 +195,8 @@ Widget _emailField(BuildContext context, emailController){
                             filled: true,
                             contentPadding: const EdgeInsets.all(16),
                             prefixIcon: Icon(
-                              Icons.email,
+                              Symbols
+                              .email,
                               color: Theme.of(context).canvasColor.withOpacity(0.7)
                             ),
                             label: Text(

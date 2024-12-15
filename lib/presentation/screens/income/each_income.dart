@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:moneyy/domain/entities/income/income.dart';
 import 'package:moneyy/presentation/screens/expenses/delete_expense_button.dart';
 import 'package:moneyy/presentation/screens/income/update_income.dart';
+
 
 class IncomeCard extends StatefulWidget {
   final IncomeEntity transaction;
@@ -35,16 +37,16 @@ class IncomeCardState extends State<IncomeCard> {
     return formatter.format(date);
   }
 
-  IconData getIconForCategory(String category) {
-    switch (category.toLowerCase()) {
-      case 'Active':
-        return Icons.mobile_off;
-      case 'Passive':
-        return Icons.notification_add;
-      default:
-        return Icons.add;
-    }
+IconData getIconForCategory(String category) {
+  switch (category.toLowerCase()) {
+    case 'active':
+      return Symbols.work; // Active category icon
+    case 'passive':
+      return Symbols.heart_check; // Passive category icon
+    default:
+      return Symbols.add_a_photo; // Default icon to be returned
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -85,14 +87,15 @@ class IncomeCardState extends State<IncomeCard> {
               leading: Column(
                 children: [
                   Icon(
-                    Icons.arrow_outward,
-                    color: Colors.red.shade200,
-                    size: 20,
+                    Symbols.south_west,
+                    color: Colors.green,
+                    size: 25,
                   ),
                   Icon(
                     getIconForCategory(widget.transaction.incomeCategory),
-                    size: 20,
-                    color: Colors.red.shade200,
+                    size: 25,
+                    color: Colors.green.shade400,
+
                   ),
                 ],
               ),
@@ -109,28 +112,23 @@ class IncomeCardState extends State<IncomeCard> {
                       color: Theme.of(context).canvasColor,
                     ),
                   ),
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    highlightColor:Colors.transparent,
-                    hoverColor: Colors.transparent,
-                    splashColor: Colors.transparent,
-                    splashRadius:null,
-                    icon: _expanded
-                          ? Transform.rotate(
-                              angle: 1.5708, // Rotate 90 degrees to make the arrow point downward
-                              child: Icon(
-                                Icons.arrow_forward_ios_sharp,
-                                size: 15,
-                                color: Theme.of(context).canvasColor.withOpacity(0.7),
-                              ),
-                            )
-                          : Icon(
-                              Icons.arrow_forward_ios_sharp,
-                              size: 15,
-                              color: Theme.of(context).canvasColor.withOpacity(0.7),
-                            ),
-                    onPressed: _toggleExpanded,
-                  ),
+                GestureDetector(
+                  onTap: _toggleExpanded,
+                  child: _expanded
+                      ? Transform.rotate(
+                          angle: 1.5708, // Rotate 90 degrees
+                          child: Icon(
+                            Icons.arrow_forward_ios_sharp,
+                            size: 15,
+                            color: Theme.of(context).canvasColor.withOpacity(0.7),
+                          ),
+                        )
+                      : Icon(
+                          Icons.arrow_forward_ios_sharp,
+                          size: 15,
+                          color: Theme.of(context).canvasColor.withOpacity(0.7),
+                        ),
+                ),
                 ],
               ),
               

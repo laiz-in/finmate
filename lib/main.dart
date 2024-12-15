@@ -19,6 +19,9 @@ import 'package:moneyy/domain/usecases/connectivity/connectivity_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/add_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/total_expenses_usecase.dart';
 import 'package:moneyy/domain/usecases/income/add_income_usecase.dart';
+import 'package:moneyy/domain/usecases/income/this_month_total_income.dart';
+import 'package:moneyy/domain/usecases/income/this_week_total_income.dart';
+import 'package:moneyy/domain/usecases/income/this_year_total_income.dart';
 import 'package:moneyy/domain/usecases/income/total_income_usecase.dart';
 import 'package:moneyy/firebase_initializer.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
@@ -93,13 +96,15 @@ void main() async {
 
 
         // homescreen
-        BlocProvider(
-        create: (context) => HomeScreenBloc(
-          userRepository: sl<UserRepository>(),
-          connectivityCubit: BlocProvider.of<ConnectivityCubit>(context),
+      BlocProvider(
+          create: (context) => HomeScreenBloc(
+            userRepository: sl<UserRepository>(), 
+            connectivityCubit: BlocProvider.of<ConnectivityCubit>(context), 
+            fetchThisMonthIncomeUseCase: sl<ThisMonthToatalIncomeUseCase>(), 
+            fetchThisWeekIncomeUseCase: sl<ThisWeekToatalIncomeUseCase>(), 
+            fetchThisYearIncomeUseCase: sl<ThisYearToatalIncomeUseCase>(), 
+          ),
         ),
-      ),
-
       ],
       child: MyApp(),
     ),

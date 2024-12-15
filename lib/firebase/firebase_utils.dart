@@ -10,6 +10,62 @@ final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 // Constants for collection names to avoid typos and ease maintenance
 const String _usersCollection = 'users';
 const String _spendingsCollection = 'spendings';
+const String _incomeCollection = "income";
+
+
+// TO GET MONTHLY TOTAL INCOME
+Future<double> getMonthTotalIncome( context, String userId) async {
+  try {
+    double thisMonthIncome = 0.0;
+    DateTime now = DateTime.now();
+    DateTime startOfMonth = DateTime(now.year, now.month, 1); // 1st of the current month at 12:00 AM
+    DateTime currentTime = now; // Current date and time
+
+    QuerySnapshot spendingSnapshot = await _firestore
+        .collection(_usersCollection)
+        .doc(userId)
+        .collection(_spendingsCollection)
+        .where('incomeDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfMonth))
+        .where('incomeDate', isLessThanOrEqualTo: Timestamp.fromDate(currentTime))
+        .get();
+
+    for (var doc in spendingSnapshot.docs) {
+      thisMonthIncome += (doc['incomeAmount'] as num).toDouble();
+    }
+    print("returning $thisMonthIncome");
+    return thisMonthIncome;
+  } catch (e) {
+    errorSnackbar(context, 'Error in getMonthTotalIncome: $e');
+    rethrow;
+  }
+}
+
+// Function to get the this month expense so far
+Future<double> getMonthTotalSpending( context, String userId) async {
+  try {
+    double thisMonthSpending = 0.0;
+    DateTime now = DateTime.now();
+    DateTime startOfMonth = DateTime(now.year, now.month, 1); // 1st of the current month at 12:00 AM
+    DateTime currentTime = now; // Current date and time
+
+    QuerySnapshot spendingSnapshot = await _firestore
+        .collection(_usersCollection)
+        .doc(userId)
+        .collection(_spendingsCollection)
+        .where('spendingDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfMonth))
+        .where('spendingDate', isLessThanOrEqualTo: Timestamp.fromDate(currentTime))
+        .get();
+
+    for (var doc in spendingSnapshot.docs) {
+      thisMonthSpending += (doc['spendingAmount'] as num).toDouble();
+    }
+    print("returning $thisMonthSpending");
+    return thisMonthSpending;
+  } catch (e) {
+    errorSnackbar(context, 'Error in getMonthTotalSpending: $e');
+    rethrow;
+  }
+}
 
 // Function to get the today's expense so far
 Future<double> getTodayTotalSpending(context,String userId) async {
@@ -34,6 +90,33 @@ Future<double> getTodayTotalSpending(context,String userId) async {
     return totalSpending;
   } catch (e) {
     errorSnackbar(context,'Error in getTodayTotalSpending: $e');
+    rethrow;
+  }
+}
+
+// Function to get the today's income so far
+Future<double> getTodayTotalIncome(context,String userId) async {
+  try {
+    double totalIncome = 0.0;
+    DateTime now = DateTime.now();
+    DateTime startOfDay = DateTime(now.year, now.month, now.day);
+    DateTime endOfDay = startOfDay.add(Duration(days: 1)).subtract(Duration(seconds: 1));
+
+    QuerySnapshot spendingSnapshot = await _firestore
+        .collection(_usersCollection)
+        .doc(userId)
+        .collection(_spendingsCollection)
+        .where('incomeDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+        .where('incomeDate', isLessThanOrEqualTo: Timestamp.fromDate(endOfDay))
+        .get();
+
+    for (var doc in spendingSnapshot.docs) {
+      totalIncome += (doc['incomeAmount'] as num).toDouble();
+    }
+    
+    return totalIncome;
+  } catch (e) {
+    errorSnackbar(context,'Error in getTodayTotalIncome: $e');
     rethrow;
   }
 }
@@ -102,8 +185,6 @@ Future<List<CustomTransaction>> getAllSpendings(context,String userId) async {
     rethrow;
   }
 }
-
-
 
 // Function to delete a transaction
 Future<void> deleteTransaction(context,String userId, String transactionId) async {

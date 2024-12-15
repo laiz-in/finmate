@@ -41,6 +41,9 @@ import 'package:moneyy/domain/usecases/expenses/update_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/income/add_income_usecase.dart';
 import 'package:moneyy/domain/usecases/income/delete_income_usecase.dart';
 import 'package:moneyy/domain/usecases/income/last_three_income_usecase.dart';
+import 'package:moneyy/domain/usecases/income/this_month_total_income.dart';
+import 'package:moneyy/domain/usecases/income/this_week_total_income.dart';
+import 'package:moneyy/domain/usecases/income/this_year_total_income.dart';
 import 'package:moneyy/domain/usecases/income/total_income_usecase.dart';
 import 'package:moneyy/domain/usecases/income/update_income_usecase.dart';
 import 'package:moneyy/domain/usecases/settings/reset_daily_limit.dart';
@@ -71,6 +74,10 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton<IncomeRepository>(() => IncomeRepositoryImpl(sl()));
   sl.registerLazySingleton(() => TotalIncomeUseCase(sl()));
   sl.registerLazySingleton(() => LastThreeIncomeUseCase(sl()));
+  sl.registerLazySingleton(() => ThisMonthToatalIncomeUseCase(sl()));
+  sl.registerLazySingleton(() => ThisWeekToatalIncomeUseCase(sl()));
+  sl.registerLazySingleton(() => ThisYearToatalIncomeUseCase(sl()));
+
   sl.registerLazySingleton(() => AddIncomeUseCase(sl()));
   // sl.registerFactory(() => IncomeBloc(sl(), sl()));
 

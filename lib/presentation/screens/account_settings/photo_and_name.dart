@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:moneyy/domain/entities/auth/user.dart';
 
 import '../../../data/sources/home/home_firebase_services.dart';
@@ -142,7 +143,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         SizedBox(width: 5,),
                       Icon(
-                        Icons.waving_hand, size: 20,color: Theme.of(context).canvasColor.withOpacity(0.6),),
+                        Symbols.waving_hand, size: 20,color: Theme.of(context).canvasColor.withOpacity(0.6),),
                     ],
                   ),
                   SizedBox(height: 10,),
@@ -150,7 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   Row(
                     children: [
                       Icon(
-                        Icons.email, size: 15,color: Theme.of(context).canvasColor.withOpacity(0.5),),
+                        Symbols.email, size: 15,color: Theme.of(context).canvasColor.withOpacity(0.5),),
                         SizedBox(width: 5,),
                       Text(_user!.email?? "email id",
                       style: GoogleFonts.poppins(
