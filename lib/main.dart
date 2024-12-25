@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:moneyy/bloc/authentication/auth_bloc.dart';
 import 'package:moneyy/bloc/authentication/auth_event.dart';
@@ -29,24 +30,23 @@ import 'package:moneyy/presentation/screens/splash/splash.dart';
 import 'package:moneyy/service_locator.dart';
 import 'package:path_provider/path_provider.dart';
 
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: getFirebaseOptions(),
   );
-
 
   // Initialize Hydrated Storage
   final storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
   );
 
-  FirebaseInitializer.enableOfflinePersistence('https://console.firebase.google.com/project/finmate-d9f70/database/finmate-d9f70-default-rtdb/data/~2F');
-
+  FirebaseInitializer.enableOfflinePersistence(
+    'https://console.firebase.google.com/project/finmate-d9f70/database/finmate-d9f70-default-rtdb/data/~2F',
+  );
 
   await initializeDependencies();
 
@@ -56,13 +56,12 @@ void main() async {
   runApp(
     MultiBlocProvider(
       providers: [
-
-        // auth
+        // Auth Bloc
         BlocProvider(
           create: (context) => AuthBloc()..add(AuthCheckRequested()),
         ),
 
-        //expense
+        // Expenses Bloc
         BlocProvider(
           create: (context) => ExpensesBloc(
             sl<TotalExpensesUseCase>(),
@@ -70,6 +69,7 @@ void main() async {
           ),
         ),
 
+        // Bills Bloc
         BlocProvider(
           create: (context) => BillsBloc(
             sl<TotalBillsUsecase>(),
@@ -77,6 +77,7 @@ void main() async {
           ),
         ),
 
+        // Income Bloc
         BlocProvider(
           create: (context) => IncomeBloc(
             sl<TotalIncomeUseCase>(),
@@ -84,29 +85,28 @@ void main() async {
           ),
         ),
 
-        // theme
+        // Theme
         BlocProvider(
           create: (context) => sl<ThemeCubit>()..loadTheme(),
         ),
 
-        // network
+        // Network
         BlocProvider(
           create: (context) => ConnectivityCubit(sl<GetConnectivityStatus>()),
         ),
 
-
-        // homescreen
-      BlocProvider(
+        // HomeScreen
+        BlocProvider(
           create: (context) => HomeScreenBloc(
-            userRepository: sl<UserRepository>(), 
-            connectivityCubit: BlocProvider.of<ConnectivityCubit>(context), 
-            fetchThisMonthIncomeUseCase: sl<ThisMonthToatalIncomeUseCase>(), 
-            fetchThisWeekIncomeUseCase: sl<ThisWeekToatalIncomeUseCase>(), 
-            fetchThisYearIncomeUseCase: sl<ThisYearToatalIncomeUseCase>(), 
+            userRepository: sl<UserRepository>(),
+            connectivityCubit: BlocProvider.of<ConnectivityCubit>(context),
+            fetchThisMonthIncomeUseCase: sl<ThisMonthToatalIncomeUseCase>(),
+            fetchThisWeekIncomeUseCase: sl<ThisWeekToatalIncomeUseCase>(),
+            fetchThisYearIncomeUseCase: sl<ThisYearToatalIncomeUseCase>(),
           ),
         ),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -116,25 +116,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ConnectivityCubit, bool>(
-      listener: (context, isConnected) {
-      },
-
-      child: BlocBuilder<ThemeCubit, ThemeMode>(
-        builder: (context, themeMode) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            onGenerateRoute: AppRoutes.generateRoute,
-            routes: {
-              '/': (context) => const SplashScreen(),
+    return ScreenUtilInit(
+      designSize: const Size(375, 812), // Specify your design reference
+      minTextAdapt: true,
+      builder: (context, child) {
+        return BlocListener<ConnectivityCubit, bool>(
+          listener: (context, isConnected) {
+            // Handle connectivity changes
+          },
+          child: BlocBuilder<ThemeCubit, ThemeMode>(
+            builder: (context, themeMode) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                onGenerateRoute: AppRoutes.generateRoute,
+                routes: {
+                  '/': (context) => const SplashScreen(),
+                },
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
+                themeMode: themeMode,
+                title: 'Finmate',
+              );
             },
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: themeMode,
-            title: 'Finmate',
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

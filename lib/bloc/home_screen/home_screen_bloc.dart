@@ -26,6 +26,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     required this.fetchThisWeekIncomeUseCase,
     required this.fetchThisYearIncomeUseCase,
   }) : super(HomeScreenLoading()) {
+    
     // Listen to connectivity changes and emit an event instead of calling emit directly
     connectivitySubscription = connectivityCubit.stream.listen((isConnected) {
       if (!isConnected) {
@@ -91,7 +92,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
 
   @override
   Future<void> close() {
-    connectivitySubscription.cancel(); // Clean up the subscription
+    connectivitySubscription.cancel();
     return super.close();
   }
 }

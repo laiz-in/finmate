@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
 import 'package:moneyy/core/colors/colors.dart';
@@ -24,20 +25,21 @@ class LoginButtonWidget extends StatefulWidget {
 }
 
 class LoginButtonWidgetState extends State<LoginButtonWidget> {
-  bool isLoading = false; // Track loading state
+  bool isLoading = false; // TRACK LOADING STATE
 
+  // HELPER METHOD FOR LOGIN BUTTON
   Widget _loginButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(10.w), // PADDING
       child: InkWell(
         onTap: () async {
-          // Validate the form
+          // VALIDATE THE FORM
           if (widget.formKey.currentState!.validate()) {
             setState(() {
-              isLoading = true; // Show loading animation
+              isLoading = true; // SHOW LOADING ANIMATION
             });
 
-            // Perform sign-in use case
+            // PERFORM SIGN-IN USE CASE
             var result = await sl<SignInUseCase>().call(
               params: UserSignInReq(
                 email: widget.emailController.text.toString(),
@@ -48,17 +50,17 @@ class LoginButtonWidgetState extends State<LoginButtonWidget> {
             result.fold(
               (error) {
                 setState(() {
-                  isLoading = false; // Hide animation on error
+                  isLoading = false; // HIDE ANIMATION ON ERROR
                 });
                 errorSnackbar(context, error.toString());
               },
               (success) {
                 setState(() {
-                  isLoading = false; // Hide animation on success
+                  isLoading = false; // HIDE ANIMATION ON SUCCESS
                 });
                 Navigator.pushNamedAndRemoveUntil(
                   context,
-                  AppRoutes.mainScreen, // Define this route in AppRoutes
+                  AppRoutes.mainScreen, // DEFINE THIS ROUTE IN APP ROUTES
                   (route) => false,
                 );
               },
@@ -66,15 +68,20 @@ class LoginButtonWidgetState extends State<LoginButtonWidget> {
           }
         },
         child: Container(
-          height: 65,
+          height: 65.h, // HEIGHT
           width: double.infinity,
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.7),
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.circular(15.0.r), // RADIUS
           ),
           child: Center(
             child: isLoading
-                ? Center(child: CircularProgressIndicator(color: AppColors.foregroundColor,strokeWidth: 2,)) // Show loading animation
+                ? Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.foregroundColor,
+                      strokeWidth: 2.w, // STROKE WIDTH
+                    ),
+                  ) // SHOW LOADING ANIMATION
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -82,7 +89,7 @@ class LoginButtonWidgetState extends State<LoginButtonWidget> {
                         'Login',
                         style: GoogleFonts.poppins(
                           color: const Color(0xFF4C7766),
-                          fontSize: 28,
+                          fontSize: 28.sp, // FONT SIZE
                           fontWeight: FontWeight.w600,
                         ),
                       ),

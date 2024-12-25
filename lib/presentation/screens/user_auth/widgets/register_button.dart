@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
 import 'package:moneyy/common/widgets/info_snackbar.dart';
+import 'package:moneyy/core/colors/colors.dart';
 import 'package:moneyy/data/models/auth/create_user_req.dart';
 import 'package:moneyy/domain/usecases/auth/sign_up.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
-import 'package:moneyy/presentation/screens/user_auth/widgets/loading_dots.dart'; // Loading animation widget
 import 'package:moneyy/service_locator.dart';
 
 class RegisterButtonWidget extends StatefulWidget {
@@ -23,20 +24,21 @@ class RegisterButtonWidget extends StatefulWidget {
     required this.confirmPasswordController,
     required this.firstNameController,
     required this.lastNameController,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _RegisterButtonWidgetState createState() => _RegisterButtonWidgetState();
 }
 
 class _RegisterButtonWidgetState extends State<RegisterButtonWidget> {
-  bool isLoading = false; // Track loading state
+  bool isLoading = false; // TRACK LOADING STATE
 
+  // REGISTER BUTTON LOGIC
   Future<void> _onRegister() async {
     if (widget.formKey.currentState!.validate()) {
       setState(() {
-        isLoading = true; // Show loading animation
+        isLoading = true; // SHOW LOADING ANIMATION
       });
 
       var result = await sl<SignUpUseCase>().call(
@@ -49,52 +51,60 @@ class _RegisterButtonWidgetState extends State<RegisterButtonWidget> {
       );
 
       result.fold(
-        (l) {
+        (error) {
           setState(() {
-            isLoading = false; // Hide animation on error
+            isLoading = false; // HIDE ANIMATION ON ERROR
           });
-          errorSnackbar(context, l.toString());
+          errorSnackbar(context, error.toString());
         },
-
-        (r) {
+        (success) {
           setState(() {
-            isLoading = false; // Hide animation on success
+            isLoading = false; // HIDE ANIMATION ON SUCCESS
           });
-          infoSnackbar(context, "Please verify email and proceed to login");
+          infoSnackbar(context, 'Please verify your email and login');
           Navigator.pushNamedAndRemoveUntil(
             context,
-            AppRoutes.logIn, // Redirect to login screen
+            AppRoutes.logIn, // DEFINE THIS ROUTE IN APP ROUTES
             (route) => false,
           );
         },
       );
-      
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(15.0),
+      padding: EdgeInsets.all(10.w), // PADDING
       child: InkWell(
         onTap: _onRegister,
         child: Container(
-          height: 65,
+          height: 65.h, // HEIGHT
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.8),
-            borderRadius: BorderRadius.circular(15.0),
+            color: Colors.white.withOpacity(0.7),
+            borderRadius: BorderRadius.circular(15.0.r), // RADIUS
           ),
           child: Center(
             child: isLoading
-                ? Center(child: LoadingDots()) // Show loading animation if isLoading is true
-                : Text(
-                    'Register',
-                    style: GoogleFonts.poppins(
-                      color: Color(0xFF4C7766),
-                      fontSize: 28,
-                      fontWeight: FontWeight.w600,
+                ? Center(
+                    child: CircularProgressIndicator(
+                      color: AppColors.foregroundColor,
+                      strokeWidth: 2.w, // STROKE WIDTH
                     ),
+                  ) // SHOW LOADING ANIMATION
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Register',
+                        style: GoogleFonts.poppins(
+                          color: const Color(0xFF4C7766),
+                          fontSize: 28.sp, // FONT SIZE
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
           ),
         ),

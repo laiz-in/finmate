@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
 
@@ -11,19 +12,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      toolbarHeight: 80,
+      toolbarHeight: 80.h,
       scrolledUnderElevation: 0,
       automaticallyImplyLeading: false,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       title: Container(
-        padding: const EdgeInsets.fromLTRB(5, 8, 0, 0),
+        padding:  EdgeInsets.fromLTRB(5.w, 8.h, 0, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'Welcome back !',
               style: GoogleFonts.poppins(
-                fontSize: 15,
+                fontSize: 15.sp,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).canvasColor.withOpacity(0.5),
               ),
@@ -31,7 +32,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             Text(
               userName,
               style: GoogleFonts.poppins(
-                fontSize: 22,
+                fontSize: 22.sp,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).canvasColor,
               ),
@@ -44,7 +45,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: Icon(
             Icons.notifications_outlined,
             color: Theme.of(context).canvasColor,
-            size: 25,
+            size: 23.sp,
           ),
           onPressed: () {
             // Add your notification logic here
@@ -54,13 +55,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: Icon(
             Icons.person_outline_outlined,
             color: Theme.of(context).canvasColor,
-            size: 25,
+            size: 23.sp,
           ),
           onPressed: () {
             Navigator.pushNamed(context, AppRoutes.profileScreen);
           },
         ),
-        const SizedBox(width: 20),
+        SizedBox(width: 20.w),
       ],
     );
   }

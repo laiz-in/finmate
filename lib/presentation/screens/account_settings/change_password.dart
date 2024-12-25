@@ -54,12 +54,7 @@ class _ResetPasswordState extends State<ResetPasswordForSettings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        iconTheme: IconThemeData(color:Theme.of(context).canvasColor),
-      ),
-
+      backgroundColor: Colors.transparent,
 
       body: GestureDetector(
         onTap: () {
@@ -67,12 +62,8 @@ class _ResetPasswordState extends State<ResetPasswordForSettings> {
         },
         child: Stack(
           children: [
-            // Background container
-            Container(
-              decoration:BoxDecoration(
-                color:Theme.of(context).scaffoldBackgroundColor,
-              ),
-            ),
+
+
             Align(
               alignment: Alignment.topCenter,
               child: SingleChildScrollView(
@@ -84,8 +75,18 @@ class _ResetPasswordState extends State<ResetPasswordForSettings> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const SizedBox(height: 40),
+                      const SizedBox(height: 15),
 
+                    Center(
+                          child: Container(
+                            height: 3,
+                            width:100 ,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).canvasColor.withOpacity(0.3)
+                            ),
+                          ),
+                        ),
+                      const SizedBox(height: 40),
 
                       // Password reset heading
                       _passwordResetHeading(context),
@@ -99,6 +100,8 @@ class _ResetPasswordState extends State<ResetPasswordForSettings> {
 
                       // Send button
                       InkWell(
+                        splashColor: Colors.transparent,
+                        hoverColor: Colors.transparent,
                         onTap: _resetPassword,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(20.0, 10, 20, 20),
@@ -191,7 +194,7 @@ Widget _emailField(BuildContext context, emailController){
                           ),
                           decoration: InputDecoration(
                             fillColor:
-                                Theme.of(context).highlightColor,
+                                Theme.of(context).cardColor,
                             filled: true,
                             contentPadding: const EdgeInsets.all(16),
                             prefixIcon: Icon(
@@ -216,13 +219,14 @@ Widget _emailField(BuildContext context, emailController){
                               borderRadius: BorderRadius.circular(15.0),
                               borderSide: BorderSide(
                                 color: Theme.of(context).scaffoldBackgroundColor,
+                                
                                 width: 0,
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15.0),
                               borderSide: BorderSide(
-                                color: Theme.of(context).scaffoldBackgroundColor,
+                                color: Colors.transparent,
                                 width: 0,
                               ),
                             ),

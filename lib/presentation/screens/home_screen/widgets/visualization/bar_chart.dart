@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart' as dartz;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
@@ -20,14 +21,14 @@ class _DaywiseBarchartState extends State<DaywiseBarchart> {
   @override
   void initState() {
     super.initState();
-    // Call the use case and handle the Either type
+    // CALL THE USE CASE AND HANDLE THE EITHER TYPE
     _expensesFuture = sl<LastSevenDayExpensesUseCase>()();
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(0.0),
+      padding: EdgeInsets.all(0), // PADDING
       child: FutureBuilder<dartz.Either<String, Map<String, double>>>(
         future: _expensesFuture,
         builder: (context, snapshot) {
@@ -58,53 +59,58 @@ class _DaywiseBarchartState extends State<DaywiseBarchart> {
     );
   }
 
-  // Loading container
+  // LOADING CONTAINER
   Widget _loadingContainer(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(25, 15, 25, 10),
+      padding: EdgeInsets.fromLTRB(25.w, 15.h, 25.w, 10.h), // PADDING
       width: double.infinity,
-      height: 120,
+      height: 120.h, // HEIGHT
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
             color: const Color.fromARGB(255, 68, 68, 68).withOpacity(0.10),
-            spreadRadius: 12,
-            blurRadius: 17,
-            offset: const Offset(0, 4),
+            spreadRadius: 12.r,
+            blurRadius: 17.r,
+            offset: const Offset(0, 4), // CHANGES POSITION OF SHADOW
           ),
         ],
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20.r),
+          bottomRight: Radius.circular(20.r),
+        ),
         color: Theme.of(context).hintColor,
       ),
     );
   }
 
-  // Widget to build the bar chart with the fetched data
+  // WIDGET TO BUILD THE BAR CHART WITH THE FETCHED DATA
   Widget _buildBarChart(List<double> expenses) {
     double maxY = expenses.reduce((a, b) => a > b ? a : b);
-
-      List<double> expensesreversed = expenses.reversed.toList();
+    List<double> expensesReversed = expenses.reversed.toList();
 
     return Container(
-      padding: const EdgeInsets.fromLTRB(15, 15, 15, 10),
+      padding: EdgeInsets.fromLTRB(15.w, 15.h, 15.w, 10.h), // PADDING
       width: double.infinity,
-      height: 120, // Adjust height for bar chart
+      height: 120.h, // HEIGHT
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
             color: const Color.fromARGB(255, 68, 68, 68).withOpacity(0.10),
-            spreadRadius: 12,
-            blurRadius: 17,
-            offset: const Offset(0, 4),
+            spreadRadius: 12.r,
+            blurRadius: 17.r,
+            offset: const Offset(0, 4), // CHANGES POSITION OF SHADOW
           ),
         ],
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(20.r),
+          bottomRight: Radius.circular(20.r),
+        ),
         color: Theme.of(context).hintColor,
       ),
       child: BarChart(
         BarChartData(
           alignment: BarChartAlignment.spaceEvenly,
-          maxY: maxY,// Adjust to add space above the tallest bar
+          maxY: maxY, // ADJUST TO ADD SPACE ABOVE THE TALLEST BAR
           minY: 0,
           titlesData: FlTitlesData(
             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -113,11 +119,11 @@ class _DaywiseBarchartState extends State<DaywiseBarchart> {
                 showTitles: true,
                 getTitlesWidget: (value, meta) {
                   return Padding(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: EdgeInsets.only(top: 10.h), // PADDING
                     child: Text(
                       value.toInt().toString(),
                       style: GoogleFonts.poppins(
-                        fontSize: 8,
+                        fontSize: 8.sp, // FONT SIZE
                         color: Theme.of(context).canvasColor,
                       ),
                     ),
@@ -134,13 +140,13 @@ class _DaywiseBarchartState extends State<DaywiseBarchart> {
                   DateTime date = now.subtract(Duration(days: 14 - value.toInt()));
                   String dayLabel = DateFormat('d').format(date);
                   return Padding(
-                    padding: const EdgeInsets.only(top: 5.0,left: 0),
+                    padding: EdgeInsets.only(top: 5.h, left: 0), // PADDING
                     child: Text(
                       dayLabel,
                       style: GoogleFonts.poppins(
                         color: Theme.of(context).canvasColor,
                         fontWeight: FontWeight.w500,
-                        fontSize: 7,
+                        fontSize: 7.sp, // FONT SIZE
                       ),
                     ),
                   );
@@ -151,15 +157,15 @@ class _DaywiseBarchartState extends State<DaywiseBarchart> {
           ),
           gridData: FlGridData(show: false, drawVerticalLine: false),
           borderData: FlBorderData(show: false),
-          barGroups: expensesreversed.asMap().entries.map((entry) {
+          barGroups: expensesReversed.asMap().entries.map((entry) {
             return BarChartGroupData(
               x: entry.key,
               barRods: [
                 BarChartRodData(
                   toY: entry.value,
                   color: Theme.of(context).canvasColor,
-                  width: 10, // Adjust width of the bars
-                  borderRadius: BorderRadius.circular(6),
+                  width: 10.w, // WIDTH OF THE BARS
+                  borderRadius: BorderRadius.circular(6.r),
                   backDrawRodData: BackgroundBarChartRodData(
                     show: true,
                     toY: maxY,

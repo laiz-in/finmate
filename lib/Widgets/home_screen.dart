@@ -53,7 +53,7 @@ Future<void> _fetchUserData() async {
       }
 
       if (userId != null) {
-        List<CustomTransaction> transactions = await getAllSpendings(context, userId!);
+        List<CustomTransaction> transactions = await getAllSpendings(userId!);
         if (mounted) {
           setState(() {
             allTransactions = transactions;

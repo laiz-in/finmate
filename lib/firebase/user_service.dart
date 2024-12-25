@@ -16,8 +16,8 @@ class UserService {
 
     String userId = user.uid;
     DocumentSnapshot userDoc = await _firestore.collection('users').doc(userId).get();
-    double todayTotalSpending = await firebaseUtils.getTodayTotalSpending(context, userId);
-    List<firebaseUtils.CustomTransaction> transactions = await firebaseUtils.getLastThreeTransactions(context, userId);
+    double todayTotalSpending = await firebaseUtils.getTodayTotalSpending(userId);
+    List<firebaseUtils.CustomTransaction> transactions = await firebaseUtils.getLastThreeTransactions(userId);
 
     if (!userDoc.exists) {
       throw Exception('User document does not exist');

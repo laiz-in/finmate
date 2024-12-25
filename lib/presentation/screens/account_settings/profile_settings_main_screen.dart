@@ -5,16 +5,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/bloc/themes/theme_cubit.dart';
 import 'package:moneyy/core/colors/colors.dart';
-import 'package:moneyy/presentation/routes/routes.dart';
 import 'package:moneyy/presentation/screens/account_settings/change_daily_limit.dart';
+import 'package:moneyy/presentation/screens/account_settings/change_email.dart';
 import 'package:moneyy/presentation/screens/account_settings/change_monthly_limit.dart';
+import 'package:moneyy/presentation/screens/account_settings/change_password.dart';
 import 'package:moneyy/presentation/screens/account_settings/photo_and_name.dart';
+import 'package:moneyy/presentation/screens/account_settings/send_feedback.dart';
 import 'package:moneyy/presentation/screens/account_settings/widgets/account_deletion_confirmation.dart';
 import 'package:moneyy/presentation/screens/account_settings/widgets/sign_out_confirmation_dialogue.dart';
 
 
 
 class ProfileSettings extends StatefulWidget {
+  const ProfileSettings({super.key});
+
   @override
   ProfileSettingsState createState() => ProfileSettingsState();
 }
@@ -50,6 +54,7 @@ showDialog(
     },
   );}
 
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -63,7 +68,7 @@ showDialog(
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
 
-      //App bar
+      //APP BAR
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0), // Adjust this height as needed
         child: AppBar(
@@ -88,6 +93,8 @@ showDialog(
         ),
       ),
 
+
+      // BODY
       body: Padding(
         padding: const EdgeInsets.fromLTRB(15.0, 15, 15, 15),
 
@@ -96,6 +103,7 @@ showDialog(
             children: [
               SizedBox(width: double.infinity,height: 15,),
 
+              // PROFILE PHOTO AND NAME
               ProfilePage(),
               
               SizedBox(width: double.infinity,height: 18,),
@@ -120,15 +128,34 @@ showDialog(
 
                     
 
-                    // Text button to change email
+                    // TEXT BUTTON TO CHANGE EMAIL
                     TextButton(
                       style: ButtonStyle(
                       splashFactory: NoSplash.splashFactory,
                       overlayColor: WidgetStateProperty.all(Colors.transparent),
                       ),
-                      onPressed: () {
-                                      Navigator.pushNamed(context, '/changeEmail');
-                                      },
+                      onPressed: ()
+                      {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        elevation: 20,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                        ),
+                        builder: (BuildContext context) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
+                                ),
+                                height: (MediaQuery.of(context).size.height*0.9),
+                            
+                                child: ResetEmail(),
+                              );
+                            },
+                      );},
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
@@ -142,31 +169,46 @@ showDialog(
                     Divider(color: Theme.of(context).canvasColor.withOpacity(0.2),),
 
 
-
-                    // Text button to update password
+                    // TEXT BUTTON FOR PASSWORD UPDATE
                     TextButton(
                       style: ButtonStyle(
                       splashFactory: NoSplash.splashFactory,
                       overlayColor: WidgetStateProperty.all(Colors.transparent),
-                      ),
-                      onPressed: () {
-                                Navigator.pushNamed(context, AppRoutes.passwordResetScreenForSettings);
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children:[
-                                  Text("Update your password",
-                                  style: GoogleFonts.poppins(fontSize: 15,color: Theme.of(context).canvasColor
-                                  ,fontWeight: FontWeight.w500),),
+                      ),onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        elevation: 20,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                        ),
+                        builder: (BuildContext context) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
+                                ),
+                                height: (MediaQuery.of(context).size.height*0.9),
+                            
+                                child: ResetPasswordForSettings(),
+                              );
+                            },
+                      );},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children:[
+                        Text("Update your password",
+                        style: GoogleFonts.poppins(fontSize: 15,color: Theme.of(context).canvasColor
+                        ,fontWeight: FontWeight.w500),),
                         Icon(Icons.arrow_forward_ios,color: Theme.of(context).canvasColor.withOpacity(0.5),size: 17,),
-                                  ],
-                                )
+                      ],
+                      )
                     ),
                     Divider(color: Theme.of(context).canvasColor.withOpacity(0.2),),
 
 
-
-                    // Text button to change daily limit
+                    // TEXT BUTTON FOR DAILY LIMIT
                     TextButton(
                       style: ButtonStyle(
                       splashFactory: NoSplash.splashFactory,
@@ -200,14 +242,12 @@ showDialog(
                         ,fontWeight: FontWeight.w500),),
                         Icon(Icons.arrow_forward_ios,color: Theme.of(context).canvasColor.withOpacity(0.5),size: 17,),
                       ],
-                    )
-                    
+                      )
                     ),
                     Divider(color: Theme.of(context).canvasColor.withOpacity(0.2),),
 
 
-
-                    // Textb button to change monthly limit
+                    // TEXT BUTTON FOR MONTHLY LIMIT
                     TextButton(
                       style: ButtonStyle(
                       splashFactory: NoSplash.splashFactory,
@@ -248,21 +288,38 @@ showDialog(
                     Divider(color: Theme.of(context).canvasColor.withOpacity(0.2),),
 
 
-
-                    // Textb button to send feedback
+                    // TEXT BUTTON FOR FEEDBACK
                     TextButton(
                       style: ButtonStyle(
                       splashFactory: NoSplash.splashFactory,
                       overlayColor: WidgetStateProperty.all(Colors.transparent),
                       ),
-                      onPressed: (){Navigator.pushNamed(
-                                              context,
-                                              AppRoutes.sendFeedbackScreen,
-                                            );},
-                      child: Row(
+                      onPressed: ()
+                      {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        elevation: 20,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+                        ),
+                        builder: (BuildContext context) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
+                                ),
+                                height: (MediaQuery.of(context).size.height*0.9),
+                            
+                                child: SendFeedbackScreen(),
+                              );
+                            },
+                      );},
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children:[
-                        Text("Send your feedback",
+                        Text("Reset your monthly limit",
                         style: GoogleFonts.poppins(fontSize: 15,color: Theme.of(context).canvasColor
                         ,fontWeight: FontWeight.w500),),
                         Icon(Icons.arrow_forward_ios,color: Theme.of(context).canvasColor.withOpacity(0.5),size: 17,),
@@ -273,7 +330,7 @@ showDialog(
 
 
 
-                    // Theme changing text
+                    // THEME CHANGE TOGGLE
                     Padding(
                       padding: EdgeInsets.fromLTRB(10, 0, 7, 0),
                       child: Row(
@@ -382,7 +439,6 @@ showDialog(
           ),
         ),
         child: Row(
-          // mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

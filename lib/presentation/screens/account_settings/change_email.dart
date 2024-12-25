@@ -51,12 +51,7 @@ class _ResetEmailState extends State<ResetEmail> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-
-      appBar: AppBar(
-        backgroundColor:Theme.of(context).scaffoldBackgroundColor,
-        iconTheme: IconThemeData(color:Theme.of(context).canvasColor),
-      ),
+      backgroundColor: Colors.transparent,
 
 
       body: GestureDetector(
@@ -65,12 +60,7 @@ class _ResetEmailState extends State<ResetEmail> {
         },
         child: Stack(
           children: [
-            // Container
-            Container(
-              decoration: BoxDecoration(
-                color:Theme.of(context).scaffoldBackgroundColor,
-              ),
-            ),
+            
             // Align for the email and button Text fields
             Align(
               alignment: Alignment.topCenter,
@@ -83,6 +73,18 @@ class _ResetEmailState extends State<ResetEmail> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+
+                      SizedBox(height: 15,),
+
+                          Center(
+                          child: Container(
+                            height: 3,
+                            width:100 ,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).canvasColor.withOpacity(0.3)
+                            ),
+                          ),
+                        ),
                       SizedBox(height: 40,),
 
 
@@ -125,7 +127,7 @@ class _ResetEmailState extends State<ResetEmail> {
                             fontSize: 20,
                           ),
                           decoration: InputDecoration(
-                            fillColor: Theme.of(context).highlightColor,
+                            fillColor: Theme.of(context).cardColor,
                             filled: true,
                             contentPadding: EdgeInsets.all(16),
                             prefixIcon: Icon(
@@ -173,6 +175,8 @@ class _ResetEmailState extends State<ResetEmail> {
                       
                       // Send button
                       InkWell(
+                        hoverColor: Colors.transparent,
+                        splashColor: Colors.transparent,
                         onTap: _resetEmail,
                         child:Padding(
                           padding: EdgeInsets.fromLTRB(20.0, 10, 20, 20),

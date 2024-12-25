@@ -114,7 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(width: 20),
 
           Expanded(
-            child: Container(
+            child: SizedBox(
               height: 100,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +123,7 @@ class _ProfilePageState extends State<ProfilePage> {
               
                   Text("Hello",
                   style: GoogleFonts.poppins(
-                    fontSize: 18,
+                    fontSize: 16,
                     height: 1,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(context).canvasColor.withOpacity(0.5)
@@ -136,7 +136,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   
                           style: GoogleFonts.poppins(
                             height: 0.5, // Matches the line height to remove gaps
-                            fontSize: 18,
+                            fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Theme.of(context).canvasColor,
                           ),

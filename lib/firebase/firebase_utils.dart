@@ -1,10 +1,6 @@
-// C:\Users\Hp\Desktop\moneyy\moneyy\lib\firebase\firebase_utils.dart
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../ui/error_snackbar.dart';
-
-//single instance of FirebaseFirestore throughout the file
+// Single instance of FirebaseFirestore throughout the file
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
 // Constants for collection names to avoid typos and ease maintenance
@@ -12,9 +8,8 @@ const String _usersCollection = 'users';
 const String _spendingsCollection = 'spendings';
 const String _incomeCollection = "income";
 
-
 // TO GET MONTHLY TOTAL INCOME
-Future<double> getMonthTotalIncome( context, String userId) async {
+Future<double> getMonthTotalIncome(String userId) async {
   try {
     double thisMonthIncome = 0.0;
     DateTime now = DateTime.now();
@@ -24,7 +19,7 @@ Future<double> getMonthTotalIncome( context, String userId) async {
     QuerySnapshot spendingSnapshot = await _firestore
         .collection(_usersCollection)
         .doc(userId)
-        .collection(_spendingsCollection)
+        .collection(_incomeCollection)
         .where('incomeDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfMonth))
         .where('incomeDate', isLessThanOrEqualTo: Timestamp.fromDate(currentTime))
         .get();
@@ -32,16 +27,14 @@ Future<double> getMonthTotalIncome( context, String userId) async {
     for (var doc in spendingSnapshot.docs) {
       thisMonthIncome += (doc['incomeAmount'] as num).toDouble();
     }
-    print("returning $thisMonthIncome");
     return thisMonthIncome;
   } catch (e) {
-    errorSnackbar(context, 'Error in getMonthTotalIncome: $e');
-    rethrow;
+    throw Exception('Error in getMonthTotalIncome: $e');
   }
 }
 
 // Function to get the this month expense so far
-Future<double> getMonthTotalSpending( context, String userId) async {
+Future<double> getMonthTotalSpending(String userId) async {
   try {
     double thisMonthSpending = 0.0;
     DateTime now = DateTime.now();
@@ -59,16 +52,14 @@ Future<double> getMonthTotalSpending( context, String userId) async {
     for (var doc in spendingSnapshot.docs) {
       thisMonthSpending += (doc['spendingAmount'] as num).toDouble();
     }
-    print("returning $thisMonthSpending");
     return thisMonthSpending;
   } catch (e) {
-    errorSnackbar(context, 'Error in getMonthTotalSpending: $e');
-    rethrow;
+    throw Exception('Error in getMonthTotalSpending: $e');
   }
 }
 
 // Function to get the today's expense so far
-Future<double> getTodayTotalSpending(context,String userId) async {
+Future<double> getTodayTotalSpending(String userId) async {
   try {
     double totalSpending = 0.0;
     DateTime now = DateTime.now();
@@ -86,16 +77,14 @@ Future<double> getTodayTotalSpending(context,String userId) async {
     for (var doc in spendingSnapshot.docs) {
       totalSpending += (doc['spendingAmount'] as num).toDouble();
     }
-    
     return totalSpending;
   } catch (e) {
-    errorSnackbar(context,'Error in getTodayTotalSpending: $e');
-    rethrow;
+    throw Exception('Error in getTodayTotalSpending: $e');
   }
 }
 
 // Function to get the today's income so far
-Future<double> getTodayTotalIncome(context,String userId) async {
+Future<double> getTodayTotalIncome(String userId) async {
   try {
     double totalIncome = 0.0;
     DateTime now = DateTime.now();
@@ -105,7 +94,7 @@ Future<double> getTodayTotalIncome(context,String userId) async {
     QuerySnapshot spendingSnapshot = await _firestore
         .collection(_usersCollection)
         .doc(userId)
-        .collection(_spendingsCollection)
+        .collection(_incomeCollection)
         .where('incomeDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
         .where('incomeDate', isLessThanOrEqualTo: Timestamp.fromDate(endOfDay))
         .get();
@@ -113,11 +102,9 @@ Future<double> getTodayTotalIncome(context,String userId) async {
     for (var doc in spendingSnapshot.docs) {
       totalIncome += (doc['incomeAmount'] as num).toDouble();
     }
-    
     return totalIncome;
   } catch (e) {
-    errorSnackbar(context,'Error in getTodayTotalIncome: $e');
-    rethrow;
+    throw Exception('Error in getTodayTotalIncome: $e');
   }
 }
 
@@ -149,7 +136,7 @@ class CustomTransaction {
 }
 
 // Function to get the last three spendings
-Future<List<CustomTransaction>> getLastThreeTransactions(context,String userId) async {
+Future<List<CustomTransaction>> getLastThreeTransactions(String userId) async {
   try {
     QuerySnapshot spendingSnapshot = await _firestore
         .collection(_usersCollection)
@@ -161,13 +148,12 @@ Future<List<CustomTransaction>> getLastThreeTransactions(context,String userId) 
 
     return spendingSnapshot.docs.map((doc) => CustomTransaction.fromFirestore(doc)).toList();
   } catch (e) {
-    errorSnackbar(context,'Error in getLastThreeTransactions: $e');
-    rethrow;
+    throw Exception('Error in getLastThreeTransactions: $e');
   }
 }
 
 // Function to get all the spendings list
-Future<List<CustomTransaction>> getAllSpendings(context,String userId) async {
+Future<List<CustomTransaction>> getAllSpendings(String userId) async {
   try {
     // Implement pagination for better performance with large datasets
     const int pageSize = 20;
@@ -181,13 +167,12 @@ Future<List<CustomTransaction>> getAllSpendings(context,String userId) async {
 
     return spendingSnapshot.docs.map((doc) => CustomTransaction.fromFirestore(doc)).toList();
   } catch (e) {
-    errorSnackbar(context,'Error in getAllSpendings: $e');
-    rethrow;
+    throw Exception('Error in getAllSpendings: $e');
   }
 }
 
 // Function to delete a transaction
-Future<void> deleteTransaction(context,String userId, String transactionId) async {
+Future<void> deleteTransaction(String userId, String transactionId) async {
   try {
     return await _firestore.runTransaction((transaction) async {
       DocumentReference userRef = _firestore.collection(_usersCollection).doc(userId);
@@ -212,13 +197,12 @@ Future<void> deleteTransaction(context,String userId, String transactionId) asyn
       transaction.update(userRef, {'totalSpending': newTotalSpending});
     });
   } catch (e) {
-    errorSnackbar(context,'Error in deleteTransaction: $e');
-    rethrow;
+    throw Exception('Error in deleteTransaction: $e');
   }
 }
 
 // Function to update a transaction
-Future<void> updateTransaction(context,String userId, String transactionId, Map<String, dynamic> updatedData) async {
+Future<void> updateTransaction(String userId, String transactionId, Map<String, dynamic> updatedData) async {
   try {
     await _firestore
         .collection(_usersCollection)
@@ -227,7 +211,6 @@ Future<void> updateTransaction(context,String userId, String transactionId, Map<
         .doc(transactionId)
         .update(updatedData);
   } catch (e) {
-    errorSnackbar(context,'Error in updateTransaction: $e');
-    rethrow;
+    throw Exception('Error in updateTransaction: $e');
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/core/colors/colors.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
@@ -18,9 +19,7 @@ class LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool isloading =  true;
-
-
+  bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -28,39 +27,41 @@ class LoginScreenState extends State<LoginScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: Color(0xFF4C7766),
-        resizeToAvoidBottomInset: true, // Allow the layout to resize when the keyboard appears
+        resizeToAvoidBottomInset: true, // ALLOW THE LAYOUT TO RESIZE WHEN THE KEYBOARD APPEARS
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 10),
+            padding: EdgeInsets.symmetric(horizontal: 10.w), // PADDING
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 100),
-              
-                  // Login headig
+                  SizedBox(height: 100.h), // SPACING
+
+                  // LOGIN HEADING
                   _loginHeading(context),
-              
-                  SizedBox(height: 15),
-              
-                  // Email field
+
+                  SizedBox(height: 15.h), // SPACING
+
+                  // EMAIL FIELD
                   EmailField(emailController: _emailController),
-              
-                  // Password field
+
+                  // PASSWORD FIELD
                   PasswordField(passwordController: _passwordController),
-              
-                  
-                  // forgot password link
+
+                  // FORGOT PASSWORD LINK
                   _forgotPasswordLink(context),
-              
-                  // Login button
-                  LoginButtonWidget(emailController: _emailController, passwordController: _passwordController,formKey: _formKey,),
-                  
-                  // dont have an account section
-                  _redirectToSignUpLink(context)
-                  
+
+                  // LOGIN BUTTON
+                  LoginButtonWidget(
+                    emailController: _emailController,
+                    passwordController: _passwordController,
+                    formKey: _formKey,
+                  ),
+
+                  // DON'T HAVE AN ACCOUNT SECTION
+                  _redirectToSignUpLink(context),
                 ],
               ),
             ),
@@ -71,17 +72,17 @@ class LoginScreenState extends State<LoginScreen> {
   }
 }
 
-
+// HELPER METHOD FOR LOGIN HEADING
 Widget _loginHeading(BuildContext context) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [
-      const SizedBox(width: 17),
+      SizedBox(width: 17.w), // SPACING
       Text(
         'Login',
         style: GoogleFonts.poppins(
           color: Colors.white.withOpacity(0.8),
-          fontSize: 30,
+          fontSize: 30.sp, // FONT SIZE
           fontWeight: FontWeight.w600,
         ),
       ),
@@ -89,75 +90,78 @@ Widget _loginHeading(BuildContext context) {
         ' to finmate',
         style: GoogleFonts.poppins(
           color: Colors.white.withOpacity(0.4),
-          fontSize: 30,
+          fontSize: 30.sp, // FONT SIZE
           fontWeight: FontWeight.w600,
         ),
       ),
-      const SizedBox(width: 10), // Add some space between the text and icon
+      SizedBox(width: 10.w), // SPACING
       Icon(
         Icons.arrow_forward,
         color: Colors.white.withOpacity(0.4),
-        size: 40,
+        size: 40.sp, // ICON SIZE
       ),
     ],
   );
 }
 
-Widget _forgotPasswordLink(BuildContext context){
+// HELPER METHOD FOR FORGOT PASSWORD LINK
+Widget _forgotPasswordLink(BuildContext context) {
   return Padding(
-                  padding: EdgeInsets.all(15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                                      Navigator.pushNamed(context, AppRoutes.passwordResetScreen);
-                                      },
-                        child: Text(
-                          "Forgot Password?",
-                          style: GoogleFonts.poppins(
-                          color:AppColors.foregroundColorFaded2.withOpacity(0.5),
-                            letterSpacing: 0.5,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
+    padding: EdgeInsets.all(15.w), // PADDING
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        InkWell(
+          splashColor: Colors.transparent,
+          hoverColor: Colors.transparent,
+          onTap: () {
+            Navigator.pushNamed(context, AppRoutes.passwordResetScreen);
+          },
+          child: Text(
+            "Forgot Password?",
+            style: GoogleFonts.poppins(
+              color: AppColors.foregroundColorFaded2.withOpacity(0.5),
+              letterSpacing: 0.5,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
-Widget _redirectToSignUpLink(BuildContext context){
-    return Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        "Don't have an account?",
-                        style: GoogleFonts.poppins(
-                          fontSize: 15,
-                          color:AppColors.foregroundColorFaded2.withOpacity(0.5),
-                          letterSpacing: 0.5,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                      SizedBox(width: 5), // Add space between texts
-                      InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(context, AppRoutes.signUp);
-                        },
-                        child: Text(
-                          "Register now",
-                          style: GoogleFonts.poppins(
-                            color: AppColors.foregroundColorFaded2.withOpacity(0.8),
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                );
+// HELPER METHOD FOR REDIRECT TO SIGN UP LINK
+Widget _redirectToSignUpLink(BuildContext context) {
+  return Padding(
+    padding: EdgeInsets.all(15.w), // PADDING
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Text(
+          "Don't have an account?",
+          style: GoogleFonts.poppins(
+            fontSize: 13.sp, // FONT SIZE
+            color: AppColors.foregroundColorFaded2.withOpacity(0.5),
+            letterSpacing: 0.5,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        SizedBox(width: 5.w), // SPACING
+        InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, AppRoutes.signUp);
+          },
+          child: Text(
+            "Register now",
+            style: GoogleFonts.poppins(
+              color: AppColors.foregroundColorFaded2.withOpacity(0.8),
+              fontWeight: FontWeight.w500,
+              fontSize: 13.sp, // FONT SIZE
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }
-
