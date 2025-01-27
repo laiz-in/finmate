@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:moneyy/presentation/routes/routes.dart';
 import 'package:shimmer/shimmer.dart';
 
 class ShimmerScreen extends StatelessWidget {
@@ -11,34 +10,11 @@ class ShimmerScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        toolbarHeight: 80.h, // TOOLBAR HEIGHT
+        toolbarHeight: 75.h, // TOOLBAR HEIGHT
         scrolledUnderElevation: 0,
         automaticallyImplyLeading: false,
 
-        // ACTION BUTTONS
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.notifications_outlined,
-              color: Theme.of(context).canvasColor,
-              size: 23.sp, // ICON SIZE
-            ),
-            onPressed: () {
-              // ADD YOUR NOTIFICATION LOGIC HERE
-            },
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.person_outlined,
-              color: Theme.of(context).canvasColor,
-              size: 23.sp, // ICON SIZE
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, AppRoutes.profileScreen);
-            },
-          ),
-          SizedBox(width: 20.w), // SPACING
-        ],
+      
       ),
 
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,

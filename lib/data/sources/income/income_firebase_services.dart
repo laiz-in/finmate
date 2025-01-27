@@ -275,6 +275,33 @@ Future<Either<String, double>> fetchThisYearIncome() async {
   }
 }
 
+// TODAY'S INCOME
+Future<Either<String, double>> fetchTotalIncome() async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      double todaysIncome = 0.0;
+      DateTime now = DateTime.now();
+      DateTime startOfDay = DateTime(now.year, now.month, now.day); // Start of today
+      DateTime endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59); // End of today
 
+      QuerySnapshot incomeSnapshot = await _firestore
+          .collection("users")
+          .doc(user.uid)
+          .collection("income")
+          .where('incomeDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where('incomeDate', isLessThanOrEqualTo: Timestamp.fromDate(endOfDay))
+          .get();
 
+      for (var doc in incomeSnapshot.docs) {
+        todaysIncome += (doc['incomeAmount'] as num).toDouble();
+      }
+      return Right(todaysIncome);
+    } else {
+      return Left("User is not logged in");
+    }
+  } catch (e) {
+    return Left("Failed to fetch today's total income: ${e.toString()}");
+  }
+}
 }

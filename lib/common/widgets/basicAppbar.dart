@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -11,13 +12,8 @@ class CommonAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       leading: IconButton(
-          icon: Transform.rotate(
-          angle: 3.14159, // Rotate the icon by 180 degrees (in radians)
-          child: const Icon(
-            Icons.arrow_forward_ios,
-            size: 18, // Smaller icon size for a subtle design
-          ),
-        ),
+          icon: Icon(Icons.arrow_back_ios,size: 20.sp,),
+          
         color: Theme.of(context).canvasColor, // Matches the color theme
         onPressed: () {
           Navigator.pop(context); // Navigates back to the previous screen

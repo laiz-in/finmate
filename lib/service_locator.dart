@@ -28,6 +28,7 @@ import 'package:moneyy/domain/usecases/auth/sign_in.dart';
 import 'package:moneyy/domain/usecases/auth/sign_out.dart';
 import 'package:moneyy/domain/usecases/auth/sign_up.dart';
 import 'package:moneyy/domain/usecases/bills/add_bill_usecase.dart';
+import 'package:moneyy/domain/usecases/bills/change_paid_status_usecase.dart';
 import 'package:moneyy/domain/usecases/bills/delete_bill_usecase.dart';
 import 'package:moneyy/domain/usecases/bills/total_bills_usecase.dart';
 import 'package:moneyy/domain/usecases/bills/update_bill_usecase.dart';
@@ -44,11 +45,12 @@ import 'package:moneyy/domain/usecases/income/last_three_income_usecase.dart';
 import 'package:moneyy/domain/usecases/income/this_month_total_income.dart';
 import 'package:moneyy/domain/usecases/income/this_week_total_income.dart';
 import 'package:moneyy/domain/usecases/income/this_year_total_income.dart';
+import 'package:moneyy/domain/usecases/income/todays_income_usecase.dart';
 import 'package:moneyy/domain/usecases/income/total_income_usecase.dart';
 import 'package:moneyy/domain/usecases/income/update_income_usecase.dart';
+import 'package:moneyy/domain/usecases/settings/name_reset.dart';
 import 'package:moneyy/domain/usecases/settings/reset_daily_limit.dart';
 import 'package:moneyy/domain/usecases/settings/reset_monthly_limit.dart';
-import 'package:moneyy/domain/usecases/settings/reset_profile_picture.dart';
 import 'package:moneyy/domain/usecases/settings/send_feedback.dart';
 
 final sl = GetIt.instance;
@@ -57,6 +59,7 @@ Future<void> initializeDependencies() async {
 
   // BILLS RELATED
   sl.registerLazySingleton(() => UpdateBillUsecase(sl()));
+  sl.registerLazySingleton(() => UpdatePaidStatusUsecase(sl()));
   sl.registerLazySingleton(() => DeleteBillUsecase(sl()));
   sl.registerLazySingleton(() => AddBillUsecase(sl()));
   sl.registerLazySingleton(() => TotalBillsUsecase(sl()));
@@ -76,6 +79,8 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton(() => LastThreeIncomeUseCase(sl()));
   sl.registerLazySingleton(() => ThisMonthToatalIncomeUseCase(sl()));
   sl.registerLazySingleton(() => ThisWeekToatalIncomeUseCase(sl()));
+  sl.registerLazySingleton(() => TodaysIncomeUsecase(sl()));
+
   sl.registerLazySingleton(() => ThisYearToatalIncomeUseCase(sl()));
 
   sl.registerLazySingleton(() => AddIncomeUseCase(sl()));
@@ -106,12 +111,12 @@ Future<void> initializeDependencies() async {
   // Register settings page related services
   sl.registerSingleton<SettingsRepository>(SettingsRepositoryImpl());
   sl.registerSingleton<SettingsFirebaseService>(SettingsFirebaseServiceImpl());
-  sl.registerSingleton<UpdateProfilePictureUseCase>(UpdateProfilePictureUseCase(),);
   sl.registerSingleton<ResetDailyLimitUseCase>(ResetDailyLimitUseCase(),);
   sl.registerSingleton<ResetMonthlyLimitUseCase>(ResetMonthlyLimitUseCase(),);
   sl.registerSingleton<SendFeedbackUseCase>(SendFeedbackUseCase(),);
   sl.registerSingleton<ResetPasswordUseCase>(ResetPasswordUseCase(),);
   sl.registerSingleton<ResetEmailUseCase>(ResetEmailUseCase(),);
+  sl.registerSingleton<ResetNameUseCase>(ResetNameUseCase(),);
 
   
   // Theme change related services

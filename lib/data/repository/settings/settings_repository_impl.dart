@@ -6,10 +6,6 @@ import '../../../service_locator.dart';
 
 class SettingsRepositoryImpl extends SettingsRepository{
 
-@override
-Future<Either> updateProfilePicture({required String profilePictureURL}) async {
-    return await sl<SettingsFirebaseService>().updateProfilePicture(profilePictureURL: profilePictureURL);
-}
 
 @override
 Future<Either> resetMonthlyLimit({required int monthlyLimit}) async {

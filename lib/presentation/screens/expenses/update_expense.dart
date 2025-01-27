@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
 import 'package:moneyy/common/widgets/success_snackbar.dart';
@@ -17,17 +18,16 @@ class UpdateSpendingDialog extends StatefulWidget {
   final String transactionId;
   final Function(double, String, String, DateTime) onSubmit;
 
-
-  const UpdateSpendingDialog({super.key,
-  required this.uidOfTransaction,
-  required this.initialcreatedAt,
+  const UpdateSpendingDialog({
+    super.key,
+    required this.uidOfTransaction,
+    required this.initialcreatedAt,
     required this.initialAmount,
     required this.initialCategory,
     required this.initialDescription,
     required this.initialDate,
     required this.transactionId,
     required this.onSubmit,
-
   });
 
   @override
@@ -81,60 +81,56 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-
-      insetPadding: EdgeInsets.fromLTRB(5,20,0,10),
-      contentPadding: EdgeInsets.fromLTRB(23,10,23,10),
-      
+      insetPadding: EdgeInsets.fromLTRB(10.w, 20.h, 10.w, 10.h), // PADDING
+      contentPadding: EdgeInsets.fromLTRB(23.w, 10.h, 23.w, 10.h), // PADDING
       shape: RoundedRectangleBorder(
-        
-        borderRadius: BorderRadius.circular(26.0),
+        borderRadius: BorderRadius.circular(26.0.r), // RADIUS
       ),
       elevation: 15,
       backgroundColor: Theme.of(context).primaryColor,
 
-      // Title text
+      // TITLE TEXT
       title: Text(
         'Edit your expense',
         style: GoogleFonts.poppins(
-          fontSize: 17,
+          fontSize: 17.sp, // FONT SIZE
           color: Theme.of(context).canvasColor,
           fontWeight: FontWeight.w500,
         ),
       ),
-      
-      content: Form(
 
+      // FORM CONTENT
+      content: Form(
         key: _formKey,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              SizedBox(height: 10),
+              SizedBox(height: 10.h), // SPACING
 
-              // Amount field
+              // AMOUNT FIELD
               TextFormField(
                 initialValue: _spendingAmount.toString(),
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontSize: 15,
+                  fontSize: 15.sp, // FONT SIZE
                   fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.never,
                   labelText: '0.00',
                   labelStyle: GoogleFonts.poppins(
-                    fontSize: 15,
+                    fontSize: 15.sp, // FONT SIZE
                     color: Theme.of(context).canvasColor,
                     fontWeight: FontWeight.w500,
                   ),
                   filled: true,
                   fillColor: Theme.of(context).cardColor,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(12.0.r)), // RADIUS
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-                  
+                  contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w), // PADDING
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -149,26 +145,25 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                   return null;
                 },
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 15.h), // SPACING
 
-              // Description field
+              // DESCRIPTION FIELD
               TextFormField(
                 initialValue: _spendingDescription,
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontSize: 15,
+                  fontSize: 15.sp, // FONT SIZE
                   fontWeight: FontWeight.w500,
-                  decoration: TextDecoration.none
+                  decoration: TextDecoration.none,
                 ),
                 decoration: InputDecoration(
-                  
                   filled: true,
                   fillColor: Theme.of(context).cardColor,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(12.0.r)), // RADIUS
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+                  contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w), // PADDING
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -178,51 +173,49 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                   return null;
                 },
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 15.h), // SPACING
 
-              // Dropdown to select category
+              // DROPDOWN TO SELECT CATEGORY
               DropdownButtonFormField<String>(
-                
                 value: _spendingCategory,
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
                   fontWeight: FontWeight.w500,
-                  fontSize: 15,
+                  fontSize: 15.sp, // FONT SIZE
                 ),
                 decoration: InputDecoration(
                   labelText: 'Category',
                   labelStyle: GoogleFonts.poppins(
-                    fontSize: 15,
-                    color:Theme.of(context).canvasColor,
+                    fontSize: 15.sp, // FONT SIZE
+                    color: Theme.of(context).canvasColor,
                     fontWeight: FontWeight.w500,
                   ),
                   floatingLabelBehavior: FloatingLabelBehavior.never,
                   filled: true,
                   fillColor: Theme.of(context).cardColor,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(12.0.r)), // RADIUS
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+                  contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w), // PADDING
                 ),
                 dropdownColor: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.all(Radius.circular(15)),
+                borderRadius: BorderRadius.all(Radius.circular(15.r)), // RADIUS
                 items: _categories.map((category) {
                   return DropdownMenuItem<String>(
-                    
                     value: category,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                      padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 0.w), // PADDING
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(12))
+                        borderRadius: BorderRadius.all(Radius.circular(12.r)), // RADIUS
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                        padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 0.w), // PADDING
                         child: Text(
                           category,
                           style: GoogleFonts.poppins(
                             color: Theme.of(context).canvasColor,
-                            fontSize: 15,
+                            fontSize: 15.sp, // FONT SIZE
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -237,24 +230,23 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                 },
                 isExpanded: true,
               ),
-              SizedBox(height: 15),
+              SizedBox(height: 15.h), // SPACING
 
-              // Date field
+              // DATE FIELD
               TextFormField(
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontSize: 15,
+                  fontSize: 15.sp, // FONT SIZE
                   fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration(
-                  
                   filled: true,
-                  fillColor:Theme.of(context).cardColor,
+                  fillColor: Theme.of(context).cardColor,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(12.0.r)), // RADIUS
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+                  contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w), // PADDING
                 ),
                 controller: _dateController,
                 readOnly: true,
@@ -266,134 +258,131 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                   return null;
                 },
               ),
-
-            SizedBox(height: 8,)
+              SizedBox(height: 8.h), // SPACING
             ],
           ),
         ),
       ),
 
+      // ACTION BUTTONS
       actions: <Widget>[
-
         SizedBox(
           width: double.infinity,
-          
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-
-            
-            
-            // Cancel button
-            Expanded(
-              child: Container(
-                color: Colors.transparent,
-                child: TextButton(
-                child: Text(
-                  'Cancel',
-                  style: GoogleFonts.poppins(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.myOrange,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                ),
-              ),
-            ),
-
-
-            // Update button
-            Expanded(
-              child: Container(
-                width: 150,height: 50,
-                color: Colors.transparent,
-                child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:Theme.of(context).canvasColor, // Background color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0), // Set the border radius
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 28.0), // Optional padding
-                ),
-                child:isloading
-                                      ? SizedBox(
-                                        width: 20,height: 20,
-                                        child: Center(
-                                            child:CircularProgressIndicator(
-                                              color: Theme.of(context).scaffoldBackgroundColor,strokeWidth: 2,
-                                            )
-                                          ),
-                                      )
-                                      : Center(
-                                          child: Text(
-                                            'Update',
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 16,
-                                              color: Theme.of(context).scaffoldBackgroundColor,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                
-                
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    setState(() {
-                      isloading = true;
-                    });
-                    final updatedExpense = ExpensesModel(
-                      uidOfTransaction: widget.uidOfTransaction,
-                      spendingDescription: _spendingDescription,
-                      spendingCategory: _spendingCategory,
-                      spendingAmount: _spendingAmount,
-                      spendingDate: _spendingDate,
-                      createdAt: widget.initialcreatedAt,
-                    );
-
-                    final updateExpensesUseCase = sl<UpdateExpensesUseCase>();
-
-                    final result = await updateExpensesUseCase.call(uidOfTransaction: widget.transactionId,updatedExpense: updatedExpense,);
-
-                    result.fold(
-                      (failureMessage) {
-                        if(mounted){
-                        errorSnackbar(context, failureMessage);}
-                        setState(() {
-                          isloading =false;
-                        });
-                        
-                      },
-                      (successMessage) {
-                        if(mounted){
-                        successSnackbar(context, successMessage);}
-                        setState(() {
-                          isloading =false;
-                        });
-                        widget.onSubmit(_spendingAmount, _spendingCategory, _spendingDescription, _spendingDate);
-                        Navigator.of(context).pop();
-                      },
-                    );
-                      // Clear form fields
-                      setState(() {
-                        _spendingAmount = 0.0;
-                        _spendingCategory = 'Groceries';
-                        _spendingDescription = '';
-                        _spendingDate = DateTime.now();
-                        _dateController.text = "${_spendingDate.toLocal()}".split(' ')[0];
-                      });
-                  }
-                },
+              // CANCEL BUTTON
+              Expanded(
+                child: Container(
+                  color: Colors.transparent,
+                  child: TextButton(
+                    child: Text(
+                      'Cancel',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15.sp, // FONT SIZE
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.myOrange,
                       ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
               ),
-            ),
-            ]
+
+              // UPDATE BUTTON
+              Expanded(
+                child: Container(
+                  width: 150.w, // WIDTH
+                  height: 50.h, // HEIGHT
+                  color: Colors.transparent,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).canvasColor, // BACKGROUND COLOR
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0.r), // RADIUS
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 28.w), // PADDING
+                    ),
+                    child: isloading
+                        ? SizedBox(
+                            width: 20.w, // WIDTH
+                            height: 20.h, // HEIGHT
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: Theme.of(context).scaffoldBackgroundColor,
+                                strokeWidth: 2.w, // STROKE WIDTH
+                              ),
+                            ),
+                          )
+                        : Center(
+                            child: Text(
+                              'Update',
+                              style: GoogleFonts.poppins(
+                                fontSize: 16.sp, // FONT SIZE
+                                color: Theme.of(context).scaffoldBackgroundColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          isloading = true;
+                        });
+                        final updatedExpense = ExpensesModel(
+                          uidOfTransaction: widget.uidOfTransaction,
+                          spendingDescription: _spendingDescription,
+                          spendingCategory: _spendingCategory,
+                          spendingAmount: _spendingAmount,
+                          spendingDate: _spendingDate,
+                          createdAt: widget.initialcreatedAt,
+                        );
+
+                        final updateExpensesUseCase = sl<UpdateExpensesUseCase>();
+
+                        final result = await updateExpensesUseCase.call(
+                          uidOfTransaction: widget.transactionId,
+                          updatedExpense: updatedExpense,
+                        );
+
+                        result.fold(
+                          (failureMessage) {
+                            if (mounted) {
+                              errorSnackbar(context, failureMessage);
+                            }
+                            setState(() {
+                              isloading = false;
+                            });
+                          },
+                          (successMessage) {
+                            if (mounted) {
+                              successSnackbar(context, successMessage);
+                            }
+                            setState(() {
+                              isloading = false;
+                            });
+                            widget.onSubmit(_spendingAmount, _spendingCategory, _spendingDescription, _spendingDate);
+                            Navigator.of(context).pop();
+                          },
+                        );
+                        // CLEAR FORM FIELDS
+                        setState(() {
+                          _spendingAmount = 0.0;
+                          _spendingCategory = 'Groceries';
+                          _spendingDescription = '';
+                          _spendingDate = DateTime.now();
+                          _dateController.text = "${_spendingDate.toLocal()}".split(' ')[0];
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
-
-
-        )
+        ),
       ],
     );
   }

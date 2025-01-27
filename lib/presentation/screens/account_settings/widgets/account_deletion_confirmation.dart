@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
 import 'package:moneyy/domain/usecases/auth/account_deletion.dart';
@@ -15,21 +16,21 @@ class AccountDeletionConfirmationDialog extends StatefulWidget {
 
 class _AccountDeletionConfirmationDialogState
     extends State<AccountDeletionConfirmationDialog> {
-  bool isLoading = false; // To track the loading state
+  bool isLoading = false; // TO TRACK THE LOADING STATE
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(15),
+      padding: EdgeInsets.all(10.w), // PADDING
       child: AlertDialog(
         backgroundColor: Colors.white,
         elevation: 15,
 
-        // Account deletion confirmation heading
+        // ACCOUNT DELETION CONFIRMATION HEADING
         title: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(bottom: 20),
+              padding: EdgeInsets.only(bottom: 15.h), // PADDING
               child: Center(
                 child: Text(
                   'Do you want to delete your account? All data will be cleared.',
@@ -37,14 +38,16 @@ class _AccountDeletionConfirmationDialogState
                   style: GoogleFonts.poppins(
                     color: const Color.fromARGB(255, 214, 76, 66),
                     fontWeight: FontWeight.w500,
-                    fontSize: 14
-                    ,
+                    fontSize: 13.sp, // FONT SIZE
                   ),
                 ),
               ),
             ),
-
-            Divider(color: Colors.red.withOpacity(0.3),endIndent: 0,indent: 0,)
+            Divider(
+              color: Colors.red.withOpacity(0.3),
+              endIndent: 0,
+              indent: 0,
+            ),
           ],
         ),
 
@@ -53,17 +56,16 @@ class _AccountDeletionConfirmationDialogState
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-
-              // Cancel button
+              // CANCEL BUTTON
               Container(
-                padding: const EdgeInsets.only(left: 5),
+                padding: EdgeInsets.only(left: 5.w), // PADDING
                 color: Colors.transparent,
                 child: TextButton(
                   onPressed: () => Navigator.of(context).pop(),
                   child: Text(
                     'No, cancel',
                     style: GoogleFonts.poppins(
-                      fontSize: 13,
+                      fontSize: 13.sp, // FONT SIZE
                       color: const Color.fromARGB(255, 235, 125, 117),
                       fontWeight: FontWeight.w500,
                     ),
@@ -71,33 +73,33 @@ class _AccountDeletionConfirmationDialogState
                 ),
               ),
 
-              // Proceed button
+              // PROCEED BUTTON
               Container(
-                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                  color: Color.fromARGB(255, 212, 76, 66),
+                padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0), // PADDING
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(12.r)), // RADIUS
+                  color: const Color.fromARGB(255, 212, 76, 66),
                 ),
                 child: TextButton(
                   onPressed: isLoading
-                      ? null // Disable button while loading
+                      ? null // DISABLE BUTTON WHILE LOADING
                       : () async {
                           await _handleAccountDeletion(context);
                         },
                   child: isLoading
                       ? SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
+                          height: 20.h, // HEIGHT
+                          width: 20.w, // WIDTH
+                          child: CircularProgressIndicator(
                             color: Colors.white,
-                            strokeWidth: 2,
+                            strokeWidth: 2.w, // STROKE WIDTH
                           ),
-                      ) // Show loading indicator
+                        ) // SHOW LOADING INDICATOR
                       : Text(
                           'Yes, delete',
                           style: GoogleFonts.poppins(
                             color: const Color.fromARGB(255, 248, 245, 245),
-                            fontSize: 13,
+                            fontSize: 13.sp, // FONT SIZE
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -110,46 +112,42 @@ class _AccountDeletionConfirmationDialogState
     );
   }
 
-  // Function to call the account deletion use case
+  // FUNCTION TO CALL THE ACCOUNT DELETION USE CASE
   Future<void> _handleAccountDeletion(BuildContext context) async {
     setState(() {
-      isLoading = true; // Start loading
+      isLoading = true; // START LOADING
     });
-
-
 
     final accountDeletionUseCase = sl<AccountDeletionUseCase>();
     final result = await accountDeletionUseCase.call();
 
     result.fold(
-      // If an error occurred
+      // IF AN ERROR OCCURRED
       (l) {
         if (mounted) {
           setState(() {
-            isLoading = false; // Stop loading on error
+            isLoading = false; // STOP LOADING ON ERROR
           });
-              // Close the dialog only if mounted
+          // CLOSE THE DIALOG ONLY IF MOUNTED
           if (mounted) {
             Navigator.of(context).pop();
           }
           errorSnackbar(context, l.toString());
-
         }
       },
-      // If account deletion is successful
+      // IF ACCOUNT DELETION IS SUCCESSFUL
       (r) {
-        
+        if (mounted) {
           setState(() {
-            isLoading = false; // Stop loading on success
+            isLoading = false; // STOP LOADING ON SUCCESS
           });
           Navigator.pushNamedAndRemoveUntil(
             context,
-            AppRoutes.logIn, // Define this route
+            AppRoutes.logIn, // DEFINE THIS ROUTE
             (route) => false,
           );
-        
+        }
       },
-
     );
   }
 }

@@ -36,6 +36,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
       }
     });
 
+
     // Handle event to fetch user data
     on<FetchUserData>((event, emit) async {
       emit(HomeScreenLoading());

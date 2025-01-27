@@ -14,6 +14,7 @@ import 'package:moneyy/presentation/screens/user_auth/password_forgot/password_r
 import 'package:moneyy/presentation/screens/user_auth/sign_in/sign_in.dart';
 import 'package:moneyy/presentation/screens/user_auth/sign_up/sign_up.dart';
 
+
 class AppRoutes {
   static const String signUp = '/signup';
   static const String logIn = '/login';

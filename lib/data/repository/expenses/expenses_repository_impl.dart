@@ -32,7 +32,6 @@ class ExpensesRepositoryImpl implements ExpensesRepository {
   }
 
 
-
   // FETCH LAST 3 EXPENSES
   @override
   Future<Either<String, List<ExpensesEntity>>> fetchLastThreeExpenses() async {
@@ -53,7 +52,6 @@ class ExpensesRepositoryImpl implements ExpensesRepository {
       return Left("Error fetching last three expenses: $e");
     }
   }
-
 
 
   // TO ADD AN EXPENSE
@@ -118,4 +116,6 @@ class ExpensesRepositoryImpl implements ExpensesRepository {
       return Left('Error fetching last seven day expenses: $e');
     }
   }
+
+
 }

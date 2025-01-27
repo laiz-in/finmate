@@ -21,7 +21,7 @@ class FirebaseHomeService {
         return Left("User data not found");
       }
     } catch (e) {
-      return Left("Error fetching user data");
+      return Left("Error fetching user data in services: $e");
     }
   }
 }

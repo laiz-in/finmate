@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:moneyy/presentation/routes/routes.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String userName;
@@ -32,7 +32,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             Text(
               userName,
               style: GoogleFonts.poppins(
-                fontSize: 22.sp,
+                fontSize: 20.sp,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).canvasColor,
               ),
@@ -40,32 +40,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           ],
         ),
       ),
+
+      // actions to include the correct icons and navigation
       actions: [
         IconButton(
           icon: Icon(
-            Icons.notifications_outlined,
+            Symbols.notifications,
             color: Theme.of(context).canvasColor,
             size: 23.sp,
+            weight: 900,
           ),
           onPressed: () {
             // Add your notification logic here
           },
         ),
-        IconButton(
-          icon: Icon(
-            Icons.person_outline_outlined,
-            color: Theme.of(context).canvasColor,
-            size: 23.sp,
-          ),
-          onPressed: () {
-            Navigator.pushNamed(context, AppRoutes.profileScreen);
-          },
-        ),
+        
+        
         SizedBox(width: 20.w),
       ],
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(80);
+  Size get preferredSize => Size.fromHeight(75.h);
 }

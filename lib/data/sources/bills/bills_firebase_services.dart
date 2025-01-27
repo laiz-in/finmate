@@ -157,5 +157,44 @@ Future<List<BillModel>> fetchAllBills({DateTime? lastAddedDate, required int pag
 }
 
 
+ // TOGGLE PAID STATUS
+  Future<Either<String, String>> updatePaidStatus(String uidOfBill) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+
+      if (user != null) {
+        // Get the specific bill document
+        final billRef = FirebaseFirestore.instance
+            .collection("users")
+            .doc(user.uid)
+            .collection("bills")
+            .doc(uidOfBill);
+        final billSnapshot = await billRef.get();
+
+        // Ensure the bill document exists
+        if (!billSnapshot.exists) {
+          return Left("Bill not found");
+        }
+
+        // Get the current paidStatus
+        final currentStatus = billSnapshot.data()?['paidStatus'] ?? 0;
+
+        // Toggle the paidStatus
+        final newStatus = currentStatus == 0 ? 1 : 0;
+
+        // Update the document with the new paidStatus
+        await billRef.update({'paidStatus': newStatus});
+
+        return Right("Successfully updated the paid status");
+      } else {
+        return Left("User is not logged in");
+      }
+    } catch (e) {
+      return Left("Failed to update paid status: ${e.toString()}");
+    }
+  }
+
+
+
 
 }

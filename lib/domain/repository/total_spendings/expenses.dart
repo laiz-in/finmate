@@ -4,6 +4,9 @@ import 'package:moneyy/domain/entities/spending/expenses.dart';
 
 abstract class ExpensesRepository {
 
+
+
+
   Future<Either<String, List<ExpensesEntity>>> fetchAllExpenses(int page, int pageSize);
 
   Future<Either<String, List<ExpensesEntity>>> fetchLastThreeExpenses();
@@ -15,5 +18,5 @@ abstract class ExpensesRepository {
 
   Future<Either> addExpense(ExpensesModel expense);
 
-  Future<Either<String, Map<String, double>>> fetchLastSevenDayExpenses(); // New method
+  Future<Either<String, Map<String, double>>> fetchLastSevenDayExpenses();
 }

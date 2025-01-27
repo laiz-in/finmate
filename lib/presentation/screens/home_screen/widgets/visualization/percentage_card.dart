@@ -149,10 +149,12 @@ class GraphCardWidgetState extends State<GraphCardWidget> {
         SizedBox(height: 8.h,),
         Text(
           label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: GoogleFonts.poppins(
-            fontSize: 10.sp, // FONT SIZE
-            color: Theme.of(context).canvasColor.withOpacity(0.8),
+            color: Theme.of(context).canvasColor.withOpacity(0.6),
             fontWeight: FontWeight.w500,
+            fontSize: 10.sp, // FONT SIZE
           ),
         ),
         SizedBox(height: 8.h), // SPACING
@@ -177,8 +179,9 @@ class GraphCardWidgetState extends State<GraphCardWidget> {
         ),
         SizedBox(height: 8.h), // SPACING
         Text(
-          value.toStringAsFixed(0),
-          style: GoogleFonts.poppins(
+          '₹ ${value.toStringAsFixed(0)}',
+
+          style: GoogleFonts.montserrat(
             fontSize: 10.sp, // FONT SIZE
             color: Theme.of(context).canvasColor.withOpacity(0.6),
             fontWeight: FontWeight.w600,
@@ -206,9 +209,8 @@ class GraphCardWidgetState extends State<GraphCardWidget> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: GoogleFonts.poppins(
-            color: Theme.of(context).canvasColor.withOpacity(0.8),
+            color: Theme.of(context).canvasColor.withOpacity(0.6),
             fontWeight: FontWeight.w500,
-            
             fontSize: 10.sp, // FONT SIZE
           ),
         ),

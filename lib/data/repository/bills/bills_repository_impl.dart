@@ -86,5 +86,16 @@ class BillsRepositoryImpl implements BillsRepository {
     }
   }
 
+  // TO TOGGLE PAID STATUS
+  @override
+    Future<Either<String,String>> updatePaidStatus(String uidOfBill) async {
+    try{
+      await _firebaseService.updatePaidStatus(uidOfBill);
+      return Right("Bill updated succesfully");
+    } catch(e){
+      return Left("Failed to update the Bill status");
+    }
+  }
+
 
 }

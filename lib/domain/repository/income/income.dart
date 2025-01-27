@@ -4,6 +4,8 @@ import 'package:moneyy/domain/entities/income/income.dart';
 
 abstract class IncomeRepository {
 
+  Future<Either<String, double>> fetchTotalIncome();
+
   Future<Either<String, double>> fetchThisWeekIncome();
 
   Future<Either<String, double>> fetchThisYearIncome();

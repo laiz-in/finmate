@@ -6,7 +6,6 @@ import 'package:dartz/dartz.dart';
 abstract class SettingsRepository {
 
 
-  Future<Either> updateProfilePicture({required String profilePictureURL});
 
   Future<Either> resetDailyLimit({required int dailyLimit});
 

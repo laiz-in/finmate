@@ -4,30 +4,33 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
 import 'package:moneyy/common/widgets/success_snackbar.dart';
-import 'package:moneyy/domain/usecases/settings/send_feedback.dart';
+import 'package:moneyy/domain/usecases/settings/name_reset.dart';
 import 'package:moneyy/service_locator.dart';
 
-class SendFeedbackScreen extends StatefulWidget {
-  const SendFeedbackScreen({super.key});
+class ResetProfileName extends StatefulWidget {
+  const ResetProfileName({super.key});
 
   @override
-  State<SendFeedbackScreen> createState() => _SendFeedbackScreenState();
+  State<ResetProfileName> createState() => _ResetProfileNameState();
 }
 
-class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
-  final TextEditingController _feedbackController = TextEditingController();
+class _ResetProfileNameState extends State<ResetProfileName> {
+  final TextEditingController _firstnamecontroller = TextEditingController();
+  final TextEditingController _lastnamecontroller = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
-  // SEND FEEDBACK LOGIC
-  void _sendFeedback() async {
+  // RESET MONTHLY LIMIT LOGIC
+  void _resetProfileName() async {
     if (_formKey.currentState?.validate() ?? false) {
       setState(() {
         _isLoading = true;
       });
-      String feedback = _feedbackController.text; // UPDATED FEEDBACK TEXT CONTROLLER
-      final sendFeedbackUseCase = sl<SendFeedbackUseCase>();
-      final result = await sendFeedbackUseCase.call(feedback: feedback);
+      String firstName = _firstnamecontroller.text.trim();
+      String lastName = _lastnamecontroller.text.trim();
+      final resetProfileName = sl<ResetNameUseCase>();
+      final result = await resetProfileName.call(firstName:firstName, lastName: lastName);
 
       result.fold(
         // IF ANY ERROR OCCURRED
@@ -37,13 +40,13 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
             _isLoading = false;
           });
         },
-        // IF FEEDBACK SUBMISSION IS SUCCESS
+        // IF LIMIT UPDATION IS SUCCESS
         (r) {
           setState(() {
             _isLoading = false;
           });
           if (mounted) {
-            successSnackbar(context, 'Feedback has been added!');
+            successSnackbar(context, 'Profile name has been updated');
             Navigator.pop(context);
           }
         },
@@ -90,24 +93,24 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
 
                       SizedBox(height: 40.h), // SPACING
 
-                      // FEEDBACK HEADING
+                      // MONTHLY RESET HEADING
                       Padding(
                         padding: EdgeInsets.all(20.w), // PADDING
                         child: Row(
                           children: [
-                            Text(
-                              ' Send Feedback',
-                              style: GoogleFonts.poppins(
-                                color: Theme.of(context).canvasColor,
-                                fontSize: 25.sp, // FONT SIZE
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            SizedBox(width: 10.w), // SPACING
                             Icon(
-                              Symbols.feedback,
+                              Symbols.person_edit,
                               color: Theme.of(context).canvasColor,
                               size: 35.sp, // ICON SIZE
+                            ),
+                            SizedBox(width: 10.w), // SPACING
+                            Text(
+                              'Change profile name',
+                              style: GoogleFonts.poppins(
+                                color: Theme.of(context).canvasColor,
+                                fontSize: 20.sp, // FONT SIZE
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ],
                         ),
@@ -115,32 +118,25 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
 
                       SizedBox(height: 15.h), // SPACING
 
-                      // FEEDBACK TEXT FIELD
+                      // FIRST NAME FIELD
                       Padding(
                         padding: EdgeInsets.fromLTRB(20.w, 20.h, 20.w, 0), // PADDING
                         child: TextFormField(
-                          controller: _feedbackController,
+                          controller: _firstnamecontroller,
                           cursorColor: Theme.of(context).canvasColor.withOpacity(0.7),
                           style: GoogleFonts.poppins(
                             color: Theme.of(context).canvasColor,
                             fontWeight: FontWeight.w400,
                             decoration: TextDecoration.none,
-                            fontSize: 14.sp, // FONT SIZE
+                            fontSize: 15.sp, // FONT SIZE
                           ),
-                          keyboardType: TextInputType.multiline,
-                          minLines: 1,
-                          maxLines: null, // ALLOWS THE FIELD TO EXPAND
                           decoration: InputDecoration(
                             fillColor: Theme.of(context).cardColor,
                             filled: true,
                             contentPadding: EdgeInsets.all(16.w), // PADDING
-                            prefixIcon: Icon(
-                              Symbols.feedback,
-                              color: Theme.of(context).canvasColor.withOpacity(0.7),
-                              size: 22.sp, // ICON SIZE
-                            ),
+                            
                             label: Text(
-                              'Enter your feedback',
+                              'First name',
                               style: GoogleFonts.poppins(
                                 fontSize: 15.sp, // FONT SIZE
                                 fontWeight: FontWeight.w400,
@@ -182,24 +178,93 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
                           ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your feedback';
+                              return 'Please enter a name';
                             }
+                            
                             return null;
                           },
                         ),
                       ),
 
+
+                      // LAST NAME FIELD
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 0), // PADDING
+                        child: TextFormField(
+                          controller: _lastnamecontroller,
+                          cursorColor: Theme.of(context).canvasColor.withOpacity(0.7),
+                          style: GoogleFonts.poppins(
+                            color: Theme.of(context).canvasColor,
+                            fontWeight: FontWeight.w400,
+                            decoration: TextDecoration.none,
+                            fontSize: 15.sp, // FONT SIZE
+                          ),
+                          decoration: InputDecoration(
+                            fillColor: Theme.of(context).cardColor,
+                            filled: true,
+                            contentPadding: EdgeInsets.all(16.w), // PADDING
+                            
+                            label: Text(
+                              'Last name',
+                              style: GoogleFonts.poppins(
+                                fontSize: 15.sp, // FONT SIZE
+                                fontWeight: FontWeight.w400,
+                                color: Theme.of(context).canvasColor.withOpacity(0.7),
+                              ),
+                            ),
+                            floatingLabelBehavior: FloatingLabelBehavior.never,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0.r), // RADIUS
+                              borderSide: BorderSide(color: Theme.of(context).scaffoldBackgroundColor, width: 0),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0.r), // RADIUS
+                              borderSide: BorderSide(color: Theme.of(context).scaffoldBackgroundColor, width: 0),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0.r), // RADIUS
+                              borderSide: BorderSide(color: Theme.of(context).scaffoldBackgroundColor, width: 0),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0.r), // RADIUS
+                              borderSide: BorderSide(
+                                color: Colors.red.shade200,
+                                width: 1.w, // BORDER WIDTH
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15.0.r), // RADIUS
+                              borderSide: BorderSide(
+                                color: Colors.red.shade200,
+                                width: 1.w, // BORDER WIDTH
+                              ),
+                            ),
+                            errorStyle: GoogleFonts.poppins(
+                              color: Colors.red.shade200,
+                              fontSize: 12.sp, // FONT SIZE
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter an amount';
+                            }
+                            
+                            return null;
+                          },
+                        ),
+                      ),
                       SizedBox(height: 15.h), // SPACING
 
                       // SEND BUTTON
                       InkWell(
-                        hoverColor: Colors.transparent,
                         splashColor: Colors.transparent,
-                        onTap: _sendFeedback,
+                        hoverColor: Colors.transparent,
+                        onTap: _resetProfileName,
                         child: Padding(
                           padding: EdgeInsets.fromLTRB(20.w, 10.h, 20.w, 20.h), // PADDING
                           child: Container(
-                            height: 55.h, // HEIGHT
+                            height: 63.h, // HEIGHT
                             width: double.infinity,
                             decoration: BoxDecoration(
                               color: Theme.of(context).primaryColorDark,
@@ -213,11 +278,11 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
                                     'Submit',
                                     style: GoogleFonts.poppins(
                                       color: Theme.of(context).hintColor,
-                                      fontSize: 25.sp, // FONT SIZE
+                                      fontSize: 23.sp, // FONT SIZE
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  SizedBox(width: 10.w), // SPACING
+                                  SizedBox(width: 15.w), // SPACING
                                   if (_isLoading)
                                     SizedBox(
                                       height: 20.h, // HEIGHT
@@ -234,19 +299,6 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
                         ),
                       ),
 
-                      // INSTRUCTIONS
-                      Padding(
-                        padding: EdgeInsets.all(20.w), // PADDING
-                        child: Text(
-                          softWrap: true,
-                          'Note: Your feedback is valuable to us. Thank you for taking the time to share your thoughts.',
-                          style: GoogleFonts.poppins(
-                            color: Theme.of(context).canvasColor.withOpacity(0.7),
-                            fontSize: 12.sp, // FONT SIZE
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),

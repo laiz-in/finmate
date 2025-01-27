@@ -62,7 +62,7 @@ Future<void> _fetchUserData() async {
       }
     } catch (e) {
       if (mounted) {
-      errorSnackbar(context, "Error fetching user data");
+      errorSnackbar(context, "Error fetching user data its in old hoemscreen");
     }
   }
 }

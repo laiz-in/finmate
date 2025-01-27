@@ -24,7 +24,6 @@ import 'package:moneyy/domain/usecases/income/this_month_total_income.dart';
 import 'package:moneyy/domain/usecases/income/this_week_total_income.dart';
 import 'package:moneyy/domain/usecases/income/this_year_total_income.dart';
 import 'package:moneyy/domain/usecases/income/total_income_usecase.dart';
-import 'package:moneyy/firebase_initializer.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
 import 'package:moneyy/presentation/screens/splash/splash.dart';
 import 'package:moneyy/service_locator.dart';
@@ -42,10 +41,6 @@ void main() async {
   // Initialize Hydrated Storage
   final storage = await HydratedStorage.build(
     storageDirectory: await getApplicationDocumentsDirectory(),
-  );
-
-  FirebaseInitializer.enableOfflinePersistence(
-    'https://console.firebase.google.com/project/finmate-d9f70/database/finmate-d9f70-default-rtdb/data/~2F',
   );
 
   await initializeDependencies();

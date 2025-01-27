@@ -6,6 +6,12 @@ abstract class BillsEvent {}
 
 // TOTAL 8 EVENTS
 
+
+
+class FilterByPaidStatusEvent extends BillsEvent {
+  final int paidStatus; // 1 for Paid, 0 for Pending
+  FilterByPaidStatusEvent({required this.paidStatus});
+}
 // TO FETCH ALL BILLS
 class FetchAllBillsEvent extends BillsEvent {}
 
@@ -22,6 +28,12 @@ class AddBillEvent extends BillsEvent {
 class DeleteBillsEvent extends BillsEvent {
   final String billId;
   DeleteBillsEvent(this.billId);
+}
+
+// WHEN UPDATING A BILL STATUS
+class UpdateBillStatusEvent extends BillsEvent {
+  final String billId;
+  UpdateBillStatusEvent(this.billId);
 }
 
 // WHEN SEARCHING A BILL

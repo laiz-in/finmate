@@ -9,6 +9,19 @@ class IncomeRepositoryImpl implements IncomeRepository {
 
   IncomeRepositoryImpl(this._firebaseService);
 
+// FETCH TOTAL INCOME
+@override
+Future<Either<String, double>> fetchTotalIncome() async {
+  try {
+    final eitherResult = await _firebaseService.fetchTotalIncome();
+    return eitherResult.fold(
+      (failure) => Left(failure),
+      (totalIncome) => Right(totalIncome)
+    );
+  } catch (e) {
+    return Left("Error fetching total income: $e");
+  }
+}
 
 
 // FETCH THIS MONTH INCOME

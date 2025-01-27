@@ -16,4 +16,7 @@ abstract class BillsRepository {
   // TO ADD A NEW BILL
   Future<Either> addBill(BillModel bill);
 
+  // TO UPDATE A BILL STATUS
+  Future<Either> updatePaidStatus(String uidOfBill);
+
 }
