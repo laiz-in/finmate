@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:moneyy/data/sources/settings/settings_firebase_services.dart';
+import 'package:moneyy/data/sources/remote/settings/settings_firebase_services.dart';
 import 'package:moneyy/domain/repository/settings/settings.dart';
 
 import '../../../service_locator.dart';

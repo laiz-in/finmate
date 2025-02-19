@@ -44,10 +44,12 @@ class _RegisterButtonWidgetState extends State<RegisterButtonWidget> {
       var result = await sl<SignUpUseCase>().call(
         params: UserCreateReq(
           email: widget.emailController.text.trim(),
-          password: widget.passwordController.text.trim(),
           firstName: widget.firstNameController.text.trim(),
           lastName: widget.lastNameController.text.trim(),
+          uid: '',
         ),
+        password: widget.passwordController.text.trim(),
+
       );
 
       result.fold(

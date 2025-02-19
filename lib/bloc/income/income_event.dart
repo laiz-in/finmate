@@ -6,6 +6,9 @@ abstract class IncomeEvent {}
 
 class FetchAllIncomeEvent extends IncomeEvent {}
 
+class FetchCompleteIncomeEvent extends IncomeEvent {}
+
+
 class LoadMoreIncomeEvent extends IncomeEvent {}
 
 class AddIncomeEvent extends IncomeEvent {

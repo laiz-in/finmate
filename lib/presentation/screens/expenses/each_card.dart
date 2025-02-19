@@ -77,6 +77,7 @@ class TransactionCardState extends State<TransactionCard> {
               spreadRadius: 3.0.r, // SPREAD RADIUS
             ),
           ],
+          
           color: Theme.of(context).hintColor,
           borderRadius: BorderRadius.circular(15.0.r), // RADIUS
         ),
@@ -107,68 +108,73 @@ class TransactionCardState extends State<TransactionCard> {
               ),
 
 // EXPENSE TITLE AND SUBTITLE
-title: Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-    // 50%: EXPENSE TITLE
-    Expanded(
-      flex: 5, // 50%
-      child: Text(
-        widget.transaction.spendingDescription,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: GoogleFonts.montserrat(
-          fontSize: 15.sp, // FONT SIZE
-          fontWeight: FontWeight.w500,
-          color: Theme.of(context).canvasColor.withOpacity(0.8),
+title: SizedBox(
+  height: 45.h,
+  child: Row(
+    crossAxisAlignment: CrossAxisAlignment.center,
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      // 50%: EXPENSE TITLE
+      Expanded(
+        flex: 5, // 50%
+        child: Text(
+          widget.transaction.spendingDescription,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.montserrat(
+            fontSize: 14.sp, // FONT SIZE
+            fontWeight: FontWeight.w500,
+            height: 1,
+            color: Theme.of(context).canvasColor.withOpacity(0.8),
+          ),
         ),
       ),
-    ),
-
-    // 40%: EXPENSE AMOUNT
-    Expanded(
-      flex: 4, // 40%
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end, // Align amount to the end
-        children: [
-          Flexible(
-            child: Text(
-              widget.transaction.spendingAmount.toStringAsFixed(1),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: GoogleFonts.montserrat(
-                fontSize: 15.sp, // FONT SIZE
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).canvasColor,
+  
+      // 40%: EXPENSE AMOUNT
+      Expanded(
+        flex: 4, // 40%
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end, // Align amount to the end
+          children: [
+            Flexible(
+              child: Text(
+                widget.transaction.spendingAmount.toStringAsFixed(1),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.montserrat(
+                  fontSize: 15.sp, // FONT SIZE
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).canvasColor,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-
-    // 10%: EXPAND ICON
-    Expanded(
-      flex: 1, // 10%
-      child: GestureDetector(
-        onTap: _toggleExpanded,
-        child: _expanded
-            ? Transform.rotate(
-                angle: 1.5708, // ROTATE 90 DEGREES
-                child: Icon(
+  
+      // 10%: EXPAND ICON
+      Expanded(
+        flex: 1, // 10%
+        child: GestureDetector(
+          onTap: _toggleExpanded,
+          child: _expanded
+              ? Transform.rotate(
+                  angle: 1.5708, // ROTATE 90 DEGREES
+                  child: Icon(
+                    Icons.arrow_forward_ios_sharp,
+                    size: 15.sp, // ICON SIZE
+                    color: Theme.of(context).canvasColor.withOpacity(0.7),
+                  ),
+                )
+              : Icon(
                   Icons.arrow_forward_ios_sharp,
                   size: 15.sp, // ICON SIZE
                   color: Theme.of(context).canvasColor.withOpacity(0.7),
                 ),
-              )
-            : Icon(
-                Icons.arrow_forward_ios_sharp,
-                size: 15.sp, // ICON SIZE
-                color: Theme.of(context).canvasColor.withOpacity(0.7),
-              ),
+        ),
       ),
-    ),
-  ],
+    ],
+  ),
 ),
 
 

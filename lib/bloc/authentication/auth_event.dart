@@ -9,5 +9,4 @@ class UserLoggedIn extends AuthEvent {}
 
 class UserLoggedOut extends AuthEvent {}
 
-class AppStarted extends AuthEvent {}
 

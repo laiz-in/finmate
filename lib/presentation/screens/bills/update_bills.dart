@@ -17,7 +17,7 @@ class UpdateBillDialog extends StatefulWidget {
   final double initialBillpaidStatus;
   final DateTime initialBillDueDate;
   final String transactionId;
-  final Function(double, String, String, DateTime) onSubmit;
+  final Function(double, String, String, DateTime,double) onSubmit;
 
   const UpdateBillDialog({
     super.key,
@@ -43,9 +43,12 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
   late String _billTitle;
   late DateTime _addedDate;
   late DateTime _billDueDate;
+  late double _paidStatus;
   final TextEditingController _dateController = TextEditingController();
   bool isloading = false;
 
+  
+  // HELPER FUNCTION TO SELECT DATE
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -61,6 +64,7 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
     }
   }
 
+  // INIT STATE
   @override
   void initState() {
     super.initState();
@@ -69,6 +73,8 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
     _billDescription = widget.initialBillDescription;
     _billDueDate = widget.initialBillDueDate;
     _addedDate = widget.initialaddedDate;
+    _paidStatus = widget.initialBillpaidStatus;
+
     _dateController.text = "${_addedDate.toLocal()}".split(' ')[0];
   }
 
@@ -103,75 +109,122 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
             children: <Widget>[
               SizedBox(height: 10.h), // SPACING
 
-              //  BILL AMOUNT FIELD
-              TextFormField(
-                initialValue: _billAmount.toString(),
-                style: GoogleFonts.poppins(
-                  color: Theme.of(context).canvasColor,
+            //  BILL AMOUNT FIELD
+            TextFormField(
+              initialValue: _billAmount.toString(),
+              style: GoogleFonts.poppins(
+                color: Theme.of(context).canvasColor,
+                fontSize: 15.sp, // FONT SIZE
+                fontWeight: FontWeight.w500,
+              ),
+              decoration: InputDecoration(
+                floatingLabelBehavior: FloatingLabelBehavior.never,
+                labelText: '0.00',
+                labelStyle: GoogleFonts.poppins(
                   fontSize: 15.sp, // FONT SIZE
+                  color: Theme.of(context).canvasColor,
                   fontWeight: FontWeight.w500,
                 ),
-                decoration: InputDecoration(
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
-                  labelText: '0.00',
-                  labelStyle: GoogleFonts.poppins(
-                    fontSize: 15.sp, // FONT SIZE
-                    color: Theme.of(context).canvasColor,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  filled: true,
-                  fillColor: Theme.of(context).cardColor,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12.0.r)), // RADIUS
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w), // PADDING
+                filled: true,
+                fillColor: Theme.of(context).cardColor,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0.r)), // RADIUS
+                  borderSide: BorderSide.none,
                 ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an amount';
-                  }
-                  try {
-                    _billAmount = double.parse(value);
-                  } catch (e) {
-                    return 'Please enter a valid number';
-                  }
-                  return null;
-                },
+                contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w), // PADDING
               ),
-              SizedBox(height: 15.h), // SPACING
+              keyboardType: TextInputType.number,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter an amount';
+                }
+                try {
+                  _billAmount = double.parse(value);
+                } catch (e) {
+                  return 'Please enter a valid number';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 15.h), // SPACING
 
-              // BILL TITLE FIELD
-              TextFormField(
-                initialValue: _billTitle,
-                style: GoogleFonts.poppins(
-                  color: Theme.of(context).canvasColor,
-                  fontSize: 15.sp, // FONT SIZE
-                  fontWeight: FontWeight.w500,
-                  decoration: TextDecoration.none,
-                ),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Theme.of(context).cardColor,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12.0.r)), // RADIUS
-                    borderSide: BorderSide.none,
-                  ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w), // PADDING
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a title';
-                  }
-                  _billTitle = value;
-                  return null;
-                },
+            // PAID STATUS FIELD
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 12.w),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(12.0.r),
               ),
-              SizedBox(height: 15.h), // SPACING
+              child: DropdownButtonFormField<double>(
+                value: widget.initialBillpaidStatus, // Using the initial value from the widget
+                items: [
+                  DropdownMenuItem(
+                    value: 0,
+                    child: Text(
+                      "Pending",
+                      style: GoogleFonts.poppins(
+                        fontSize: 15.sp,
+                        color: Theme.of(context).canvasColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  DropdownMenuItem(
+                    value: 1,
+                    child: Text(
+                      "Paid",
+                      style: GoogleFonts.poppins(
+                        fontSize: 15.sp,
+                        color: Theme.of(context).canvasColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+                dropdownColor: Theme.of(context).primaryColor,
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      _paidStatus = value;
+                    });
+                  }
+                },
+                decoration: InputDecoration(border: InputBorder.none),
+                borderRadius: BorderRadius.circular(12.r), // Adds border radius to dropdown
+              ),
+            ),
+            SizedBox(height:15.h,),
+            
+            // BILL TITLE FIELD
+            TextFormField(
+              initialValue: _billTitle,
+              style: GoogleFonts.poppins(
+                color: Theme.of(context).canvasColor,
+                fontSize: 15.sp, // FONT SIZE
+                fontWeight: FontWeight.w500,
+                decoration: TextDecoration.none,
+              ),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Theme.of(context).cardColor,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12.0.r)), // RADIUS
+                  borderSide: BorderSide.none,
+                ),
+                contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w), // PADDING
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please enter a title';
+                }
+                _billTitle = value;
+                return null;
+              },
+            ),
+            SizedBox(height: 15.h), // SPACING
 
             // BILL DESCRIPTION FIELD
-              TextFormField(
+            TextFormField(
                 initialValue: _billDescription,
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
@@ -196,7 +249,7 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
                   return null;
                 },
               ),
-              SizedBox(height: 15.h), // SPACING
+            SizedBox(height: 15.h), // SPACING
 
             // DUE DATE HEADING
             Row(
@@ -238,6 +291,7 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
               },
             ),
             SizedBox(height: 8.h), // SPACING
+            
             ],
           ),
         ),
@@ -316,7 +370,7 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
                           billDescription: _billDescription,
                           billTitle: _billTitle,
                           billDueDate: _billDueDate,
-                          paidStatus: widget.initialBillpaidStatus,
+                          paidStatus: _paidStatus,
                           addedDate: widget.initialaddedDate,
                         );
 
@@ -327,23 +381,24 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
                           updatedBill: updatedBill,
                         );
 
+                        if(mounted){
+                          setState(() {
+                              isloading = false;
+                            });
+                        }
+
                         result.fold(
                           (failureMessage) {
                             if (mounted) {
                               errorSnackbar(context, failureMessage);
                             }
-                            setState(() {
-                              isloading = false;
-                            });
+                            
                           },
                           (successMessage) {
                             if (mounted) {
                               successSnackbar(context, successMessage);
                             }
-                            setState(() {
-                              isloading = false;
-                            });
-                            widget.onSubmit(_billAmount, _billTitle, _billDescription, _billDueDate);
+                            widget.onSubmit(_billAmount, _billTitle, _billDescription, _billDueDate,_paidStatus);
                             Navigator.of(context).pop();
                           },
                         );

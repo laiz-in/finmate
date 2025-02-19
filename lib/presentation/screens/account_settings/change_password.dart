@@ -5,8 +5,9 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:moneyy/common/widgets/success_snackbar.dart';
 import 'package:moneyy/domain/usecases/auth/password_reset.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
-import 'package:moneyy/service_locator.dart'; // TO GET THE USE CASE INSTANCE
-import 'package:moneyy/ui/error_snackbar.dart';
+import 'package:moneyy/service_locator.dart';
+
+import '../../../common/widgets/error_snackbar.dart'; // TO GET THE USE CASE INSTANCE
 
 class ResetPasswordForSettings extends StatefulWidget {
   const ResetPasswordForSettings({super.key});
@@ -36,7 +37,7 @@ class _ResetPasswordState extends State<ResetPasswordForSettings> {
           setState(() {
             isLoading = false; // HIDE ANIMATION ON ERROR
           });
-          errorSnackbar(context, "Unable to send reset password email.");
+          errorSnackbar(context, "Sorry, internet required for this action");
         },
         (success) {
           setState(() {
@@ -188,7 +189,7 @@ Widget _emailField(BuildContext context, TextEditingController emailController) 
         color: Theme.of(context).canvasColor,
         fontWeight: FontWeight.w500,
         decoration: TextDecoration.none,
-        fontSize: 20.sp, // FONT SIZE
+        fontSize: 16.sp, // FONT SIZE
       ),
       decoration: InputDecoration(
         fillColor: Theme.of(context).cardColor,

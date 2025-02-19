@@ -14,6 +14,9 @@ abstract class IncomeRepository {
 
   Future<Either<String, List<IncomeEntity>>> fetchAllIncome(int page, int pageSize);
 
+  Future<Either<String, List<IncomeEntity>>> fetchCompleteIncome();
+
+
   Future<Either<String, List<IncomeEntity>>> fetchLastThreeIncome();
 
   Future<Either> updateIncome(String uidOfIncome ,IncomeModel updatedIncome);

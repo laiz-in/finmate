@@ -6,6 +6,9 @@ abstract class ExpensesEvent {}
 
 class FetchAllExpensesEvent extends ExpensesEvent {}
 
+class FetchCompleteExpensesEvent extends ExpensesEvent {}
+
+
 class LoadMoreExpensesEvent extends ExpensesEvent {}
 
 class AddExpenseEvent extends ExpensesEvent {

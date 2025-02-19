@@ -1,16 +1,17 @@
+// FILEPATH: /C:/Users/Hp/Desktop/moneyy - Copy/moneyy/lib/presentation/screens/income/each_income.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // IMPORT SCREENUTIL
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:moneyy/domain/entities/income/income.dart';
-import 'package:moneyy/presentation/screens/expenses/delete_expense_button.dart';
+import 'package:moneyy/presentation/screens/income/delete_income.dart';
 import 'package:moneyy/presentation/screens/income/update_income.dart';
-
 
 class IncomeCard extends StatefulWidget {
   final IncomeEntity transaction;
-  final Function onUpdate; // Callback for update
-  final Function onDelete; // Callback for delete
+  final Function onUpdate; // CALLBACK FOR UPDATE
+  final Function onDelete; // CALLBACK FOR DELETE
 
   const IncomeCard({
     super.key,
@@ -37,16 +38,16 @@ class IncomeCardState extends State<IncomeCard> {
     return formatter.format(date);
   }
 
-IconData getIconForCategory(String category) {
-  switch (category.toLowerCase()) {
-    case 'active':
-      return Symbols.work; // Active category icon
-    case 'passive':
-      return Symbols.heart_check; // Passive category icon
-    default:
-      return Symbols.add_a_photo; // Default icon to be returned
+  IconData getIconForCategory(String category) {
+    switch (category.toLowerCase()) {
+      case 'active':
+        return Symbols.work; // ACTIVE CATEGORY ICON
+      case 'passive':
+        return Symbols.heart_check; // PASSIVE CATEGORY ICON
+      default:
+        return Symbols.add_a_photo; // DEFAULT ICON TO BE RETURNED
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -54,113 +55,100 @@ IconData getIconForCategory(String category) {
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15.0),
-        padding: const EdgeInsets.fromLTRB(15, 0, 10, 0.0),
-      
+        margin: EdgeInsets.symmetric(vertical: 6.h, horizontal: 15.w), // USE SCREENUTIL FOR MARGIN
+        padding: EdgeInsets.fromLTRB(15.w, 0, 10.w, 0.0), // USE SCREENUTIL FOR PADDING
         decoration: BoxDecoration(
           boxShadow: [
-      BoxShadow(
-        color: const Color.fromARGB(255, 65, 64, 64).withOpacity(0.13), // Shadow color
-        offset: const Offset(0, 4), // Horizontal and vertical offset
-        blurRadius: 12.0, // Blur radius
-        spreadRadius: 3.0, // Spread radius
-      ),
-    ],
+            BoxShadow(
+              color: const Color.fromARGB(255, 65, 64, 64).withOpacity(0.10), // SHADOW COLOR
+              offset: const Offset(0, 4), // HORIZONTAL AND VERTICAL OFFSET
+              blurRadius: 12.0, // BLUR RADIUS
+              spreadRadius: 3.0, // SPREAD RADIUS
+            ),
+          ],
           color: Theme.of(context).hintColor,
-          borderRadius: BorderRadius.circular(20.0),
+          borderRadius: BorderRadius.circular(20.r), // USE SCREENUTIL FOR BORDER RADIUS
         ),
-
         child: Column(
           children: [
-
             ListTile(
-              
               splashColor: Colors.transparent,
-
               hoverColor: Colors.transparent,
               contentPadding: EdgeInsets.zero,
               onTap: _toggleExpanded,
-
               leading: Column(
                 children: [
                   Icon(
                     Symbols.south_west,
                     color: Colors.green,
-                    size: 25,
+                    size: 25.sp, // USE SCREENUTIL FOR SIZE
                   ),
                   Icon(
                     getIconForCategory(widget.transaction.incomeCategory),
-                    size: 25,
+                    size: 25.sp, // USE SCREENUTIL FOR SIZE
                     color: Colors.green.shade400,
-
                   ),
                 ],
               ),
-
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    overflow:TextOverflow.ellipsis,
+                    overflow: TextOverflow.ellipsis,
                     widget.transaction.incomeAmount.toStringAsFixed(2),
                     style: GoogleFonts.montserrat(
-                      fontSize: 20,
+                      fontSize: 15.sp, // USE SCREENUTIL FOR FONT SIZE
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).canvasColor,
                     ),
                   ),
-                GestureDetector(
-                  onTap: _toggleExpanded,
-                  child: _expanded
-                      ? Transform.rotate(
-                          angle: 1.5708, // Rotate 90 degrees
-                          child: Icon(
+                  GestureDetector(
+                    onTap: _toggleExpanded,
+                    child: _expanded
+                        ? Transform.rotate(
+                            angle: 1.5708, // ROTATE 90 DEGREES
+                            child: Icon(
+                              Icons.arrow_forward_ios_sharp,
+                              size: 15.sp, // USE SCREENUTIL FOR SIZE
+                              color: Theme.of(context).canvasColor.withOpacity(0.7),
+                            ),
+                          )
+                        : Icon(
                             Icons.arrow_forward_ios_sharp,
-                            size: 15,
+                            size: 15.sp, // USE SCREENUTIL FOR SIZE
                             color: Theme.of(context).canvasColor.withOpacity(0.7),
                           ),
-                        )
-                      : Icon(
-                          Icons.arrow_forward_ios_sharp,
-                          size: 15,
-                          color: Theme.of(context).canvasColor.withOpacity(0.7),
-                        ),
-                ),
+                  ),
                 ],
               ),
-              
               subtitle: Column(
-              
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Divider(color: Theme.of(context).canvasColor.withOpacity(0.1)),
-
                   Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         maxLines: 3,
-                        overflow:TextOverflow.ellipsis,
+                        overflow: TextOverflow.ellipsis,
                         widget.transaction.incomeRemarks,
                         style: GoogleFonts.poppins(
-                          fontSize: 15,
+                          fontSize: 14.sp, // USE SCREENUTIL FOR FONT SIZE
                           fontWeight: FontWeight.w500,
                           color: Theme.of(context).canvasColor.withOpacity(0.7),
                         ),
                       ),
-                      SizedBox(height: 3,),
+                      SizedBox(height: 3.h), // USE SCREENUTIL FOR HEIGHT
                       Text(
                         overflow: TextOverflow.ellipsis,
                         timeAgo(widget.transaction.incomeDate),
                         style: GoogleFonts.poppins(
-                        
-                          fontSize: 11,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 11.sp, // USE SCREENUTIL FOR FONT SIZE
+                          fontWeight: FontWeight.w400,
                           color: Theme.of(context).canvasColor.withOpacity(0.5),
                         ),
                       ),
@@ -169,37 +157,28 @@ IconData getIconForCategory(String category) {
                 ],
               ),
             ),
-
-
-            // EXPANSION CONTIANS DELETE AND UPDATE BUTTON
+            // EXPANSION CONTAINS DELETE AND UPDATE BUTTON
             if (_expanded) ...[
-              SizedBox(height: 10.0),
+              SizedBox(height: 10.h), // USE SCREENUTIL FOR HEIGHT
               Padding(
-                padding: const EdgeInsets.only(bottom:8.0),
+                padding: EdgeInsets.only(bottom: 8.h), // USE SCREENUTIL FOR PADDING
                 child: Row(
                   children: [
-
-                
-                  // BUTTON TO DELETE EXPENSE
-                  DeleteExpenseButton(
-                    onDeleteConfirmed: () async {
-                          widget.onDelete();
-                    },
-                  ),
-                
-
-
-
-                  // BUTTON TO UPDATE EXPENSE
-                    SizedBox(width: 7.0),
+                    // BUTTON TO DELETE EXPENSE
+                    DeleteIncomeButton(
+                      onDeleteConfirmed: () async {
+                        widget.onDelete();
+                      },
+                    ),
+                    // BUTTON TO UPDATE EXPENSE
+                    SizedBox(width: 7.w), // USE SCREENUTIL FOR WIDTH
                     Expanded(
                       child: ElevatedButton.icon(
                         onPressed: () {
                           showDialog(
                             context: context,
                             builder: (context) => UpdateIncomeDialog(
-                              
-                              initialcreatedAt:widget.transaction.createdAt,
+                              initialcreatedAt: widget.transaction.createdAt,
                               initialAmount: widget.transaction.incomeAmount,
                               initialCategory: widget.transaction.incomeCategory,
                               initialRemarks: widget.transaction.incomeRemarks,
@@ -207,26 +186,27 @@ IconData getIconForCategory(String category) {
                               incomeId: widget.transaction.uidOfIncome,
                               onSubmit: (amount, category, description, date) {
                                 widget.onUpdate();
-                              }, uidOfIncome: widget.transaction.uidOfIncome,
+                              },
+                              uidOfIncome: widget.transaction.uidOfIncome,
                             ),
                           );
                         },
                         label: Text(
                           'Update',
                           style: GoogleFonts.poppins(
-                            fontSize: 15,
-                            color: Colors.white,
+                            fontSize: 13.sp, // USE SCREENUTIL FOR FONT SIZE
+                            color: const Color.fromARGB(255, 1, 45, 88),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                         style: ButtonStyle(
                           backgroundColor: WidgetStateProperty.all<Color>(
-                            Color.fromARGB(255, 136, 182, 221),
+                            const Color.fromARGB(255, 208, 223, 235),
                           ),
                           elevation: WidgetStateProperty.all<double>(0),
                           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
+                              borderRadius: BorderRadius.circular(12.r), // USE SCREENUTIL FOR BORDER RADIUS
                             ),
                           ),
                         ),

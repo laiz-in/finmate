@@ -37,6 +37,7 @@ class BillScreenState extends State<BillScreen> with SingleTickerProviderStateMi
 
   @override
   void dispose() {
+      _tabController.removeListener(_handleTabSelection);
     _scrollController.dispose();
     _tabController.dispose();
     super.dispose();
@@ -182,8 +183,21 @@ class BillScreenState extends State<BillScreen> with SingleTickerProviderStateMi
     );
   }
 
-  Widget _buildBillsList() {
-    return BlocConsumer<BillsBloc, BillState>(
+Widget _buildBillsList() {
+  return RefreshIndicator(
+    backgroundColor: Colors.transparent,
+    color: Colors.white,
+    strokeWidth: 2.w, // STROKE WIDTH
+    displacement: 50.h, // DISPLACEMENT
+    onRefresh: () async {
+      if (_tabController.index != 0) {
+        setState(() {
+          _tabController.index = 0;
+        });
+      }
+      _fetchBills();
+    },
+    child: BlocConsumer<BillsBloc, BillState>(
       listener: (context, state) {
         if (state is BillsError) {
           errorSnackbar(context, state.message);
@@ -228,8 +242,10 @@ class BillScreenState extends State<BillScreen> with SingleTickerProviderStateMi
           ),
         );
       },
-    );
-  }
+    ),
+  );
+}
+
 
   Widget _buildEmptyBillsMessage() {
     return Center(

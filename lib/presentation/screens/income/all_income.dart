@@ -22,6 +22,8 @@ class IncomeScreen extends StatefulWidget {
 
 class IncomeScreenState extends State<IncomeScreen> {
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController(); // Add this
+
   String searchQuery = '';
   String? activeFilter = '';
 
@@ -36,7 +38,9 @@ class IncomeScreenState extends State<IncomeScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
     super.dispose();
+    
   }
 
   void _fetchIncome() {
@@ -49,41 +53,40 @@ class IncomeScreenState extends State<IncomeScreen> {
   }
 
   void _applyDateRangeFilter(String filterType) {
-    final today = DateTime.now();
-    DateTime startDate;
-    DateTime endDate = today;
-    switch (filterType) {
-      case "all":
-        startDate = DateTime(2000, 1, 1, 0, 0, 0, 0, 0);
-        endDate = today;
-        break;
-      case "today":
-        startDate = today;
-        endDate = today;
-        break;
-      case "last week":
-        startDate = today.subtract(Duration(days: 6));
-        break;
-      case "this month":
-        startDate = DateTime(today.year, today.month, 1);
-        break;
-      default:
-        return;
-    }
-    context.read<IncomeBloc>().add(FilterByDateRangeEvent(startDate, endDate));
+  final today = DateTime.now();
+  DateTime startDate;
+  DateTime endDate = today;
+
+  switch (filterType) {
+    case "load all":
+      context.read<IncomeBloc>().add(FetchCompleteIncomeEvent());
+      return; // Return early as we don't need to filter by date.
+    case "today":
+      startDate = today;
+      endDate = today;
+      break;
+
+    case "this month":
+      startDate = DateTime(today.year, today.month, 1);
+      break;
+    default:
+      return;
   }
 
+  context.read<IncomeBloc>().add(FilterByDateRangeEvent(startDate, endDate));
+}
+
   void _toggleFilter(String label) {
-    setState(() {
-      if (activeFilter == label) {
-        activeFilter = null;
-        _clearFilters();
-      } else {
-        activeFilter = label;
-        _applyDateRangeFilter(label.toLowerCase());
-      }
-    });
-  }
+  setState(() {
+    if (activeFilter?.toLowerCase() == label.toLowerCase()) {
+      activeFilter = null;
+      _clearFilters();
+    } else {
+      activeFilter = label; // Store original case
+      _applyDateRangeFilter(label.toLowerCase());
+    }
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -111,7 +114,7 @@ class IncomeScreenState extends State<IncomeScreen> {
         ),
       ),
 
-
+      // MAIN BODY
       body: SafeArea(
         child: Column(
           children: [
@@ -121,6 +124,8 @@ class IncomeScreenState extends State<IncomeScreen> {
           ],
         ),
       ),
+      
+      // FLOATING ACTION BUTTON
       floatingActionButton: FloatingActionButton(
         onPressed: () => showModalBottomSheet(
           context: context,
@@ -151,8 +156,8 @@ class IncomeScreenState extends State<IncomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            flex: 1,
-            child: _buildQuickFilterButton("all"),
+            flex: 2,
+            child: _buildQuickFilterButton("Load all"),
           ),
           SizedBox(width: 7.w), // SPACING
           Expanded(
@@ -160,11 +165,7 @@ class IncomeScreenState extends State<IncomeScreen> {
             child: _buildQuickFilterButton("this month"),
           ),
           SizedBox(width: 7.w), // SPACING
-          Expanded(
-            flex: 2,
-            child: _buildQuickFilterButton("last week"),
-          ),
-          SizedBox(width: 7.w), // SPACING
+
           Expanded(
             flex: 2,
             child: _buildQuickFilterButton("today"),
@@ -175,7 +176,7 @@ class IncomeScreenState extends State<IncomeScreen> {
   }
 
   Widget _buildQuickFilterButton(String label) {
-    bool isActive = activeFilter == label;
+  bool isActive = activeFilter?.toLowerCase() == label.toLowerCase();
     return InkWell(
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
@@ -205,7 +206,7 @@ class IncomeScreenState extends State<IncomeScreen> {
             label,
             style: GoogleFonts.poppins(
               color: Theme.of(context).canvasColor,
-              fontSize: 14.sp, // FONT SIZE
+              fontSize: 12.sp, // FONT SIZE
             ),
           ),
         ),
@@ -247,6 +248,8 @@ class IncomeScreenState extends State<IncomeScreen> {
                   SizedBox(width: 10.0.w), // SPACING
                   Expanded(
                     child: TextField(
+                      controller: _searchController, // Add the controller here
+
                       style: GoogleFonts.poppins(
                         color: Theme.of(context).canvasColor,
                         fontSize: 15.sp, // FONT SIZE
@@ -342,11 +345,13 @@ class IncomeScreenState extends State<IncomeScreen> {
             strokeWidth: 2.w, // STROKE WIDTH
             displacement: 50.h, // DISPLACEMENT
             onRefresh: () async {
-              setState(() {
-                activeFilter = "all";
-              });
-              context.read<IncomeBloc>().add(RefreshIncomeEvent());
-            },
+          setState(() {
+            activeFilter = null; // Reset active filter on pull-down refresh
+            searchQuery = ''; // Also reset search query if needed
+            _searchController.clear(); // Clear the actual text field
+          });
+          context.read<IncomeBloc>().add(RefreshIncomeEvent());
+        },
             child: VsScrollbar(
               scrollbarTimeToFade: Duration(milliseconds: 800), // SCROLLBAR FADE DURATION
               controller: _scrollController, // ATTACH THE SCROLL CONTROLLER

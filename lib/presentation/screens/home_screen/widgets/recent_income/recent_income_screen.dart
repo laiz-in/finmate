@@ -28,7 +28,7 @@ class _RecentIncomeScreenState extends State<RecentIncomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 0), // PADDING
+      padding: EdgeInsets.zero,
       child: FutureBuilder<dartz.Either<String, List<IncomeEntity>>>(
         future: _recentIncomeFuture,
         builder: (context, snapshot) {
@@ -164,14 +164,15 @@ class _RecentIncomeScreenState extends State<RecentIncomeScreen> {
                                     child: Icon(
                                       Symbols.south_west,
                                       color: Colors.green.shade300,
-                                      size: 20.sp, // ICON SIZE
+                                      size: 20.sp,
+                                      weight: 900, // ICON SIZE
                                     ),
                                   ),
                                   Text(
                                     transaction.incomeAmount.toStringAsFixed(1),
                                     overflow: TextOverflow.ellipsis,
                                     style: GoogleFonts.montserrat(
-                                      fontSize: 16.sp, // FONT SIZE
+                                      fontSize: 14.sp, // FONT SIZE
                                       fontWeight: FontWeight.w600,
                                       color: Theme.of(context).canvasColor,
                                     ),
@@ -180,7 +181,7 @@ class _RecentIncomeScreenState extends State<RecentIncomeScreen> {
                               ),
                             ),
                             Expanded(
-                              flex: 6, // 70% OF THE WIDTH
+                              flex: 5, // 70% OF THE WIDTH
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -191,7 +192,7 @@ class _RecentIncomeScreenState extends State<RecentIncomeScreen> {
                                       transaction.incomeRemarks,
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.poppins(
-                                        fontSize: 15.sp, // FONT SIZE
+                                        fontSize: 14.sp, // FONT SIZE
                                         fontWeight: FontWeight.w400,
                                         color: Theme.of(context).canvasColor.withOpacity(0.7),
                                       ),
@@ -208,8 +209,8 @@ class _RecentIncomeScreenState extends State<RecentIncomeScreen> {
                                           timeAgo(transaction.incomeDate),
                                           overflow: TextOverflow.ellipsis,
                                           style: GoogleFonts.poppins(
-                                            fontSize: 12.sp, // FONT SIZE
-                                            fontWeight: FontWeight.w500,
+                                            fontSize: 10.sp, // FONT SIZE
+                                            fontWeight: FontWeight.w400,
                                             color: Theme.of(context).canvasColor.withOpacity(0.7),
                                           ),
                                         ),

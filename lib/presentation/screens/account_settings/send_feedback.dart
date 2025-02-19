@@ -20,36 +20,35 @@ class _SendFeedbackScreenState extends State<SendFeedbackScreen> {
   bool _isLoading = false;
 
   // SEND FEEDBACK LOGIC
-  void _sendFeedback() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      setState(() {
-        _isLoading = true;
-      });
-      String feedback = _feedbackController.text; // UPDATED FEEDBACK TEXT CONTROLLER
-      final sendFeedbackUseCase = sl<SendFeedbackUseCase>();
-      final result = await sendFeedbackUseCase.call(feedback: feedback);
+void _sendFeedback() async {
+  if (_formKey.currentState?.validate() ?? false) {
+    setState(() {
+      _isLoading = true;
+    });
 
-      result.fold(
-        // IF ANY ERROR OCCURRED
-        (l) {
-          errorSnackbar(context, l.toString());
-          setState(() {
-            _isLoading = false;
-          });
-        },
-        // IF FEEDBACK SUBMISSION IS SUCCESS
-        (r) {
-          setState(() {
-            _isLoading = false;
-          });
-          if (mounted) {
-            successSnackbar(context, 'Feedback has been added!');
-            Navigator.pop(context);
-          }
-        },
-      );
+    String feedback = _feedbackController.text;
+    final sendFeedbackUseCase = sl<SendFeedbackUseCase>();
+    final result = await sendFeedbackUseCase.call(feedback: feedback);
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
     }
+
+    result.fold(
+      // ERROR CASE
+      (l) {
+        errorSnackbar(context, l.toString());
+      },
+      // SUCCESS CASE
+      (r) {
+        successSnackbar(context, 'Feedback has been added!');
+        Navigator.pop(context);
+      },
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {

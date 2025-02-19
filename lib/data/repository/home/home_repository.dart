@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:moneyy/data/sources/home/home_firebase_services.dart';
+import 'package:moneyy/data/sources/remote/home/home_firebase_services.dart';
 import 'package:moneyy/domain/entities/auth/user.dart';
 
 class UserRepository {

@@ -66,6 +66,7 @@ class _DeleteBillButtonState extends State<DeleteBillButton> {
                       ),
                     ),
                   ),
+                  
                   // CONFIRM DELETE BUTTON
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(

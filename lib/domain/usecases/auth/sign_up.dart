@@ -8,7 +8,7 @@ import 'package:moneyy/service_locator.dart';
 class SignUpUseCase implements Usecase<Either,UserCreateReq> {
 
   @override
-  Future<Either> call({UserCreateReq? params}) async {
-    return sl<AuthRepository>().signUp(params!);
+  Future<Either> call({UserCreateReq? params, String? password}) async {
+    return sl<AuthRepository>().signUp(params!, password!); // replace 'anotherArgument' with the actual second argument
   }
 }

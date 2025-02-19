@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:moneyy/data/models/bills/user_bills.dart';
-import 'package:moneyy/data/sources/bills/bills_firebase_services.dart';
+import 'package:moneyy/data/sources/remote/bills/bills_firebase_services.dart';
 import 'package:moneyy/domain/entities/bills/bills.dart';
 import 'package:moneyy/domain/repository/bills/bills.dart';
 
@@ -12,25 +12,33 @@ class BillsRepositoryImpl implements BillsRepository {
 
   // FETCH ALL BILLS
   @override
-  Future<Either<String, List<BillsEntity>>> fetchAllBills(page,pageSize) async {
-    try {
-      final List<BillModel> billModels = await _firebaseService.fetchAllBills(pageSize:pageSize);
-      final List<BillsEntity> expensesEntities = billModels.map((model) {
-        return BillsEntity(
-          uidOfBill: model.uidOfBill,
-          billDescription: model.billDescription,
-          billAmount: model.billAmount,
-          billDueDate: model.billDueDate,
-          billTitle: model.billTitle,
-          addedDate: model.addedDate,
-          paidStatus: model.paidStatus
-        );
-      }).toList();
-      return Right(expensesEntities);
-    } catch (e) {
-      return Left("Error fetching all bills: $e");
-    }
+Future<Either<String, List<BillsEntity>>> fetchAllBills(int page, int pageSize) async {
+  try {
+    final eitherResult = await _firebaseService.fetchAllBills(pageSize: pageSize);
+
+    return eitherResult.fold(
+      (error) => Left(error),
+      (billModels) {
+        final List<BillsEntity> billsEntities = billModels.map((model) {
+          return BillsEntity(
+            uidOfBill: model.uidOfBill,
+            billDescription: model.billDescription,
+            billAmount: model.billAmount,
+            billDueDate: model.billDueDate,
+            billTitle: model.billTitle,
+            addedDate: model.addedDate,
+            paidStatus: model.paidStatus
+          );
+        }).toList();
+
+        return Right(billsEntities);
+      }
+    );
+
+  } catch (e) {
+    return Left('Error fetching all bills: $e');
   }
+}
 
 
   // TO ADD A BILL
@@ -49,7 +57,7 @@ class BillsRepositoryImpl implements BillsRepository {
       await _firebaseService.addBill(model);
       return Right(null);
     } catch (e) {
-      return Left("Error adding expense: $e");
+      return Left("Error adding bill: $e");
     }
   }
   
@@ -68,7 +76,7 @@ class BillsRepositoryImpl implements BillsRepository {
         paidStatus: updatedBill.paidStatus,
       );
       await _firebaseService.updateBill(uidOfBill, model);
-      return Right("Bill updated succesfully");
+      return Right("Expense has been added");
     } catch(e){
       return Left("Failed to update the Bill");
     }
@@ -86,16 +94,7 @@ class BillsRepositoryImpl implements BillsRepository {
     }
   }
 
-  // TO TOGGLE PAID STATUS
-  @override
-    Future<Either<String,String>> updatePaidStatus(String uidOfBill) async {
-    try{
-      await _firebaseService.updatePaidStatus(uidOfBill);
-      return Right("Bill updated succesfully");
-    } catch(e){
-      return Left("Failed to update the Bill status");
-    }
-  }
+
 
 
 }

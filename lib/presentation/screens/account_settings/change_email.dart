@@ -119,7 +119,7 @@ class _ResetEmailState extends State<ResetEmail> {
                             color: Theme.of(context).canvasColor,
                             fontWeight: FontWeight.w500,
                             decoration: TextDecoration.none,
-                            fontSize: 20.sp, // FONT SIZE
+                            fontSize: 16.sp, // FONT SIZE
                           ),
                           decoration: InputDecoration(
                             fillColor: Theme.of(context).cardColor,

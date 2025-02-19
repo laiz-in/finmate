@@ -32,6 +32,8 @@ class LoginButtonWidgetState extends State<LoginButtonWidget> {
     return Padding(
       padding: EdgeInsets.all(10.w), // PADDING
       child: InkWell(
+        splashColor: Colors.transparent,
+        hoverColor: Colors.transparent,
         onTap: () async {
           // VALIDATE THE FORM
           if (widget.formKey.currentState!.validate()) {
@@ -53,6 +55,7 @@ class LoginButtonWidgetState extends State<LoginButtonWidget> {
                   isLoading = false; // HIDE ANIMATION ON ERROR
                 });
                 errorSnackbar(context, error.toString());
+
               },
               (success) {
                 setState(() {

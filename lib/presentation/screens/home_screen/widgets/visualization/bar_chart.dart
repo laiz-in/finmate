@@ -123,7 +123,7 @@ class _DaywiseBarchartState extends State<DaywiseBarchart> {
                     child: Text(
                       value.toInt().toString(),
                       style: GoogleFonts.poppins(
-                        fontSize: 8.sp, // FONT SIZE
+                        fontSize: 7.sp, // FONT SIZE
                         color: Theme.of(context).canvasColor,
                       ),
                     ),

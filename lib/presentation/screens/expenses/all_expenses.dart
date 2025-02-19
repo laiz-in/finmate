@@ -14,7 +14,7 @@ import 'package:moneyy/presentation/screens/expenses/filter_expenses_dialogue.da
 import 'package:vs_scrollbar/vs_scrollbar.dart';
 
 class SpendingScreen extends StatefulWidget {
-  const SpendingScreen({Key? key}) : super(key: key);
+  const SpendingScreen({super.key});
 
   @override
   SpendingScreenState createState() => SpendingScreenState();
@@ -22,6 +22,8 @@ class SpendingScreen extends StatefulWidget {
 
 class SpendingScreenState extends State<SpendingScreen> {
   final ScrollController _scrollController = ScrollController();
+    final TextEditingController _searchController = TextEditingController(); // Add this
+
   String searchQuery = '';
   String? activeFilter = '';
 
@@ -36,6 +38,7 @@ class SpendingScreenState extends State<SpendingScreen> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -49,41 +52,41 @@ class SpendingScreenState extends State<SpendingScreen> {
   }
 
   void _applyDateRangeFilter(String filterType) {
-    final today = DateTime.now();
-    DateTime startDate;
-    DateTime endDate = today;
-    switch (filterType) {
-      case "all":
-        startDate = DateTime(2000, 1, 1, 0, 0, 0, 0, 0);
-        endDate = today;
-        break;
-      case "today":
-        startDate = today;
-        endDate = today;
-        break;
-      case "last week":
-        startDate = today.subtract(Duration(days: 6));
-        break;
-      case "this month":
-        startDate = DateTime(today.year, today.month, 1);
-        break;
-      default:
-        return;
-    }
-    context.read<ExpensesBloc>().add(FilterByDateRangeEvent(startDate, endDate));
+  final today = DateTime.now();
+  DateTime startDate;
+  DateTime endDate = today;
+
+  switch (filterType) {
+    case "load all":
+      context.read<ExpensesBloc>().add(FetchCompleteExpensesEvent());
+      return; // Return early as we don't need to filter by date.
+    case "today":
+      startDate = today;
+      endDate = today;
+      break;
+
+    case "this month":
+      startDate = DateTime(today.year, today.month, 1);
+      break;
+    default:
+      return;
   }
 
-  void _toggleFilter(String label) {
-    setState(() {
-      if (activeFilter == label) {
-        activeFilter = null;
-        _clearFilters();
-      } else {
-        activeFilter = label;
-        _applyDateRangeFilter(label.toLowerCase());
-      }
-    });
-  }
+  context.read<ExpensesBloc>().add(FilterByDateRangeEvent(startDate, endDate));
+}
+
+
+void _toggleFilter(String label) {
+  setState(() {
+    if (activeFilter?.toLowerCase() == label.toLowerCase()) {
+      activeFilter = null;
+      _clearFilters();
+    } else {
+      activeFilter = label; // Store original case
+      _applyDateRangeFilter(label.toLowerCase());
+    }
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -110,6 +113,8 @@ class SpendingScreenState extends State<SpendingScreen> {
           ),
         ),
       ),
+
+      // MAIN BODY
       body: SafeArea(
         child: Column(
           children: [
@@ -119,6 +124,8 @@ class SpendingScreenState extends State<SpendingScreen> {
           ],
         ),
       ),
+      
+      // FLOATING ACTION BUTTON
       floatingActionButton: FloatingActionButton(
         onPressed: () => showModalBottomSheet(
           context: context,
@@ -149,8 +156,8 @@ class SpendingScreenState extends State<SpendingScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            flex: 1,
-            child: _buildQuickFilterButton("all"),
+            flex: 2,
+            child: _buildQuickFilterButton("Load all"),
           ),
           SizedBox(width: 7.w), // SPACING
           Expanded(
@@ -158,11 +165,7 @@ class SpendingScreenState extends State<SpendingScreen> {
             child: _buildQuickFilterButton("this month"),
           ),
           SizedBox(width: 7.w), // SPACING
-          Expanded(
-            flex: 2,
-            child: _buildQuickFilterButton("last week"),
-          ),
-          SizedBox(width: 7.w), // SPACING
+
           Expanded(
             flex: 2,
             child: _buildQuickFilterButton("today"),
@@ -173,43 +176,43 @@ class SpendingScreenState extends State<SpendingScreen> {
   }
 
   Widget _buildQuickFilterButton(String label) {
-    bool isActive = activeFilter == label;
-    return InkWell(
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      onTap: () => _toggleFilter(label.toLowerCase()),
-      child: Container(
-        padding: EdgeInsets.only(top: 12.h, bottom: 12.h), // PADDING
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromARGB(255, 65, 64, 64).withOpacity(0.10),
-              offset: const Offset(0, 4),
-              blurRadius: 7.0.r, // BLUR RADIUS
-              spreadRadius: 1.0.r, // SPREAD RADIUS
-            ),
-          ],
-          color: Theme.of(context).primaryColor,
-          borderRadius: BorderRadius.all(Radius.circular(15.r)), // RADIUS
-          border: isActive
-              ? Border.all(
-                  color: Theme.of(context).canvasColor.withOpacity(0.3),
-                  width: 1.w, // BORDER WIDTH
-                )
-              : null,
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: GoogleFonts.poppins(
-              color: Theme.of(context).canvasColor,
-              fontSize: 14.sp, // FONT SIZE
-            ),
+  bool isActive = activeFilter?.toLowerCase() == label.toLowerCase();
+  return InkWell(
+    splashColor: Colors.transparent,
+    highlightColor: Colors.transparent,
+    onTap: () => _toggleFilter(label),
+    child: Container(
+      padding: EdgeInsets.only(top: 12.h, bottom: 12.h),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: const Color.fromARGB(255, 65, 64, 64).withOpacity(0.10),
+            offset: const Offset(0, 4),
+            blurRadius: 7.0.r,
+            spreadRadius: 1.0.r,
+          ),
+        ],
+        color: Theme.of(context).primaryColor,
+        borderRadius: BorderRadius.all(Radius.circular(15.r)),
+        border: isActive
+            ? Border.all(
+                color: Theme.of(context).canvasColor.withOpacity(0.3),
+                width: 1.w,
+              )
+            : null,
+      ),
+      child: Center(
+        child: Text(
+          label,
+          style: GoogleFonts.poppins(
+            color: Theme.of(context).canvasColor,
+            fontSize: 12.sp,
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildSearchAndFilterBar() {
     return Container(
@@ -245,10 +248,12 @@ class SpendingScreenState extends State<SpendingScreen> {
                   SizedBox(width: 10.0.w), // SPACING
                   Expanded(
                     child: TextField(
+                      controller: _searchController, // Add the controller here
+
                       style: GoogleFonts.poppins(
                         color: Theme.of(context).canvasColor,
                         fontSize: 15.sp, // FONT SIZE
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w400,
                       ),
                       cursorColor: Theme.of(context).canvasColor.withOpacity(0.5),
                       onChanged: (value) {
@@ -340,11 +345,13 @@ class SpendingScreenState extends State<SpendingScreen> {
             strokeWidth: 2.w, // STROKE WIDTH
             displacement: 50.h, // DISPLACEMENT
             onRefresh: () async {
-              setState(() {
-                activeFilter = "all";
-              });
-              context.read<ExpensesBloc>().add(RefreshExpensesEvent());
-            },
+          setState(() {
+            activeFilter = null; // Reset active filter on pull-down refresh
+            searchQuery = ''; // Also reset search query if needed
+            _searchController.clear(); // Clear the actual text field
+          });
+          context.read<ExpensesBloc>().add(RefreshExpensesEvent());
+        },
             child: VsScrollbar(
               scrollbarTimeToFade: Duration(milliseconds: 800), // SCROLLBAR FADE DURATION
               controller: _scrollController, // ATTACH THE SCROLL CONTROLLER

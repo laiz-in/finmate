@@ -5,46 +5,55 @@ import './auth_event.dart';
 import './auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+
+  
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   AuthBloc() : super(AuthInitial()) {
 
-    // when AuthCheckRequested
+
+// ON AUTH CHECK REQUESTED
 on<AuthCheckRequested>((event, emit) async {
-  emit(AuthLoading()); // Emit loading state first
+  emit(AuthLoading());
   try {
-    final user = _auth.currentUser;
 
+
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final user = auth.currentUser;
+
+    //IF USER IS NOT NULL
     if (user != null) {
-      // Emit a state to indicate that we're validating the user's auth state
-      emit(AuthLoading());
 
-      // Force the user authentication state to reload from Firebase servers
-      await user.reload();
-      final refreshedUser = _auth.currentUser;
+      // CHECKS IF EMAIL IS VERIFIED
+      if (user.emailVerified) {
+        emit(AuthAuthenticated(user: user));
+      }
 
-      // Check if the user still exists and email is verified
-      if (refreshedUser != null && refreshedUser.emailVerified) {
-        emit(AuthAuthenticated(user: refreshedUser));
-      } else {
+      // IF EMAIL IS NOT VERIFIED
+      else {
         emit(AuthUnauthenticated());
       }
-    } else {
-      emit(AuthUnauthenticated());
     }
-  } catch (error) {
-    emit(AuthUnauthenticated());
-  }
+
+    // IF USER IS NULL
+    else {
+    emit(AuthFailure(message: "Authentication failed"));
+    }
+
+
+    } catch (error) {
+      emit(AuthFailure(message: "Authentication failed: ${error.toString()}"));
+    }
 });
 
 
 
-    
+    // IF THE USER IS LOGGED IN
     on<UserLoggedIn>((event, emit) async {
       try {
         emit(AuthAuthenticated(user: _auth.currentUser!));
       } catch (error) {
-        print("error in catch bloc bloc/authentication/auth_bloc.dart LINE NUMBER: 47");
+        emit(AuthUnauthenticated());
       }
     });
 
@@ -53,7 +62,7 @@ on<AuthCheckRequested>((event, emit) async {
         await _auth.signOut();
         emit(AuthUnauthenticated());
       } catch (error) {
-        print("error in catch bloc bloc/authentication/auth_bloc.dart LINE NUMBER: 56");
+        emit(AuthUnauthenticated());
       }
     });
   }

@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+import 'package:moneyy/data/sources/remote/home/home_firebase_services.dart';
 import 'package:moneyy/domain/entities/auth/user.dart';
 
-import '../../../data/sources/home/home_firebase_services.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -19,7 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
   UserEntity? _user; // HOLDS USER DATA
   bool _isLoading = true;
 
-  final FirebaseHomeService _firebaseHomeService = FirebaseHomeService();
+final FirebaseHomeService _firebaseHomeService = FirebaseHomeService();
 
   @override
   void initState() {

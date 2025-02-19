@@ -31,28 +31,26 @@ class _TitleCardWidgetState extends State<TitleCardWidget> {
   void initState() {
     super.initState();
     _fetchTodaySpending();
-    _fetchThisMonthSpending();
-    _fetchThisMonthIncome();
     _fetchTodayTotalIncome();
+    _fetchThisMonthIncome();
+    _listenToThisMonthSpending();
   }
 
-  Future<void> _fetchThisMonthSpending() async {
+    void _listenToThisMonthSpending() {
     if (widget.userId != null) {
-      try {
-        double totalmonthly = await firebaseUtils.getMonthTotalSpending( widget.userId!);
-
+      firebaseUtils.getMonthTotalSpending(widget.userId!).listen((total) {
         if (mounted) {
           setState(() {
-            thisMonthSpending = totalmonthly;
+            thisMonthSpending = total;
           });
         }
-      } catch (e) {
+      }, onError: (e) {
         if (mounted) {
           errorSnackbar(context, "Error while loading monthly spending");
-        }      }
+        }
+      });
     }
   }
-
   Future<void> _fetchThisMonthIncome() async {
     if (widget.userId != null) {
       try {
@@ -141,7 +139,7 @@ class _TitleCardWidgetState extends State<TitleCardWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
+          
             
  // MONTHLY TEXT
   Padding(
@@ -342,31 +340,31 @@ Padding(
           Expanded(
             child: _buildIconColumn(
               context,
+              icon: Symbols.swap_vert,
+              label: 'Liability',
+              onPressed: () {
+                // Navigator.pushNamed(context, AppRoutes.spendingScreen);
+              },
+            ),
+          ),
+
+          Expanded(
+            child: _buildIconColumn(
+              context,
+              icon: Symbols.bar_chart,
+              label: 'Stats',
+              onPressed: () {
+                // Navigator.pushNamed(context, AppRoutes.billScreen);
+              },
+            ),
+          ),
+
+
+          Expanded(
+            child: _buildIconColumn(
+              context,
               icon: Symbols.diversity_3,
-              label: 'Personals',
-              onPressed: () {
-                // Navigator.pushNamed(context, AppRoutes.spendingScreen);
-              },
-            ),
-          ),
-
-          Expanded(
-            child: _buildIconColumn(
-              context,
-              icon: Symbols.sell_rounded,
-              label: 'Bills',
-              onPressed: () {
-                // Navigator.pushNamed(context, AppRoutes.spendingScreen);
-              },
-            ),
-          ),
-
-
-          Expanded(
-            child: _buildIconColumn(
-              context,
-              icon: Symbols.pending_actions_rounded,
-              label: 'Reminders',
+              label: 'Groups',
               onPressed: () {
                 // Navigator.pushNamed(context, AppRoutes.spendingScreen);
               },
@@ -382,7 +380,7 @@ Padding(
 ),
 ),
 );
-  }
+}
 
   Padding _buildIconColumn(BuildContext context,
       {required IconData icon, required String label, required VoidCallback onPressed}) {
@@ -396,7 +394,7 @@ Padding(
               icon,
               color: Theme.of(context).canvasColor.withOpacity(0.6),
               size: 30.sp,
-              weight: 900,
+              weight: 600,
             ),
             SizedBox(height: 5.h),
             Text(

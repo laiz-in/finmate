@@ -19,7 +19,7 @@ class SplashScreenState extends State<SplashScreen> {
   // Function to navigate to home after delay
   Future<void> _navigateToHome() async {
 
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 2));
     if (mounted) {
       Navigator.pushReplacement(
         context,

@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:moneyy/bloc/expenses/expenses_bloc.dart';
+import 'package:moneyy/bloc/network/network_bloc.dart';
 import 'package:moneyy/bloc/themes/theme_cubit.dart';
 import 'package:moneyy/data/local/theme_storage.dart';
 import 'package:moneyy/data/repository/auth/auth_repository_impl.dart';
@@ -8,13 +9,13 @@ import 'package:moneyy/data/repository/expenses/expenses_repository_impl.dart';
 import 'package:moneyy/data/repository/home/home_repository.dart'; // Import UserRepository
 import 'package:moneyy/data/repository/income/income_repository_impl.dart';
 import 'package:moneyy/data/repository/settings/settings_repository_impl.dart';
-import 'package:moneyy/data/sources/auth/auth_firebase_service.dart';
-import 'package:moneyy/data/sources/bills/bills_firebase_services.dart';
-import 'package:moneyy/data/sources/connectivity/connectivity_services.dart';
-import 'package:moneyy/data/sources/expenses/expenses_firebase_services.dart';
-import 'package:moneyy/data/sources/home/home_firebase_services.dart'; // Import FirebaseHomeService
-import 'package:moneyy/data/sources/income/income_firebase_services.dart';
-import 'package:moneyy/data/sources/settings/settings_firebase_services.dart';
+import 'package:moneyy/data/sources/remote/auth/auth_firebase_service.dart';
+import 'package:moneyy/data/sources/remote/bills/bills_firebase_services.dart';
+import 'package:moneyy/data/sources/remote/connectivity/connectivity_services.dart';
+import 'package:moneyy/data/sources/remote/expenses/expenses_firebase_services.dart';
+import 'package:moneyy/data/sources/remote/home/home_firebase_services.dart';
+import 'package:moneyy/data/sources/remote/income/income_firebase_services.dart';
+import 'package:moneyy/data/sources/remote/settings/settings_firebase_services.dart';
 import 'package:moneyy/domain/repository/auth/auth.dart';
 import 'package:moneyy/domain/repository/bills/bills.dart';
 import 'package:moneyy/domain/repository/connectivity/connectivity_service.dart';
@@ -28,18 +29,19 @@ import 'package:moneyy/domain/usecases/auth/sign_in.dart';
 import 'package:moneyy/domain/usecases/auth/sign_out.dart';
 import 'package:moneyy/domain/usecases/auth/sign_up.dart';
 import 'package:moneyy/domain/usecases/bills/add_bill_usecase.dart';
-import 'package:moneyy/domain/usecases/bills/change_paid_status_usecase.dart';
 import 'package:moneyy/domain/usecases/bills/delete_bill_usecase.dart';
 import 'package:moneyy/domain/usecases/bills/total_bills_usecase.dart';
 import 'package:moneyy/domain/usecases/bills/update_bill_usecase.dart';
 import 'package:moneyy/domain/usecases/connectivity/connectivity_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/add_expense_usecase.dart';
+import 'package:moneyy/domain/usecases/expenses/complete_expenses_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/delete_expenses_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/last_seven_day_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/last_three_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/total_expenses_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/update_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/income/add_income_usecase.dart';
+import 'package:moneyy/domain/usecases/income/complete_income_usecase.dart';
 import 'package:moneyy/domain/usecases/income/delete_income_usecase.dart';
 import 'package:moneyy/domain/usecases/income/last_three_income_usecase.dart';
 import 'package:moneyy/domain/usecases/income/this_month_total_income.dart';
@@ -59,7 +61,6 @@ Future<void> initializeDependencies() async {
 
   // BILLS RELATED
   sl.registerLazySingleton(() => UpdateBillUsecase(sl()));
-  sl.registerLazySingleton(() => UpdatePaidStatusUsecase(sl()));
   sl.registerLazySingleton(() => DeleteBillUsecase(sl()));
   sl.registerLazySingleton(() => AddBillUsecase(sl()));
   sl.registerLazySingleton(() => TotalBillsUsecase(sl()));
@@ -76,6 +77,7 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton(() => IncomeFirebaseService());
   sl.registerLazySingleton<IncomeRepository>(() => IncomeRepositoryImpl(sl()));
   sl.registerLazySingleton(() => TotalIncomeUseCase(sl()));
+  sl.registerLazySingleton(() => CompleteIncomeUseCase(sl()));
   sl.registerLazySingleton(() => LastThreeIncomeUseCase(sl()));
   sl.registerLazySingleton(() => ThisMonthToatalIncomeUseCase(sl()));
   sl.registerLazySingleton(() => ThisWeekToatalIncomeUseCase(sl()));
@@ -94,12 +96,13 @@ Future<void> initializeDependencies() async {
   sl.registerLazySingleton(() => ExpensesFirebaseService());
   sl.registerLazySingleton<ExpensesRepository>(() => ExpensesRepositoryImpl(sl()));
   sl.registerLazySingleton(() => TotalExpensesUseCase(sl()));
+  sl.registerLazySingleton(() => CompleteExpensesUsecase(sl()));
   sl.registerLazySingleton(() => LastThreeExpensesUseCase(sl()));
   sl.registerLazySingleton(() => AddExpensesUseCase(sl()));
-  sl.registerFactory(() => ExpensesBloc(sl(), sl()));
+  sl.registerFactory(() => ExpensesBloc(sl(), sl(),sl()));
 
 
-  // Register Authentication-related services
+  // AUTH RELATED
   sl.registerSingleton<AuthFirebaseService>(AuthFirebaseServiceImpl(),);
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl(),);
   sl.registerSingleton<SignInUseCase>(SignInUseCase(),);
@@ -108,7 +111,7 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<AccountDeletionUseCase>(AccountDeletionUseCase(),);
 
 
-  // Register settings page related services
+  // SETTINGS RELATED
   sl.registerSingleton<SettingsRepository>(SettingsRepositoryImpl());
   sl.registerSingleton<SettingsFirebaseService>(SettingsFirebaseServiceImpl());
   sl.registerSingleton<ResetDailyLimitUseCase>(ResetDailyLimitUseCase(),);
@@ -119,13 +122,13 @@ Future<void> initializeDependencies() async {
   sl.registerSingleton<ResetNameUseCase>(ResetNameUseCase(),);
 
   
-  // Theme change related services
+  // THEME CHANGE RELATED
   sl.registerFactory<ThemeCubit>(() => ThemeCubit(ThemeStorage()));
-
-
-   // Register FirebaseHomeService directly
+  sl.registerSingleton<ConnectivityCubit>(
+    ConnectivityCubit(sl<GetConnectivityStatus>()), // Ensure GetConnectivityStatus is registered
+  );
   sl.registerSingleton<FirebaseHomeService>(
-    FirebaseHomeService(), // No need for FirebaseHomeServiceImpl
+    FirebaseHomeService(), // Pass ConnectivityCubit instance
   );
 
   sl.registerSingleton<UserRepository>(

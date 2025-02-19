@@ -14,30 +14,42 @@ class AuthGuard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ConnectivityCubit, bool>(
-      builder: (context, isConnected) {
-        print("CAME TO AUTH GUARD");
-        // Check the network connection status
-        if (!isConnected) {
-          print("came to no internet screen");
-          return NoInternetScreen(); // Show NoInternetScreen when disconnected
-        }
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, authState) {
 
-        // If connected, handle authentication state
-        return BlocBuilder<AuthBloc, AuthState>(
-          builder: (context, authState) {
-            if (authState is AuthLoading) {
-              print("AUTH LAODING");
-              return SplashScreen();
-            } else if (authState is AuthAuthenticated) {
-              print("AUTHENTICATED");
-              return HomeScreen();
-            } else if (authState is AuthUnauthenticated) {
-              print("NOT AUTHENTICATED");
-              return LoginScreen();
-            } else {
-              return NoInternetScreen(); // Fallback in case of unexpected state
+        return BlocBuilder<ConnectivityCubit, bool>(
+          builder: (context, isConnected) {
+            
+
+            // IF AUTHENTICATION FAILED AND NO INTERNET CONNECTION
+            if (authState is AuthFailure && !isConnected) {
+              return NoInternetScreen();
             }
+
+
+            // WHEN AUTHENTICATON LOADING
+            if (authState is AuthLoading) {
+              return SplashScreen();
+            }
+
+            // AUTHENTICATED
+            if (authState is AuthAuthenticated) {
+              return HomeScreen();
+            }
+
+
+            // DEVICE IS NOT AUTHENTICATED
+            if (authState is AuthUnauthenticated || authState is AuthFailure) {
+              return LoginScreen();
+            }
+
+
+            // AUTHENTICATION FAILED
+            if (authState is AuthFailure) {
+              return LoginScreen();
+            }
+
+            return SplashScreen();
           },
         );
       },

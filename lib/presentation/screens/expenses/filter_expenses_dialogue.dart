@@ -1,7 +1,10 @@
+// FILEPATH: /C:/Users/Hp/Desktop/moneyy - Copy/moneyy/lib/presentation/screens/expenses/filter_expenses_dialogue.dart
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // IMPORT SCREENUTIL
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:moneyy/core/colors/colors.dart';
 
 class FilterBottomSheet extends StatefulWidget {
@@ -46,73 +49,73 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(30.0)),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)), // USE SCREENUTIL FOR BORDER RADIUS
       ),
-      padding: const EdgeInsets.fromLTRB(30,15,30,30),
+      padding: EdgeInsets.fromLTRB(30.w, 15.h, 30.w, 30.h), // USE SCREENUTIL FOR PADDING
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-
-      
-              Center(
-                child: Container(
-                  height: 3,
-                  width:100 ,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).canvasColor.withOpacity(0.3)
-                  ),
+            Center(
+              child: Container(
+                height: 3.h, // USE SCREENUTIL FOR HEIGHT
+                width: 100.w, // USE SCREENUTIL FOR WIDTH
+                decoration: BoxDecoration(
+                  color: Theme.of(context).canvasColor.withOpacity(0.3),
                 ),
               ),
+            ),
 
-            SizedBox(height: 20,),
-            // Sort by amount toggle
+            SizedBox(height: 20.h), // USE SCREENUTIL FOR HEIGHT
+
+            // SORT BY AMOUNT TOGGLE
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Sort by amount',
                   style: GoogleFonts.poppins(
-                      color: Theme.of(context).canvasColor,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14),
+                    color: Theme.of(context).canvasColor,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14.sp, // USE SCREENUTIL FOR FONT SIZE
+                  ),
                 ),
                 CupertinoSwitch(
                   value: _sortByAmountEnabled,
-                  onChanged: (value) =>
-                      setState(() => _sortByAmountEnabled = value),
+                  onChanged: (value) => setState(() => _sortByAmountEnabled = value),
                   activeColor: AppColors.foregroundColor,
                   thumbColor: Color.fromARGB(255, 231, 230, 230),
                 ),
               ],
             ),
 
-            const SizedBox(height: 5),
+            SizedBox(height: 5.h), // USE SCREENUTIL FOR HEIGHT
 
             if (_sortByAmountEnabled)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _buildSortButton('Low to high', true),
-                  SizedBox(width: 10),
+                  SizedBox(width: 10.w), // USE SCREENUTIL FOR WIDTH
                   _buildSortButton('High to low', false),
                 ],
               ),
 
-            const SizedBox(height: 10),
+            SizedBox(height: 10.h), // USE SCREENUTIL FOR HEIGHT
             Divider(color: Theme.of(context).canvasColor.withOpacity(0.5)),
-            const SizedBox(height: 10),
+            SizedBox(height: 10.h), // USE SCREENUTIL FOR HEIGHT
 
-            // Filter by date toggle
+            // FILTER BY DATE TOGGLE
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Filter by date',
                   style: GoogleFonts.poppins(
-                      color: Theme.of(context).canvasColor,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14),
+                    color: Theme.of(context).canvasColor,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14.sp, // USE SCREENUTIL FOR FONT SIZE
+                  ),
                 ),
                 CupertinoSwitch(
                   value: _filterByDateEnabled,
@@ -126,7 +129,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10.h), // USE SCREENUTIL FOR HEIGHT
             if (_filterByDateEnabled)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -136,7 +139,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                       _startDate = picked;
                     });
                   }),
-                  SizedBox(width: 10),
+                  SizedBox(width: 10.w), // USE SCREENUTIL FOR WIDTH
                   _buildDateButton('To', _endDate, (picked) {
                     setState(() {
                       _endDate = picked;
@@ -145,20 +148,21 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 ],
               ),
             
-            const SizedBox(height:12),
+            SizedBox(height: 12.h), // USE SCREENUTIL FOR HEIGHT
             Divider(color: Theme.of(context).canvasColor.withOpacity(0.5)),
-            const SizedBox(height: 6),
+            SizedBox(height: 6.h), // USE SCREENUTIL FOR HEIGHT
 
-            // Filter by category toggle
+            // FILTER BY CATEGORY TOGGLE
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   'Filter by Category',
                   style: GoogleFonts.poppins(
-                      color: Theme.of(context).canvasColor,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14),
+                    color: Theme.of(context).canvasColor,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14.sp, // USE SCREENUTIL FOR FONT SIZE
+                  ),
                 ),
                 CupertinoSwitch(
                   value: _filterByCategoryEnabled,
@@ -172,24 +176,24 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10.h), // USE SCREENUTIL FOR HEIGHT
             if (_filterByCategoryEnabled)
               _buildCategoryDropdown(),
-            const SizedBox(height: 7),
+            SizedBox(height: 7.h), // USE SCREENUTIL FOR HEIGHT
             Divider(color: Theme.of(context).canvasColor.withOpacity(0.5)),
-            const SizedBox(height: 12),
+            SizedBox(height: 12.h), // USE SCREENUTIL FOR HEIGHT
 
-            // Clear filters and Apply buttons
+            // CLEAR FILTERS AND APPLY BUTTONS
             Row(
               children: [
-                // Clear filters button container
+                // CLEAR FILTERS BUTTON CONTAINER
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
-                      border: Border.all(color: Theme.of(context).canvasColor),
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      border: Border.all(color: Colors.red.shade100),
+                      borderRadius: BorderRadius.all(Radius.circular(15.r)), // USE SCREENUTIL FOR BORDER RADIUS
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 5,),
+                    padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 5.w), // USE SCREENUTIL FOR PADDING
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -201,7 +205,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                           child: Text(
                             'Clear all',
                             style: GoogleFonts.poppins(
-                              fontSize: 15,
+                              fontSize: 15.sp, // USE SCREENUTIL FOR FONT SIZE
                               color: Theme.of(context).canvasColor,
                               fontWeight: FontWeight.w400,
                             ),
@@ -210,24 +214,24 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                         Icon(
                           Icons.close,
                           color: Theme.of(context).canvasColor,
-                          size: 20,
+                          size: 20.sp, // USE SCREENUTIL FOR SIZE
                         ),
                       ],
                     ),
                   ),
                 ),
 
-                // Spacing between buttons
-                const SizedBox(width: 8),
+                // SPACING BETWEEN BUTTONS
+                SizedBox(width: 8.w), // USE SCREENUTIL FOR WIDTH
 
-                // Apply filters button container
+                // APPLY FILTERS BUTTON CONTAINER
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).canvasColor,
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                      borderRadius: BorderRadius.all(Radius.circular(15.r)), // USE SCREENUTIL FOR BORDER RADIUS
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    padding: EdgeInsets.symmetric(vertical: 2.h), // USE SCREENUTIL FOR PADDING
                     child: TextButton(
                       onPressed: () {
                         if (_sortByAmountEnabled) {
@@ -244,7 +248,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                       child: Text(
                         'Apply',
                         style: GoogleFonts.poppins(
-                          fontSize: 16,
+                          fontSize: 16.sp, // USE SCREENUTIL FOR FONT SIZE
                           color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.w500,
                         ),
@@ -254,6 +258,23 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 ),
               ],
             ),
+          
+            SizedBox(height: 10.h), // USE SCREENUTIL FOR HEIGHT
+            Row(
+              children: [
+                Icon(Symbols.info, color: Theme.of(context).canvasColor.withOpacity(0.6), size: 15.sp), // USE SCREENUTIL FOR SIZE
+                SizedBox(width: 10.w), // USE SCREENUTIL FOR WIDTH
+                Text(
+                  'Please load all data for effective search',
+                  style: GoogleFonts.poppins(
+                    fontSize: 12.sp, // USE SCREENUTIL FOR FONT SIZE
+                    color: Theme.of(context).canvasColor.withOpacity(0.4),
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 5.h), // USE SCREENUTIL FOR HEIGHT
           ],
         ),
       ),
@@ -267,23 +288,20 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           _sortAscending = ascending;
         });
       },
-      
       style: TextButton.styleFrom(
         shape: RoundedRectangleBorder(
-          
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(10.r), // USE SCREENUTIL FOR BORDER RADIUS
         ),
-        
         backgroundColor: _sortAscending == ascending
             ? Theme.of(context).canvasColor
             : Theme.of(context).canvasColor.withOpacity(0.2),
-        minimumSize: const Size(125, 30),
+        minimumSize: Size(125.w, 30.h), // USE SCREENUTIL FOR SIZE
       ),
       child: Text(
         text,
         style: GoogleFonts.poppins(
           color: Theme.of(context).primaryColor,
-          fontSize: 12,
+          fontSize: 12.sp, // USE SCREENUTIL FOR FONT SIZE
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -292,8 +310,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   Widget _buildDateButton(String label, DateTime? date, Function(DateTime) onDatePicked) {
     return SizedBox(
-      width: 125.0,
-      height: 32.0,
+      width: 125.w, // USE SCREENUTIL FOR WIDTH
+      height: 32.h, // USE SCREENUTIL FOR HEIGHT
       child: TextButton(
         onPressed: () async {
           DateTime? picked = await showDatePicker(
@@ -309,16 +327,17 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
         style: TextButton.styleFrom(
           backgroundColor: Theme.of(context).canvasColor,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(10.r), // USE SCREENUTIL FOR BORDER RADIUS
           ),
         ),
         child: Text(
           date == null ? label : DateFormat('d/M/y').format(date),
           textAlign: TextAlign.center,
           style: GoogleFonts.poppins(
-              color: Theme.of(context).primaryColor,
-              fontSize: 12,
-              fontWeight: FontWeight.w500),
+            color: Theme.of(context).primaryColor,
+            fontSize: 12.sp, // USE SCREENUTIL FOR FONT SIZE
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );
@@ -327,22 +346,22 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
   Widget _buildCategoryDropdown() {
     return Container(
       width: double.infinity,
-      height: 40,
+      height: 40.h, // USE SCREENUTIL FOR HEIGHT
       decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).canvasColor,width: 1),
+        border: Border.all(color: Theme.of(context).canvasColor, width: 1.w), // USE SCREENUTIL FOR BORDER WIDTH
         color: Theme.of(context).primaryColor,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(15.r), // USE SCREENUTIL FOR BORDER RADIUS
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(10,8,8,8),
+              padding: EdgeInsets.fromLTRB(10.w, 8.h, 8.w, 8.h), // USE SCREENUTIL FOR PADDING
               child: DropdownButton<String>(
                 dropdownColor: Theme.of(context).scaffoldBackgroundColor,
-                icon: Icon(Icons.arrow_forward_ios,color: Theme.of(context).primaryColor,size: 15,),
-                borderRadius: BorderRadius.circular(20),
+                icon: Icon(Icons.arrow_forward_ios, color: Theme.of(context).primaryColor, size: 15.sp), // USE SCREENUTIL FOR SIZE
+                borderRadius: BorderRadius.circular(20.r), // USE SCREENUTIL FOR BORDER RADIUS
                 value: _category,
                 underline: Container(),
                 style: GoogleFonts.poppins(color: Theme.of(context).primaryColor),
@@ -350,20 +369,21 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                   'Select Category',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
-                      color: Theme.of(context).canvasColor,
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500),
+                    color: Theme.of(context).canvasColor,
+                    fontSize: 15.sp, // USE SCREENUTIL FOR FONT SIZE
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
                 items: categories.map((String category) {
                   return DropdownMenuItem<String>(
                     value: category,
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0.0, 0, 0, 0),
+                      padding: EdgeInsets.fromLTRB(0.w, 0.h, 0.w, 0.h), // USE SCREENUTIL FOR PADDING
                       child: Text(
                         category,
                         style: GoogleFonts.poppins(
                           color: Theme.of(context).canvasColor,
-                          fontSize: 15.0,
+                          fontSize: 15.sp, // USE SCREENUTIL FOR FONT SIZE
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -378,15 +398,15 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               ),
             ),
           ),
-
-        Transform.rotate(
-          angle: 1.5708, // 90 degrees in radians
-          child: Icon(
-            Icons.arrow_forward_ios,
-            size: 17,
-            color: Theme.of(context).canvasColor,
+          Transform.rotate(
+            angle: 1.5708, // 90 DEGREES IN RADIANS
+            child: Icon(
+              Icons.arrow_forward_ios,
+              size: 17.sp, // USE SCREENUTIL FOR SIZE
+              color: Theme.of(context).canvasColor,
+            ),
           ),
-        ),          SizedBox(width: 10,)
+          SizedBox(width: 10.w), // USE SCREENUTIL FOR WIDTH
         ],
       ),
     );

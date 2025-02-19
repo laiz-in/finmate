@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:moneyy/data/models/expenses/user_expenses.dart';
-import 'package:moneyy/data/sources/expenses/expenses_firebase_services.dart';
+import 'package:moneyy/data/sources/remote/expenses/expenses_firebase_services.dart';
 import 'package:moneyy/domain/entities/spending/expenses.dart';
 import 'package:moneyy/domain/repository/total_spendings/expenses.dart';
 
@@ -8,6 +8,29 @@ class ExpensesRepositoryImpl implements ExpensesRepository {
   final ExpensesFirebaseService _firebaseService;
 
   ExpensesRepositoryImpl(this._firebaseService);
+
+  // FETCH COMPELTE EXPENSES
+  @override
+  Future<Either<String, List<ExpensesEntity>>> fetchCompleteExpenses() async {
+    try {
+      final List<ExpensesModel> expensesModels = await _firebaseService.fetchCompleteExpenses();
+      final List<ExpensesEntity> expensesEntities = expensesModels.map((model) {
+        return ExpensesEntity(
+          uidOfTransaction: model.uidOfTransaction,
+          spendingDescription: model.spendingDescription,
+          spendingCategory: model.spendingCategory,
+          spendingAmount: model.spendingAmount,
+          spendingDate: model.spendingDate,
+          createdAt: model.createdAt,
+        );
+      }).toList();
+      return Right(expensesEntities);
+    } catch (e) {
+      return Left("Error fetching complete expenses: $e");
+    }
+  }
+
+
 
 
   // FETCH ALL EXPENSES
@@ -113,6 +136,7 @@ class ExpensesRepositoryImpl implements ExpensesRepository {
       final expensesPerDay = await _firebaseService.fetchLastSevenDayExpenses();
       return Right(expensesPerDay);
     } catch (e) {
+      print(e);
       return Left('Error fetching last seven day expenses: $e');
     }
   }

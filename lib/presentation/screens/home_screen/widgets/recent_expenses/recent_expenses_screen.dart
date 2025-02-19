@@ -98,10 +98,10 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
     }
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 0), // PADDING
+      padding: EdgeInsets.zero,
       child: Container(
         width: double.infinity,
-        padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 3.h), // PADDING
+        padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 3.h),
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
@@ -168,33 +168,36 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                                       Symbols.north_east_rounded,
                                       color: Colors.red.shade300,
                                       size: 20.sp, // ICON SIZE
+                                      weight: 600,
                                     ),
                                   ),
-                                  Text(
-                                    transaction.spendingAmount.toStringAsFixed(1),
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.montserrat(
-                                      fontSize: 16.sp, // FONT SIZE
-                                      fontWeight: FontWeight.w600,
-                                      color: Theme.of(context).canvasColor,
+                                  Flexible(
+                                    child: Text(
+                                      transaction.spendingAmount.toStringAsFixed(1),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.montserrat(
+                                        fontSize: 14.sp, // FONT SIZE
+                                        fontWeight: FontWeight.w600,
+                                        color: Theme.of(context).canvasColor,
+                                      ),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
                             Expanded(
-                              flex: 6, // 70% OF THE WIDTH
+                              flex: 5, // 70% OF THE WIDTH
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   // DESCRIPTION TEXT
                                   Expanded(
-                                    flex: 1, // 35% OF THE REMAINING WIDTH
+                                    flex: 7, // 35% OF THE REMAINING WIDTH
                                     child: Text(
                                       transaction.spendingDescription,
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.poppins(
-                                        fontSize: 15.sp, // FONT SIZE
+                                        fontSize: 14.sp, // FONT SIZE
                                         fontWeight: FontWeight.w400,
                                         color: Theme.of(context).canvasColor.withOpacity(0.7),
                                       ),
@@ -203,17 +206,19 @@ class _RecentExpensesScreenState extends State<RecentExpensesScreen> {
                                   SizedBox(width: 10.w), // SPACING
                                   // TIME AGO TEXT
                                   Expanded(
-                                    flex: 1, // 35% OF THE REMAINING WIDTH
+                                    flex: 3, // 35% OF THE REMAINING WIDTH
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        Text(
-                                          timeAgo(transaction.spendingDate),
-                                          overflow: TextOverflow.ellipsis,
-                                          style: GoogleFonts.poppins(
-                                            fontSize: 12.sp, // FONT SIZE
-                                            fontWeight: FontWeight.w500,
-                                            color: Theme.of(context).canvasColor.withOpacity(0.7),
+                                        Flexible(
+                                          child: Text(
+                                            timeAgo(transaction.spendingDate),
+                                            overflow: TextOverflow.ellipsis,
+                                            style: GoogleFonts.poppins(
+                                              fontSize: 10.sp, // FONT SIZE
+                                              fontWeight: FontWeight.w400,
+                                              color: Theme.of(context).canvasColor.withOpacity(0.7),
+                                            ),
                                           ),
                                         ),
                                       ],

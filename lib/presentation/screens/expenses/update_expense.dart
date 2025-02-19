@@ -346,23 +346,24 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                           uidOfTransaction: widget.transactionId,
                           updatedExpense: updatedExpense,
                         );
-
+                        
+                        if(mounted){
+                          setState(() {
+                              isloading = false;
+                            });
+                        }
                         result.fold(
                           (failureMessage) {
                             if (mounted) {
                               errorSnackbar(context, failureMessage);
                             }
-                            setState(() {
-                              isloading = false;
-                            });
+                            
                           },
                           (successMessage) {
                             if (mounted) {
                               successSnackbar(context, successMessage);
                             }
-                            setState(() {
-                              isloading = false;
-                            });
+
                             widget.onSubmit(_spendingAmount, _spendingCategory, _spendingDescription, _spendingDate);
                             Navigator.of(context).pop();
                           },

@@ -28,19 +28,19 @@ class _ResetDailyLimitState extends State<ResetDailyLimit> {
       final resetDailyLimitUseCase = sl<ResetDailyLimitUseCase>();
       final result = await resetDailyLimitUseCase.call(dailyLimit: newLimit);
 
+      if(mounted){
+        setState(() {
+            _isLoading = false;
+          });
+      }
+
       result.fold(
         // IF ANY ERROR OCCURRED
         (l) {
           errorSnackbar(context, l.toString());
-          setState(() {
-            _isLoading = false;
-          });
         },
         // IF LIMIT UPDATION IS SUCCESS
         (r) {
-          setState(() {
-            _isLoading = false;
-          });
           if (mounted) {
             successSnackbar(context, 'Daily limit has been updated');
             Navigator.pop(context);

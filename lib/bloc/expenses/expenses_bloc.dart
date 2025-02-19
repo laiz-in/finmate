@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moneyy/domain/entities/spending/expenses.dart';
 import 'package:moneyy/domain/usecases/expenses/add_expense_usecase.dart';
+import 'package:moneyy/domain/usecases/expenses/complete_expenses_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/delete_expenses_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/total_expenses_usecase.dart';
 import 'package:moneyy/service_locator.dart';
@@ -11,6 +12,8 @@ import 'expenses_state.dart';
 class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
   final TotalExpensesUseCase _totalExpensesUseCase;
   final AddExpensesUseCase _addExpensesUseCase;
+  final CompleteExpensesUsecase _completeExpensesUseCase;
+  
   List<ExpensesEntity> _allExpenses = [];
   bool _hasMore = true;
   String _searchQuery = '';
@@ -25,6 +28,8 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
   ExpensesBloc(
     this._totalExpensesUseCase,
     this._addExpensesUseCase,
+    this._completeExpensesUseCase,
+
   ) : super(ExpensesLoading()) {
     on<FetchAllExpensesEvent>(_onFetchAllExpenses);
     on<LoadMoreExpensesEvent>(_onLoadMoreExpenses);
@@ -37,7 +42,30 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
     on<RefreshExpensesEvent>(_onRefreshExpenses);
     on<ResetExpensesEvent>(_onResetExpenses);
     on<DeleteExpenseEvent>(_onDeleteExpenses);
+    on<FetchCompleteExpensesEvent>(_onFetchCompleteExpenses);
   }
+
+
+// FETCH COMPLETE EXPENSES
+Future<void> _onFetchCompleteExpenses(
+  FetchCompleteExpensesEvent event,
+  Emitter<ExpensesState> emit,
+) async {
+  emit(ExpensesLoading(isFirstFetch: true));
+  try {
+    final result = await _completeExpensesUseCase();
+    result.fold(
+      (failure) => emit(ExpensesError(failure)),
+      (expenses) {
+        _allExpenses = List.from(expenses);
+        final hasMore = expenses.length == _pageSize;
+        emit(ExpensesLoaded(_allExpenses, hasMore: hasMore));
+      },
+    );
+  } catch (e) {
+    emit(ExpensesError(e.toString()));
+  }
+}
 
 // DELETING AN EXPENSE
 void _onDeleteExpenses(DeleteExpenseEvent event, Emitter<ExpensesState> emit) async {
@@ -164,7 +192,7 @@ Future<void> _onLoadMoreExpenses(
   }
 }
 
-// Add a new expense
+// ADD NEW EXPENSE
 Future<void> _onAddExpense(AddExpenseEvent event, Emitter<ExpensesState> emit) async {
     emit(ExpensesLoading(isFirstFetch: false));
     final result = await _addExpensesUseCase();
@@ -177,13 +205,13 @@ Future<void> _onAddExpense(AddExpenseEvent event, Emitter<ExpensesState> emit) a
     );
   }
 
-// Search for expenses
+// SEARCH FOR NEW EXPENSE
 void _onSearchExpenses(SearchExpensesEvent event, Emitter<ExpensesState> emit) {
     _searchQuery = event.query;
     emit(ExpensesLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-// Clear filters
+// CLEAR FILTER
 void _onClearFilters(ClearFiltersEvent event, Emitter<ExpensesState> emit) {
     _searchQuery = '';
     _categoryFilter = null;
@@ -194,13 +222,13 @@ void _onClearFilters(ClearFiltersEvent event, Emitter<ExpensesState> emit) {
     emit(ExpensesLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-// Sort by amount
+// SORT BY AMOUNT
 void _onSortByAmount(SortByAmountEvent event, Emitter<ExpensesState> emit) {
     _sortAscending = event.ascending;
     emit(ExpensesLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-// Filter by category
+// FILTER BY CATEGORY
 void _onFilterByCategory(FilterByCategoryEvent event, Emitter<ExpensesState> emit) {
     _categoryFilter = event.category;
     emit(ExpensesLoaded(_applyFilters(), hasMore: _hasMore));

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,35 +19,43 @@ import 'package:moneyy/domain/usecases/bills/add_bill_usecase.dart';
 import 'package:moneyy/domain/usecases/bills/total_bills_usecase.dart';
 import 'package:moneyy/domain/usecases/connectivity/connectivity_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/add_expense_usecase.dart';
+import 'package:moneyy/domain/usecases/expenses/complete_expenses_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/total_expenses_usecase.dart';
 import 'package:moneyy/domain/usecases/income/add_income_usecase.dart';
+import 'package:moneyy/domain/usecases/income/complete_income_usecase.dart';
 import 'package:moneyy/domain/usecases/income/this_month_total_income.dart';
 import 'package:moneyy/domain/usecases/income/this_week_total_income.dart';
 import 'package:moneyy/domain/usecases/income/this_year_total_income.dart';
 import 'package:moneyy/domain/usecases/income/total_income_usecase.dart';
 import 'package:moneyy/presentation/routes/routes.dart';
+import 'package:moneyy/presentation/screens/connection_lost_screen/firebase_connection_lost.dart';
 import 'package:moneyy/presentation/screens/splash/splash.dart';
 import 'package:moneyy/service_locator.dart';
 import 'package:path_provider/path_provider.dart';
-
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: getFirebaseOptions(),
-  );
+  
+  // Initialize Firebase with proper error handling
+  bool isFirebaseInitialized = false;
+  try {
+    await Firebase.initializeApp(options: getFirebaseOptions());
+    isFirebaseInitialized = true;
+    FirebaseFirestore.instance.settings = Settings(persistenceEnabled: true);
+  } catch (e) {
+    debugPrint("Firebase initialization failed: $e");
+  }
+
+  
 
   // Initialize Hydrated Storage
-  final storage = await HydratedStorage.build(
-    storageDirectory: await getApplicationDocumentsDirectory(),
-  );
-
+  HydratedStorage.build(storageDirectory: await getApplicationDocumentsDirectory()).then((storage) {
+    HydratedBloc.storage = storage;
+  });
+  
   await initializeDependencies();
-
-  // Set HydratedBloc.storage to the initialized storage
-  HydratedBloc.storage = storage;
 
   runApp(
     MultiBlocProvider(
@@ -61,6 +70,8 @@ void main() async {
           create: (context) => ExpensesBloc(
             sl<TotalExpensesUseCase>(),
             sl<AddExpensesUseCase>(),
+            sl<CompleteExpensesUsecase>()
+
           ),
         ),
 
@@ -77,8 +88,8 @@ void main() async {
           create: (context) => IncomeBloc(
             sl<TotalIncomeUseCase>(),
             sl<AddIncomeUseCase>(),
-          ),
-        ),
+            sl<CompleteIncomeUseCase>()
+          ),         ),
 
         // Theme
         BlocProvider(
@@ -94,20 +105,22 @@ void main() async {
         BlocProvider(
           create: (context) => HomeScreenBloc(
             userRepository: sl<UserRepository>(),
-            connectivityCubit: BlocProvider.of<ConnectivityCubit>(context),
+            connectivityCubit: context.read<ConnectivityCubit>(),
             fetchThisMonthIncomeUseCase: sl<ThisMonthToatalIncomeUseCase>(),
             fetchThisWeekIncomeUseCase: sl<ThisWeekToatalIncomeUseCase>(),
             fetchThisYearIncomeUseCase: sl<ThisYearToatalIncomeUseCase>(),
           ),
         ),
       ],
-      child: const MyApp(),
+      child: MyApp(isFirebaseInitialized: isFirebaseInitialized),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isFirebaseInitialized;
+
+  const MyApp({super.key, required this.isFirebaseInitialized});
 
   @override
   Widget build(BuildContext context) {
@@ -125,7 +138,9 @@ class MyApp extends StatelessWidget {
                 debugShowCheckedModeBanner: false,
                 onGenerateRoute: AppRoutes.generateRoute,
                 routes: {
-                  '/': (context) => const SplashScreen(),
+                  '/': (context) => isFirebaseInitialized
+                      ? const SplashScreen()
+                      : NoFirebaseScreen(),
                 },
                 theme: AppTheme.lightTheme,
                 darkTheme: AppTheme.darkTheme,

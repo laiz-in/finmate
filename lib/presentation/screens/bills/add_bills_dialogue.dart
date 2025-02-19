@@ -21,7 +21,6 @@ class _AddBillsBottomSheetState extends State<AddBillsBottomSheet> {
   String _billTitle = '';
   String _billDescription = '';
   DateTime? _billDueDate = DateTime.now();
-  double _paidStatus = 0;
 
   final DateTime? _addedDate = DateTime.now();
 
@@ -58,6 +57,7 @@ class _AddBillsBottomSheetState extends State<AddBillsBottomSheet> {
     }
   }
 
+ //INIT FUNCTION
   @override
   void initState() {
     super.initState();
@@ -115,7 +115,7 @@ class _AddBillsBottomSheetState extends State<AddBillsBottomSheet> {
               style: GoogleFonts.poppins(
                 color: Theme.of(context).canvasColor,
                 fontSize: 14.sp, // FONT SIZE
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
               ),
               decoration: InputDecoration(
                 errorStyle: GoogleFonts.poppins(),
@@ -124,7 +124,7 @@ class _AddBillsBottomSheetState extends State<AddBillsBottomSheet> {
                 labelStyle: GoogleFonts.poppins(
                   fontSize: 14.sp, // FONT SIZE
                   color: Theme.of(context).canvasColor,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w400,
                 ),
                 filled: true,
                 fillColor: Theme.of(context).cardColor,
@@ -160,7 +160,7 @@ class _AddBillsBottomSheetState extends State<AddBillsBottomSheet> {
               style: GoogleFonts.poppins(
                 color: Theme.of(context).canvasColor,
                 fontSize: 14.sp, // FONT SIZE
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
               ),
               decoration: InputDecoration(
                 errorStyle: GoogleFonts.poppins(),
@@ -168,7 +168,7 @@ class _AddBillsBottomSheetState extends State<AddBillsBottomSheet> {
                 hintStyle: GoogleFonts.poppins(
                   fontSize: 14.sp, // FONT SIZE
                   color: Theme.of(context).canvasColor,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w400,
                 ),
                 filled: true,
                 fillColor: Theme.of(context).cardColor,
@@ -195,7 +195,7 @@ class _AddBillsBottomSheetState extends State<AddBillsBottomSheet> {
               style: GoogleFonts.poppins(
                 color: Theme.of(context).canvasColor,
                 fontSize: 14.sp, // FONT SIZE
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
               ),
               decoration: InputDecoration(
                 errorStyle: GoogleFonts.poppins(),
@@ -203,7 +203,7 @@ class _AddBillsBottomSheetState extends State<AddBillsBottomSheet> {
                 hintStyle: GoogleFonts.poppins(
                   fontSize: 14.sp, // FONT SIZE
                   color: Theme.of(context).canvasColor,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w400,
                 ),
                 filled: true,
                 fillColor: Theme.of(context).cardColor,
@@ -229,7 +229,7 @@ class _AddBillsBottomSheetState extends State<AddBillsBottomSheet> {
               style: GoogleFonts.poppins(
                 color: Theme.of(context).canvasColor,
                 fontSize: 14.sp, // FONT SIZE
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.w400,
               ),
               decoration: InputDecoration(
                 errorStyle: GoogleFonts.poppins(),

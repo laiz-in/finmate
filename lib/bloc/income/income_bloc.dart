@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moneyy/domain/entities/income/income.dart';
 import 'package:moneyy/domain/usecases/income/add_income_usecase.dart';
+import 'package:moneyy/domain/usecases/income/complete_income_usecase.dart';
 import 'package:moneyy/domain/usecases/income/delete_income_usecase.dart';
 import 'package:moneyy/domain/usecases/income/total_income_usecase.dart';
 import 'package:moneyy/service_locator.dart';
@@ -11,6 +12,7 @@ import 'income_state.dart';
 class IncomeBloc extends Bloc<IncomeEvent, IncomeState> {
   final TotalIncomeUseCase _totalIncomeUseCase;
   final AddIncomeUseCase _addIncomeUseCase;
+  final CompleteIncomeUseCase _completeIncomeUseCase;
   List<IncomeEntity> _allIncome = [];
   bool _hasMore = true;
   String _searchQuery = '';
@@ -25,8 +27,10 @@ class IncomeBloc extends Bloc<IncomeEvent, IncomeState> {
   IncomeBloc(
     this._totalIncomeUseCase,
     this._addIncomeUseCase,
+    this._completeIncomeUseCase
   ) : super(IncomeLoading()) {
     on<FetchAllIncomeEvent>(_onFetchAllIncome);
+    on<FetchCompleteIncomeEvent>(_onFetchCompleteIncome);
     on<LoadMoreIncomeEvent>(_onLoadMoreIncome);
     on<AddIncomeEvent>(_onAddIncome);
     on<SearchIncomeEvent>(_onSearchIncome);
@@ -125,6 +129,28 @@ Future<void> _onFetchAllIncome(
     _currentPage = 1; // Reset to the first page
     _pageSize = 30;  // Set page size to 30 initially
     final result = await _totalIncomeUseCase(page: _currentPage, pageSize: _pageSize);
+    result.fold(
+      (failure) => emit(IncomeError(failure)), // Emit error on failure
+      (income) {
+        _allIncome = List.from(income); // Replace with the new data
+        final hasMore = income.length == _pageSize;
+        emit(IncomeLoaded(_allIncome, hasMore: hasMore));
+      },
+    );
+  } catch (e) {
+    emit(IncomeError(e.toString())); // Emit error if an exception occurs
+  }
+}
+
+
+// TO FETCH ALL INCOME (Initial Load - 30 items)
+Future<void> _onFetchCompleteIncome(
+  FetchCompleteIncomeEvent event,
+  Emitter<IncomeState> emit,
+) async {
+  emit(IncomeLoading(isFirstFetch: true));
+  try {
+    final result = await _completeIncomeUseCase();
     result.fold(
       (failure) => emit(IncomeError(failure)), // Emit error on failure
       (income) {

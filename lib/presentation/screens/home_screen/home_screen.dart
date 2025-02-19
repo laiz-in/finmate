@@ -31,7 +31,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0; // TRACK THE CURRENT SELECTED TAB (0 = HOME)
+  int _selectedIndex = 0;
   bool isRefreshing = false;
 
   // INITIALIZE THE HOME SCREEN WITH USER DATA FROM BLOC
@@ -39,9 +39,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _fetchUserData();
+
   }
 
-  // FETCH USER DATA FROM BLOC
   Future<void> _fetchUserData() async {
     context.read<HomeScreenBloc>().add(FetchUserData());
   }
@@ -107,12 +107,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                 : null, // ONLY SHOW FAB ON HOME TAB
           );
+
+        
         } else if (state is HomeScreenLoading) {
           // SHOW LOADING INDICATOR WHILE USER DATA IS BEING FETCHED
           return ShimmerScreen();
         } else if (state is HomeScreenError) {
           // SHOW ERROR MESSAGE IF FETCHING USER DATA FAILS
-          return Center(child: Text("Error: ${state.message}"));
+          return Center(child: SizedBox(
+            height: 200.h,
+            width: 200.w,
+            child: Text("Error: ${state.message}",
+            
+            style: GoogleFonts.poppins(
+              decoration: TextDecoration.none,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w500,
+              color: Colors.white.withOpacity(0.8),
+            ),)));
         }
         return Container(); // FALLBACK EMPTY CONTAINER
       },
@@ -169,7 +181,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
           // BILL SCREEN TAB
           BottomNavigationBarItem(
-            icon: Icon(Symbols.bar_chart, weight: 700),
+            icon: Icon(Symbols.sell, weight: 700),
             label: "",
           ),
 
@@ -179,6 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Symbols.manage_accounts_rounded, weight: 600),
             label: "",
           ),
+
         ],
       ),
     );
@@ -245,7 +258,7 @@ void _showAddExpenseModal(BuildContext context) {
         },
       );
     }
-  }
+}
 
 // HELPER WIDGETS FOR RECENT EXPENSE
 class TransactionHeading extends StatelessWidget {

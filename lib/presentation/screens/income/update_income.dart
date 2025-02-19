@@ -1,4 +1,6 @@
+// FILEPATH: /C:/Users/Hp/Desktop/moneyy - Copy/moneyy/lib/presentation/screens/income/update_income.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // IMPORT SCREENUTIL
 import 'package:google_fonts/google_fonts.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
 import 'package:moneyy/common/widgets/success_snackbar.dart';
@@ -17,17 +19,16 @@ class UpdateIncomeDialog extends StatefulWidget {
   final String incomeId;
   final Function(double, String, String, DateTime) onSubmit;
 
-
-  const UpdateIncomeDialog({super.key,
-  required this.uidOfIncome,
-  required this.initialcreatedAt,
+  const UpdateIncomeDialog({
+    super.key,
+    required this.uidOfIncome,
+    required this.initialcreatedAt,
     required this.initialAmount,
     required this.initialCategory,
     required this.initialRemarks,
     required this.initialDate,
     required this.incomeId,
     required this.onSubmit,
-
   });
 
   @override
@@ -76,60 +77,48 @@ class _UpdateIncomeDialog extends State<UpdateIncomeDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-
-      insetPadding: EdgeInsets.fromLTRB(5,20,0,10),
-      contentPadding: EdgeInsets.fromLTRB(23,10,23,10),
-      
+      insetPadding: EdgeInsets.fromLTRB(5.w, 20.h, 0.w, 10.h), // USE SCREENUTIL FOR PADDING
+      contentPadding: EdgeInsets.fromLTRB(23.w, 10.h, 23.w, 10.h), // USE SCREENUTIL FOR PADDING
       shape: RoundedRectangleBorder(
-        
-        borderRadius: BorderRadius.circular(26.0),
+        borderRadius: BorderRadius.circular(26.r), // USE SCREENUTIL FOR BORDER RADIUS
       ),
       elevation: 15,
       backgroundColor: Theme.of(context).primaryColor,
 
-      // Title text
+      // TITLE TEXT
       title: Text(
         'Edit your Income',
         style: GoogleFonts.poppins(
-          fontSize: 17,
+          fontSize: 17.sp, // USE SCREENUTIL FOR FONT SIZE
           color: Theme.of(context).canvasColor,
           fontWeight: FontWeight.w500,
         ),
       ),
       
       content: Form(
-
         key: _formKey,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              SizedBox(height: 10),
+              SizedBox(height: 10.h), // USE SCREENUTIL FOR HEIGHT
 
-              // Amount field
+              // INCOME AMOUNT FIELD
               TextFormField(
                 initialValue: _incomeAmount.toString(),
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontSize: 15,
+                  fontSize: 15.sp, // USE SCREENUTIL FOR FONT SIZE
                   fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration(
-                  floatingLabelBehavior: FloatingLabelBehavior.never,
-                  labelText: '0.00',
-                  labelStyle: GoogleFonts.poppins(
-                    fontSize: 15,
-                    color: Theme.of(context).canvasColor,
-                    fontWeight: FontWeight.w500,
-                  ),
                   filled: true,
                   fillColor: Theme.of(context).cardColor,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(12.r)), // USE SCREENUTIL FOR BORDER RADIUS
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
-                  
+                  contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w), // USE SCREENUTIL FOR PADDING
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
@@ -145,26 +134,25 @@ class _UpdateIncomeDialog extends State<UpdateIncomeDialog> {
                 },
               ),
               
-              SizedBox(height: 15),
+              SizedBox(height: 15.h), // USE SCREENUTIL FOR HEIGHT
 
-              // Description field
+              // DESCRIPTION FIELD
               TextFormField(
                 initialValue: _incomeRemarks,
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontSize: 15,
+                  fontSize: 15.sp, // USE SCREENUTIL FOR FONT SIZE
                   fontWeight: FontWeight.w500,
-                  decoration: TextDecoration.none
+                  decoration: TextDecoration.none,
                 ),
                 decoration: InputDecoration(
-                  
                   filled: true,
                   fillColor: Theme.of(context).cardColor,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(12.r)), // USE SCREENUTIL FOR BORDER RADIUS
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+                  contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w), // USE SCREENUTIL FOR PADDING
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -175,51 +163,46 @@ class _UpdateIncomeDialog extends State<UpdateIncomeDialog> {
                 },
               ),
               
-              SizedBox(height: 15),
+              SizedBox(height: 15.h), // USE SCREENUTIL FOR HEIGHT
 
-              // Dropdown to select category
+              // DROPDOWN TO SELECT CATEGORY
               DropdownButtonFormField<String>(
-                
                 value: _incomeCategory,
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
                   fontWeight: FontWeight.w500,
-                  fontSize: 15,
+                  fontSize: 15.sp, // USE SCREENUTIL FOR FONT SIZE
                 ),
                 decoration: InputDecoration(
-                  labelText: 'Category',
-                  labelStyle: GoogleFonts.poppins(
-                    fontSize: 15,
-                    color:Theme.of(context).canvasColor,
-                    fontWeight: FontWeight.w500,
-                  ),
                   floatingLabelBehavior: FloatingLabelBehavior.never,
                   filled: true,
                   fillColor: Theme.of(context).cardColor,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(12.r)), // USE SCREENUTIL FOR BORDER RADIUS
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+                  contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w), // USE SCREENUTIL FOR PADDING
                 ),
+
+
                 dropdownColor: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.all(Radius.circular(15)),
+                borderRadius: BorderRadius.all(Radius.circular(15.r)), // USE SCREENUTIL FOR BORDER RADIUS
+
                 items: _categories.map((category) {
                   return DropdownMenuItem<String>(
-                    
                     value: category,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                      padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 0.w), // USE SCREENUTIL FOR PADDING
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(12))
+                        borderRadius: BorderRadius.all(Radius.circular(12.r)), // USE SCREENUTIL FOR BORDER RADIUS
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
+                        padding: EdgeInsets.symmetric(vertical: 0.h, horizontal: 0.w), // USE SCREENUTIL FOR PADDING
                         child: Text(
                           category,
                           style: GoogleFonts.poppins(
                             color: Theme.of(context).canvasColor,
-                            fontSize: 15,
+                            fontSize: 15.sp, // USE SCREENUTIL FOR FONT SIZE
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -227,6 +210,7 @@ class _UpdateIncomeDialog extends State<UpdateIncomeDialog> {
                     ),
                   );
                 }).toList(),
+                
                 onChanged: (value) {
                   setState(() {
                     _incomeCategory = value!;
@@ -235,24 +219,23 @@ class _UpdateIncomeDialog extends State<UpdateIncomeDialog> {
                 isExpanded: true,
               ),
               
-              SizedBox(height: 15),
+              SizedBox(height: 15.h), // USE SCREENUTIL FOR HEIGHT
 
-              // Date field
+              // DATE FIELD
               TextFormField(
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontSize: 15,
+                  fontSize: 15.sp, // USE SCREENUTIL FOR FONT SIZE
                   fontWeight: FontWeight.w500,
                 ),
                 decoration: InputDecoration(
-                  
                   filled: true,
-                  fillColor:Theme.of(context).cardColor,
+                  fillColor: Theme.of(context).cardColor,
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(12.r)), // USE SCREENUTIL FOR BORDER RADIUS
                     borderSide: BorderSide.none,
                   ),
-                  contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 12.0),
+                  contentPadding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 12.w), // USE SCREENUTIL FOR PADDING
                 ),
                 controller: _dateController,
                 readOnly: true,
@@ -265,133 +248,130 @@ class _UpdateIncomeDialog extends State<UpdateIncomeDialog> {
                 },
               ),
 
-            SizedBox(height: 8,)
+              SizedBox(height: 8.h), // USE SCREENUTIL FOR HEIGHT
             ],
           ),
         ),
       ),
 
       actions: <Widget>[
-
         SizedBox(
           width: double.infinity,
-          
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-
-            
-            
-            // Cancel button
-            Expanded(
-              child: Container(
-                color: Colors.transparent,
-                child: TextButton(
-                child: Text(
-                  'Cancel',
-                  style: GoogleFonts.poppins(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.myOrange,
-                  ),
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                ),
-              ),
-            ),
-
-
-            // Update button
-            Expanded(
-              child: Container(
-                width: 150,height: 50,
-                color: Colors.transparent,
-                child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor:Theme.of(context).canvasColor, // Background color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0), // Set the border radius
-                  ),
-                  padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 28.0), // Optional padding
-                ),
-                child:isloading
-                                      ? SizedBox(
-                                        width: 20,height: 20,
-                                        child: Center(
-                                            child:CircularProgressIndicator(
-                                              color: Theme.of(context).scaffoldBackgroundColor,strokeWidth: 2,
-                                            )
-                                          ),
-                                      )
-                                      : Center(
-                                          child: Text(
-                                            'Update',
-                                            style: GoogleFonts.poppins(
-                                              fontSize: 16,
-                                              color: Theme.of(context).scaffoldBackgroundColor,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ),
-                                
-                
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    setState(() {
-                      isloading = true;
-                    });
-                    final updatedIncome = IncomeModel(
-                      uidOfIncome: widget.uidOfIncome,
-                      incomeRemarks: _incomeRemarks,
-                      incomeCategory: _incomeCategory,
-                      incomeAmount: _incomeAmount,
-                      incomeDate: _incomeDate,
-                      createdAt: widget.initialcreatedAt,
-                    );
-
-                    final updateIncomeUseCase = sl<UpdateIncomeUseCase>();
-
-                    final result = await updateIncomeUseCase.call(uidOfIncome: widget.incomeId,updatedIncome: updatedIncome,);
-
-                    result.fold(
-                      (failureMessage) {
-                        if(mounted){
-                        errorSnackbar(context, failureMessage);}
-                        setState(() {
-                          isloading =false;
-                        });
-                        
-                      },
-                      (successMessage) {
-                        if(mounted){
-                        successSnackbar(context, successMessage);}
-                        setState(() {
-                          isloading =false;
-                        });
-                        widget.onSubmit(_incomeAmount, _incomeCategory, _incomeRemarks, _incomeDate);
-                        Navigator.of(context).pop();
-                      },
-                    );
-                      // Clear form fields
-                      setState(() {
-                        _incomeAmount = 0.0;
-                        _incomeCategory = 'Active';
-                        _incomeRemarks = '';
-                        _incomeDate = DateTime.now();
-                        _dateController.text = "${_incomeDate.toLocal()}".split(' ')[0];
-                      });
-                  }
-                },
+              // CANCEL BUTTON
+              Expanded(
+                child: Container(
+                  color: Colors.transparent,
+                  child: TextButton(
+                    child: Text(
+                      'Cancel',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15.sp, // USE SCREENUTIL FOR FONT SIZE
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.myOrange,
                       ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ),
               ),
-            ),
-            ]
+
+              // UPDATE BUTTON
+              Expanded(
+                child: Container(
+                  width: 150.w, // USE SCREENUTIL FOR WIDTH
+                  height: 50.h, // USE SCREENUTIL FOR HEIGHT
+                  color: Colors.transparent,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).canvasColor, // BACKGROUND COLOR
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r), // USE SCREENUTIL FOR BORDER RADIUS
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 28.w), // USE SCREENUTIL FOR PADDING
+                    ),
+                    child: isloading
+                        ? SizedBox(
+                            width: 20.w, // USE SCREENUTIL FOR WIDTH
+                            height: 20.h, // USE SCREENUTIL FOR HEIGHT
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                color: Theme.of(context).scaffoldBackgroundColor,
+                                strokeWidth: 2,
+                              ),
+                            ),
+                          )
+                        : Center(
+                            child: Text(
+                              'Update',
+                              style: GoogleFonts.poppins(
+                                fontSize: 16.sp, // USE SCREENUTIL FOR FONT SIZE
+                                color: Theme.of(context).scaffoldBackgroundColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          isloading = true;
+                        });
+                        final updatedIncome = IncomeModel(
+                          uidOfIncome: widget.uidOfIncome,
+                          incomeRemarks: _incomeRemarks,
+                          incomeCategory: _incomeCategory,
+                          incomeAmount: _incomeAmount,
+                          incomeDate: _incomeDate,
+                          createdAt: widget.initialcreatedAt,
+                        );
+
+                        final updateIncomeUseCase = sl<UpdateIncomeUseCase>();
+
+                        final result = await updateIncomeUseCase.call(
+                          uidOfIncome: widget.incomeId,
+                          updatedIncome: updatedIncome,
+                        );
+
+                        result.fold(
+                          (failureMessage) {
+                            if (mounted) {
+                              errorSnackbar(context, failureMessage);
+                            }
+                            setState(() {
+                              isloading = false;
+                            });
+                          },
+                          (successMessage) {
+                            if (mounted) {
+                              successSnackbar(context, successMessage);
+                            }
+                            setState(() {
+                              isloading = false;
+                            });
+                            widget.onSubmit(_incomeAmount, _incomeCategory, _incomeRemarks, _incomeDate);
+                            Navigator.of(context).pop();
+                          },
+                        );
+                        // CLEAR FORM FIELDS
+                        setState(() {
+                          _incomeAmount = 0.0;
+                          _incomeCategory = 'Active';
+                          _incomeRemarks = '';
+                          _incomeDate = DateTime.now();
+                          _dateController.text = "${_incomeDate.toLocal()}".split(' ')[0];
+                        });
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
-
-
-        )
+        ),
       ],
     );
   }

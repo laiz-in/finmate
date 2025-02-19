@@ -26,19 +26,10 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     required this.fetchThisWeekIncomeUseCase,
     required this.fetchThisYearIncomeUseCase,
   }) : super(HomeScreenLoading()) {
-    
-    // Listen to connectivity changes and emit an event instead of calling emit directly
-    connectivitySubscription = connectivityCubit.stream.listen((isConnected) {
-      if (!isConnected) {
-        add(NoInternetEvent()); // Trigger an event instead of using emit
-      } else {
-        add(FetchUserData()); // Re-fetch data when back online
-      }
-    });
-
 
     // Handle event to fetch user data
     on<FetchUserData>((event, emit) async {
+
       emit(HomeScreenLoading());
 
       final result = await userRepository.getUserData();
@@ -85,10 +76,6 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
       );
     });
 
-    // Handle no internet event
-    on<NoInternetEvent>((event, emit) {
-      emit(HomeScreenError("OH NO INTERNET"));
-    });
   }
 
   @override

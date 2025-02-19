@@ -10,6 +10,7 @@ class UserEntity {
   double? dailyLimit; // Daily spending limit
   double? monthlyLimit; // Monthly spending limit
   String? uid;
+  bool isSynced; // New field to track sync status
 
   UserEntity({
     this.email,
@@ -21,6 +22,7 @@ class UserEntity {
     this.dailyLimit,
     this.monthlyLimit,
     this.uid,
+    this.isSynced = false, // Default value is false
   });
 
   // Factory method to create a UserEntity from a Firestore document
@@ -37,6 +39,7 @@ class UserEntity {
       totalSpending: json['totalSpending']?.toDouble(),
       dailyLimit: json['dailyLimit']?.toDouble(),
       monthlyLimit: json['monthlyLimit']?.toDouble(),
+      isSynced: json['isSynced'] ?? false, // Default to false if not found
     );
   }
 
@@ -52,6 +55,7 @@ class UserEntity {
       'totalSpending': totalSpending,
       'dailyLimit': dailyLimit,
       'monthlyLimit': monthlyLimit,
+      'isSynced': isSynced, // Include isSynced in JSON
     };
   }
 
@@ -66,6 +70,7 @@ class UserEntity {
     double? dailyLimit,
     double? monthlyLimit,
     String? uid,
+    bool? isSynced, // Allow updating isSynced
   }) {
     return UserEntity(
       email: email ?? this.email,
@@ -77,6 +82,7 @@ class UserEntity {
       dailyLimit: dailyLimit ?? this.dailyLimit,
       monthlyLimit: monthlyLimit ?? this.monthlyLimit,
       uid: uid ?? this.uid,
+      isSynced: isSynced ?? this.isSynced, // Preserve existing value if not updated
     );
   }
 }

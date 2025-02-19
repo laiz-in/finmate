@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moneyy/domain/entities/bills/bills.dart';
 import 'package:moneyy/domain/usecases/bills/add_bill_usecase.dart';
-import 'package:moneyy/domain/usecases/bills/change_paid_status_usecase.dart';
 import 'package:moneyy/domain/usecases/bills/delete_bill_usecase.dart';
 import 'package:moneyy/domain/usecases/bills/total_bills_usecase.dart';
 import 'package:moneyy/service_locator.dart';
@@ -36,23 +35,9 @@ class BillsBloc extends Bloc<BillsEvent, BillState> {
     on<FilterByPaidStatusEvent>(_onFilterByPaidStatus); // Added event for paid status filter
     on<ResetBillsEvent>(_onResetBills);
     on<DeleteBillsEvent>(_onDeleteBills);
-    on<UpdateBillStatusEvent>(_onUpdateBillStatus);
   }
 
-  // UPDATING BILL STATUS
-  void _onUpdateBillStatus(UpdateBillStatusEvent event, Emitter<BillState> emit) async {
-    final updatePaidStatusUseCase = sl<UpdatePaidStatusUsecase>();
-    final result = await updatePaidStatusUseCase.call(uidOfBill: event.billId);
 
-    result.fold(
-      (failureMessage) {
-        emit(BillsError(failureMessage));
-      },
-      (successMessage) {
-        add(FetchAllBillsEvent());
-      },
-    );
-  }
 
 
 
@@ -122,8 +107,8 @@ class BillsBloc extends Bloc<BillsEvent, BillState> {
   ) async {
     emit(BillsLoading(isFirstFetch: true));
     try {
-      _currentPage = 1; // Reset to the first page
-      _pageSize = 30; // Set page size to 30 initially
+      _currentPage = 1;
+      _pageSize = 30;
       final result =
           await _totalBillsUseCase(page: _currentPage, pageSize: _pageSize);
       result.fold(
@@ -139,7 +124,7 @@ class BillsBloc extends Bloc<BillsEvent, BillState> {
     }
   }
 
-  // LOAD MORE BILLS (Add 30 more items on each click)
+  // LOAD MORE BILLS
   Future<void> _onLoadMoreBills(
     LoadMoreBillsEvent event,
     Emitter<BillState> emit,
@@ -165,7 +150,7 @@ class BillsBloc extends Bloc<BillsEvent, BillState> {
     }
   }
 
-  // Add a new bill
+  // ADD A NEW BILL
   Future<void> _onAddBills(AddBillEvent event, Emitter<BillState> emit) async {
     emit(BillsLoading(isFirstFetch: false));
     final result = await _addBillsUseCase();
@@ -178,13 +163,13 @@ class BillsBloc extends Bloc<BillsEvent, BillState> {
     );
   }
 
-  // Search for bills
+  // SEARCH FOR BILL
   void _onSearchBills(SearchBillsEvent event, Emitter<BillState> emit) {
     _searchQuery = event.query;
     emit(BillsLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-  // Clear filters
+  // CLEAR ALL FILTERS
   void _onClearFilters(ClearFiltersEvent event, Emitter<BillState> emit) {
     _searchQuery = '';
     _sortAscendingByDueDate = null;
@@ -194,26 +179,26 @@ class BillsBloc extends Bloc<BillsEvent, BillState> {
     emit(BillsLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-  // Sort by amount
+  // SORT BY AMOUNT
   void _onSortByBillAmount(SortByBillAmount event, Emitter<BillState> emit) {
     _sortByBillAmount = event.ascending;
     emit(BillsLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-  // Sort by due date
+  // SORT BY DUE DUE DATE
   void _onSortByDueDate(SortByDueDate event, Emitter<BillState> emit) {
     _sortAscendingByDueDate = event.ascending;
     emit(BillsLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-  // Filter by paid status
+  // FILTER BY PAID STATUS
   void _onFilterByPaidStatus(
     FilterByPaidStatusEvent event, Emitter<BillState> emit) {
   _filterByPaidStatus = event.paidStatus == 1; // true if 1, false otherwise
   emit(BillsLoaded(_applyFilters(), hasMore: _hasMore));
 }
 
-  // Refresh bills
+  // REFRESH BILLS
   void _onRefreshBills(RefreshBillsEvent event, Emitter<BillState> emit) async {
     emit(BillsLoading(isFirstFetch: true));
     try {
