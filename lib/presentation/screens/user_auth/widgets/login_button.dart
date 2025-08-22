@@ -40,6 +40,7 @@ class LoginButtonWidgetState extends State<LoginButtonWidget> {
             setState(() {
               isLoading = true; // SHOW LOADING ANIMATION
             });
+            print('LOGIN BUTTON PRESSED');
 
             // PERFORM SIGN-IN USE CASE
             var result = await sl<SignInUseCase>().call(

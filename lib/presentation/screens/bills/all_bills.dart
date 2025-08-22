@@ -86,7 +86,9 @@ class BillScreenState extends State<BillScreen> with SingleTickerProviderStateMi
         
         child: Column(
           children: [
+            
             _buildSearchBar(),
+
             _buildTabBar(),
             Expanded(child: _buildBillsList()),
           ],
@@ -113,10 +115,12 @@ class BillScreenState extends State<BillScreen> with SingleTickerProviderStateMi
     );
   }
 
-  Widget _buildSearchBar() {
+
+
+Widget _buildSearchBar() {
     return Container(
       padding: EdgeInsets.all(1.w),
-      margin: EdgeInsets.fromLTRB(15.w, 8.h, 15.w, 10.h),
+      margin: EdgeInsets.fromLTRB(15.w, 8.h, 15.w, 8.h),
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -165,7 +169,7 @@ class BillScreenState extends State<BillScreen> with SingleTickerProviderStateMi
     );
   }
 
-  Widget _buildTabBar() {
+Widget _buildTabBar() {
     return TabBar(
       padding: EdgeInsets.only(bottom: 10.h),
       dividerColor: Theme.of(context).canvasColor.withOpacity(0.3),
@@ -247,7 +251,7 @@ Widget _buildBillsList() {
 }
 
 
-  Widget _buildEmptyBillsMessage() {
+Widget _buildEmptyBillsMessage() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -270,7 +274,7 @@ Widget _buildBillsList() {
     );
   }
 
-  Widget _buildErrorMessage() {
+Widget _buildErrorMessage() {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

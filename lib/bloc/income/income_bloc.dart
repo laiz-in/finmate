@@ -190,7 +190,7 @@ Future<void> _onLoadMoreIncome(
   }
 }
 
-// Add a new expense
+// ADD A NEW INCOME
 Future<void> _onAddIncome(AddIncomeEvent event, Emitter<IncomeState> emit) async {
     emit(IncomeLoading(isFirstFetch: false));
     final result = await _addIncomeUseCase();
@@ -203,13 +203,13 @@ Future<void> _onAddIncome(AddIncomeEvent event, Emitter<IncomeState> emit) async
     );
   }
 
-// Search for expenses
+// SEARCH FOR EXPENSES
 void _onSearchIncome(SearchIncomeEvent event, Emitter<IncomeState> emit) {
     _searchQuery = event.query;
     emit(IncomeLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-// Clear filters
+// CCLEAR ALL FILTERS
 void _onClearFilters(ClearFiltersEvent event, Emitter<IncomeState> emit) {
     _searchQuery = '';
     _categoryFilter = null;
@@ -220,26 +220,26 @@ void _onClearFilters(ClearFiltersEvent event, Emitter<IncomeState> emit) {
     emit(IncomeLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-// Sort by amount
+// SORT BY AMOUNT
 void _onSortByAmount(SortByAmountEvent event, Emitter<IncomeState> emit) {
     _sortAscending = event.ascending;
     emit(IncomeLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-// Filter by category
+// FILTER BY CATEGORY
 void _onFilterByCategory(FilterByCategoryEvent event, Emitter<IncomeState> emit) {
     _categoryFilter = event.category;
     emit(IncomeLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-// Filter by date range
+// FILTER BY DATE RANGE
 void _onFilterByDateRange(FilterByDateRangeEvent event, Emitter<IncomeState> emit) {
     _startDateFilter = event.startDate;
     _endDateFilter = event.endDate;
     emit(IncomeLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-// Refresh expenses
+// REFRESH INCOME
 void _onRefreshIncome(RefreshIncomeEvent event, Emitter<IncomeState> emit) async {
   emit(IncomeLoading(isFirstFetch: true));
     try {

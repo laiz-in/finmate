@@ -105,11 +105,13 @@ class _UpdateIncomeDialog extends State<UpdateIncomeDialog> {
 
               // INCOME AMOUNT FIELD
               TextFormField(
+                cursorColor: Theme.of(context).canvasColor.withOpacity(0.4),
+
                 initialValue: _incomeAmount.toString(),
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontSize: 15.sp, // USE SCREENUTIL FOR FONT SIZE
-                  fontWeight: FontWeight.w500,
+                  fontSize: 14.sp, // USE SCREENUTIL FOR FONT SIZE
+                  fontWeight: FontWeight.w400,
                 ),
                 decoration: InputDecoration(
                   filled: true,
@@ -122,27 +124,33 @@ class _UpdateIncomeDialog extends State<UpdateIncomeDialog> {
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an amount';
-                  }
-                  try {
-                    _incomeAmount = double.parse(value);
-                  } catch (e) {
-                    return 'Please enter a valid number';
-                  }
-                  return null;
-                },
+                if (value == null || value.isEmpty) {
+                  return 'Please enter an amount';
+                } else if (num.tryParse(value)! <= 0) {
+                  return 'Please enter a valid amount';
+                } else if (num.tryParse(value)! > 999999) {
+                  return 'Maximum expense can be added is 999999';
+                }
+                try {
+                  _incomeAmount = double.parse(value);
+                } catch (e) {
+                  return 'Please enter a valid number';
+                }
+                return null;
+              },
               ),
               
               SizedBox(height: 15.h), // USE SCREENUTIL FOR HEIGHT
 
               // DESCRIPTION FIELD
               TextFormField(
+                cursorColor: Theme.of(context).canvasColor.withOpacity(0.4),
+
                 initialValue: _incomeRemarks,
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontSize: 15.sp, // USE SCREENUTIL FOR FONT SIZE
-                  fontWeight: FontWeight.w500,
+                  fontSize: 14.sp, // USE SCREENUTIL FOR FONT SIZE
+                  fontWeight: FontWeight.w400,
                   decoration: TextDecoration.none,
                 ),
                 decoration: InputDecoration(
@@ -170,8 +178,8 @@ class _UpdateIncomeDialog extends State<UpdateIncomeDialog> {
                 value: _incomeCategory,
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 15.sp, // USE SCREENUTIL FOR FONT SIZE
+                  fontWeight: FontWeight.w400,
+                  fontSize: 14.sp, // USE SCREENUTIL FOR FONT SIZE
                 ),
                 decoration: InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -202,8 +210,8 @@ class _UpdateIncomeDialog extends State<UpdateIncomeDialog> {
                           category,
                           style: GoogleFonts.poppins(
                             color: Theme.of(context).canvasColor,
-                            fontSize: 15.sp, // USE SCREENUTIL FOR FONT SIZE
-                            fontWeight: FontWeight.w500,
+                            fontSize: 14.sp, // USE SCREENUTIL FOR FONT SIZE
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ),
@@ -225,8 +233,8 @@ class _UpdateIncomeDialog extends State<UpdateIncomeDialog> {
               TextFormField(
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontSize: 15.sp, // USE SCREENUTIL FOR FONT SIZE
-                  fontWeight: FontWeight.w500,
+                  fontSize: 14.sp, // USE SCREENUTIL FOR FONT SIZE
+                  fontWeight: FontWeight.w400,
                 ),
                 decoration: InputDecoration(
                   filled: true,

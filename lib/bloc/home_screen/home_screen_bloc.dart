@@ -27,20 +27,17 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
     required this.fetchThisYearIncomeUseCase,
   }) : super(HomeScreenLoading()) {
 
-    // Handle event to fetch user data
-    on<FetchUserData>((event, emit) async {
+// EVENT FOR FETCHING USER DATA
+on<FetchUserData>((event, emit) async {
+  emit(HomeScreenLoading());
+  final result = await userRepository.getUserData();
+  result.fold(
+    (error) => emit(HomeScreenError(error)),
+    (user) => emit(HomeScreenLoaded(user)),
+  );
+});
 
-      emit(HomeScreenLoading());
-
-      final result = await userRepository.getUserData();
-
-      result.fold(
-        (error) => emit(HomeScreenError(error)),
-        (user) => emit(HomeScreenLoaded(user)),
-      );
-    });
-
-    // Handle event to fetch this month's income
+    // THIS MONTH INCOME
     on<FetchThisMonthIncomeEvent>((event, emit) async {
       emit(HomeScreenLoading());
 
@@ -52,7 +49,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
       );
     });
 
-    // Handle event to fetch this week's income
+    // THIS WEEK INCOME
     on<FetchThisWeekIncomeEvent>((event, emit) async {
       emit(HomeScreenLoading());
 
@@ -64,7 +61,7 @@ class HomeScreenBloc extends Bloc<HomeScreenEvent, HomeScreenState> {
       );
     });
 
-    // Handle event to fetch this year's income
+    // THIS YEAR INCOME
     on<FetchThisYearIncomeEvent>((event, emit) async {
       emit(HomeScreenLoading());
 

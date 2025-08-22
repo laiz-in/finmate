@@ -8,7 +8,7 @@ abstract class HomeScreenState extends Equatable {
 class HomeScreenLoading extends HomeScreenState {}
 
 class HomeScreenLoaded extends HomeScreenState {
-  final dynamic user; // Replace with your user model type
+  final dynamic user;
   HomeScreenLoaded(this.user);
 
   @override

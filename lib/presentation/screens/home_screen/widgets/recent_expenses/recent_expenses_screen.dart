@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:moneyy/common/widgets/error_snackbar.dart';
-import 'package:moneyy/domain/entities/spending/expenses.dart';
+import 'package:moneyy/domain/entities/expenses/expenses.dart';
 import 'package:moneyy/domain/usecases/expenses/last_three_expense_usecase.dart';
 import 'package:moneyy/service_locator.dart';
 

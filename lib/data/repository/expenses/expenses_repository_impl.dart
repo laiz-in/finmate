@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:moneyy/data/models/expenses/user_expenses.dart';
 import 'package:moneyy/data/sources/remote/expenses/expenses_firebase_services.dart';
-import 'package:moneyy/domain/entities/spending/expenses.dart';
+import 'package:moneyy/domain/entities/expenses/expenses.dart';
 import 'package:moneyy/domain/repository/total_spendings/expenses.dart';
 
 class ExpensesRepositoryImpl implements ExpensesRepository {
@@ -29,8 +29,6 @@ class ExpensesRepositoryImpl implements ExpensesRepository {
       return Left("Error fetching complete expenses: $e");
     }
   }
-
-
 
 
   // FETCH ALL EXPENSES

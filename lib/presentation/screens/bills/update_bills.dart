@@ -111,19 +111,21 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
 
             //  BILL AMOUNT FIELD
             TextFormField(
+              cursorColor: Theme.of(context).canvasColor.withOpacity(0.4),
+
               initialValue: _billAmount.toString(),
               style: GoogleFonts.poppins(
                 color: Theme.of(context).canvasColor,
-                fontSize: 15.sp, // FONT SIZE
-                fontWeight: FontWeight.w500,
+                fontSize: 14.sp, // FONT SIZE
+                fontWeight: FontWeight.w400,
               ),
               decoration: InputDecoration(
                 floatingLabelBehavior: FloatingLabelBehavior.never,
                 labelText: '0.00',
                 labelStyle: GoogleFonts.poppins(
-                  fontSize: 15.sp, // FONT SIZE
+                  fontSize: 14.sp, // FONT SIZE
                   color: Theme.of(context).canvasColor,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w400,
                 ),
                 filled: true,
                 fillColor: Theme.of(context).cardColor,
@@ -137,6 +139,10 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
               validator: (value) {
                 if (value == null || value.isEmpty) {
                   return 'Please enter an amount';
+                } else if (num.tryParse(value)! <= 0) {
+                  return 'Please enter a valid amount';
+                } else if (num.tryParse(value)! > 999999) {
+                  return 'Maximum expense can be added is 999999';
                 }
                 try {
                   _billAmount = double.parse(value);
@@ -163,9 +169,9 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
                     child: Text(
                       "Pending",
                       style: GoogleFonts.poppins(
-                        fontSize: 15.sp,
+                        fontSize: 14.sp,
                         color: Theme.of(context).canvasColor,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -174,9 +180,9 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
                     child: Text(
                       "Paid",
                       style: GoogleFonts.poppins(
-                        fontSize: 15.sp,
+                        fontSize: 14.sp,
                         color: Theme.of(context).canvasColor,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
                   ),
@@ -197,11 +203,13 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
             
             // BILL TITLE FIELD
             TextFormField(
+              cursorColor: Theme.of(context).canvasColor.withOpacity(0.4),
+
               initialValue: _billTitle,
               style: GoogleFonts.poppins(
                 color: Theme.of(context).canvasColor,
-                fontSize: 15.sp, // FONT SIZE
-                fontWeight: FontWeight.w500,
+                fontSize: 14.sp, // FONT SIZE
+                fontWeight: FontWeight.w400,
                 decoration: TextDecoration.none,
               ),
               decoration: InputDecoration(
@@ -225,11 +233,13 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
 
             // BILL DESCRIPTION FIELD
             TextFormField(
+                cursorColor: Theme.of(context).canvasColor.withOpacity(0.4),
+
                 initialValue: _billDescription,
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontSize: 15.sp, // FONT SIZE
-                  fontWeight: FontWeight.w500,
+                  fontSize: 14.sp, // FONT SIZE
+                  fontWeight: FontWeight.w400,
                   decoration: TextDecoration.none,
                 ),
                 decoration: InputDecoration(
@@ -255,7 +265,7 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
             Row(
               children: [
                 SizedBox(width: 3.w,),
-                Text("Bill due date", style: GoogleFonts.poppins(
+                Text(" Bill due date", style: GoogleFonts.poppins(
                   fontSize: 12.sp, // FONT SIZE
                   color: Theme.of(context).canvasColor,
                   fontWeight: FontWeight.w400,
@@ -268,8 +278,8 @@ class _UpdateBillDialog extends State<UpdateBillDialog> {
             TextFormField(
               style: GoogleFonts.poppins(
                 color: Theme.of(context).canvasColor,
-                fontSize: 15.sp, // FONT SIZE
-                fontWeight: FontWeight.w500,
+                fontSize: 14.sp, // FONT SIZE
+                fontWeight: FontWeight.w400,
               ),
               decoration: InputDecoration(
                 filled: true,

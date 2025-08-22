@@ -110,19 +110,21 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
 
               // AMOUNT FIELD
               TextFormField(
+                cursorColor: Theme.of(context).canvasColor.withOpacity(0.4),
+
                 initialValue: _spendingAmount.toString(),
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontSize: 15.sp, // FONT SIZE
-                  fontWeight: FontWeight.w500,
+                  fontSize: 14.sp, // FONT SIZE
+                  fontWeight: FontWeight.w400,
                 ),
                 decoration: InputDecoration(
                   floatingLabelBehavior: FloatingLabelBehavior.never,
                   labelText: '0.00',
                   labelStyle: GoogleFonts.poppins(
-                    fontSize: 15.sp, // FONT SIZE
+                    fontSize: 14.sp, // FONT SIZE
                     color: Theme.of(context).canvasColor,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w400,
                   ),
                   filled: true,
                   fillColor: Theme.of(context).cardColor,
@@ -134,26 +136,32 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                 ),
                 keyboardType: TextInputType.number,
                 validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter an amount';
-                  }
-                  try {
-                    _spendingAmount = double.parse(value);
-                  } catch (e) {
-                    return 'Please enter a valid number';
-                  }
-                  return null;
-                },
+                if (value == null || value.isEmpty) {
+                  return 'Please enter an amount';
+                } else if (num.tryParse(value)! <= 0) {
+                  return 'Please enter a valid amount';
+                } else if (num.tryParse(value)! > 999999) {
+                  return 'Maximum expense can be added is 999999';
+                }
+                try {
+                  _spendingAmount = double.parse(value);
+                } catch (e) {
+                  return 'Please enter a valid number';
+                }
+                return null;
+              },
               ),
               SizedBox(height: 15.h), // SPACING
 
               // DESCRIPTION FIELD
               TextFormField(
+                cursorColor: Theme.of(context).canvasColor.withOpacity(0.4),
+
                 initialValue: _spendingDescription,
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontSize: 15.sp, // FONT SIZE
-                  fontWeight: FontWeight.w500,
+                  fontSize: 14.sp, // FONT SIZE
+                  fontWeight: FontWeight.w400,
                   decoration: TextDecoration.none,
                 ),
                 decoration: InputDecoration(
@@ -186,9 +194,9 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                 decoration: InputDecoration(
                   labelText: 'Category',
                   labelStyle: GoogleFonts.poppins(
-                    fontSize: 15.sp, // FONT SIZE
+                    fontSize: 14.sp, // FONT SIZE
                     color: Theme.of(context).canvasColor,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w400,
                   ),
                   floatingLabelBehavior: FloatingLabelBehavior.never,
                   filled: true,
@@ -215,8 +223,8 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
                           category,
                           style: GoogleFonts.poppins(
                             color: Theme.of(context).canvasColor,
-                            fontSize: 15.sp, // FONT SIZE
-                            fontWeight: FontWeight.w500,
+                            fontSize: 14.sp, // FONT SIZE
+                            fontWeight: FontWeight.w400,
                           ),
                         ),
                       ),
@@ -236,8 +244,8 @@ class _UpdateSpendingDialog extends State<UpdateSpendingDialog> {
               TextFormField(
                 style: GoogleFonts.poppins(
                   color: Theme.of(context).canvasColor,
-                  fontSize: 15.sp, // FONT SIZE
-                  fontWeight: FontWeight.w500,
+                  fontSize: 14.sp, // FONT SIZE
+                  fontWeight: FontWeight.w400,
                 ),
                 decoration: InputDecoration(
                   filled: true,

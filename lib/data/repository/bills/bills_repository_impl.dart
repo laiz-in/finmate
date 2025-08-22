@@ -12,7 +12,7 @@ class BillsRepositoryImpl implements BillsRepository {
 
   // FETCH ALL BILLS
   @override
-Future<Either<String, List<BillsEntity>>> fetchAllBills(int page, int pageSize) async {
+  Future<Either<String, List<BillsEntity>>> fetchAllBills(int page, int pageSize) async {
   try {
     final eitherResult = await _firebaseService.fetchAllBills(pageSize: pageSize);
 

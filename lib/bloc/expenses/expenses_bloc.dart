@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:moneyy/domain/entities/spending/expenses.dart';
+import 'package:moneyy/domain/entities/expenses/expenses.dart';
 import 'package:moneyy/domain/usecases/expenses/add_expense_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/complete_expenses_usecase.dart';
 import 'package:moneyy/domain/usecases/expenses/delete_expenses_usecase.dart';
@@ -77,12 +77,9 @@ void _onDeleteExpenses(DeleteExpenseEvent event, Emitter<ExpensesState> emit) as
       emit(ExpensesError(failureMessage));
     },
     (successMessage) {
-      // Remove the deleted expense locally from _allExpenses
       _allExpenses = _allExpenses
           .where((expense) => expense.uidOfTransaction != event.expenseId)
           .toList();
-
-      // Re-apply filters and emit the updated list without showing the loading indicator
       emit(ExpensesLoaded(_applyFilters(), hasMore: _hasMore));
     },
   );
@@ -113,13 +110,13 @@ List<ExpensesEntity> _applyFilters() {
         _startDateFilter!.year,
         _startDateFilter!.month,
         _startDateFilter!.day,
-        0, 0, 0, 0, // Explicitly set to 12 AM
+        0, 0, 0, 0,
       );
       DateTime endDateWithTime = DateTime(
         _endDateFilter!.year,
         _endDateFilter!.month,
         _endDateFilter!.day,
-        23, 59, 59, 999, // Explicitly set to 11:59:59.999 PM
+        23, 59, 59, 999,
       );
 
       expenses = expenses.where((expense) =>
@@ -136,58 +133,56 @@ List<ExpensesEntity> _applyFilters() {
   } else if (_sortAscending == false) {
     expenses.sort((a, b) => b.spendingAmount.compareTo(a.spendingAmount));
   } else {
-    // Default sorting by date if no other sort is applied
     expenses.sort((b, a) => a.spendingDate.compareTo(b.spendingDate));
   }
-
     return expenses;
   }
 
-// TO FETCH ALL EXPENSES (Initial Load - 30 items)
+// TO FETCH ALL EXPENSES
 Future<void> _onFetchAllExpenses(
   FetchAllExpensesEvent event,
   Emitter<ExpensesState> emit,
 ) async {
   emit(ExpensesLoading(isFirstFetch: true));
   try {
-    _currentPage = 1; // Reset to the first page
-    _pageSize = 30;  // Set page size to 30 initially
+    _currentPage = 1;
+    _pageSize = 30;
     final result = await _totalExpensesUseCase(page: _currentPage, pageSize: _pageSize);
     result.fold(
-      (failure) => emit(ExpensesError(failure)), // Emit error on failure
+      (failure) => emit(ExpensesError(failure)),
       (expenses) {
-        _allExpenses = List.from(expenses); // Replace with the new data
+        _allExpenses = List.from(expenses);
         final hasMore = expenses.length == _pageSize;
         emit(ExpensesLoaded(_allExpenses, hasMore: hasMore));
       },
     );
   } catch (e) {
-    emit(ExpensesError(e.toString())); // Emit error if an exception occurs
+    emit(ExpensesError(e.toString()));
   }
 }
 
-// LOAD MORE EXPENSES (Add 30 more items on each click)
+// LOAD MORE EXPENSES
 Future<void> _onLoadMoreExpenses(
   LoadMoreExpensesEvent event,
   Emitter<ExpensesState> emit,
 ) async {
   try {
-    emit(ExpensesLoading(isFirstFetch: false)); // Emit loading for "load more"
-    _currentPage++; // Increment page for the next fetch
-    _pageSize += 30; // Increase page size by 30 for subsequent loads
+    emit(ExpensesLoading(isFirstFetch: false));
+    _currentPage++;
+    _pageSize += 30;
 
 
     final result = await _totalExpensesUseCase(page: _currentPage, pageSize: _pageSize);
     result.fold(
-      (failure) => emit(ExpensesError(failure)), // Emit error on failure
+      (failure) => emit(ExpensesError(failure)),
       (expenses) {
-        _allExpenses = List.from(expenses); // Replace with the new data
+        _allExpenses = List.from(expenses);
         final hasMore = expenses.length == _pageSize;
         emit(ExpensesLoaded(_allExpenses, hasMore: hasMore));
       },
     );
   } catch (e) {
-    _currentPage--; // Revert page increment if an exception occurs
+    _currentPage--;
     emit(ExpensesError(e.toString()));
   }
 }
@@ -234,14 +229,14 @@ void _onFilterByCategory(FilterByCategoryEvent event, Emitter<ExpensesState> emi
     emit(ExpensesLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-// Filter by date range
+// FILTER BY DATE RANGE
 void _onFilterByDateRange(FilterByDateRangeEvent event, Emitter<ExpensesState> emit) {
     _startDateFilter = event.startDate;
     _endDateFilter = event.endDate;
     emit(ExpensesLoaded(_applyFilters(), hasMore: _hasMore));
   }
 
-// Refresh expenses
+// REFRESH EXPENSES
 void _onRefreshExpenses(RefreshExpensesEvent event, Emitter<ExpensesState> emit) async {
   emit(ExpensesLoading(isFirstFetch: true));
     try {

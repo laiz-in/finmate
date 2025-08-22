@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
-import 'package:moneyy/domain/entities/spending/expenses.dart';
+import 'package:moneyy/domain/entities/expenses/expenses.dart';
 import 'package:moneyy/presentation/screens/expenses/delete_expense_button.dart';
 import 'package:moneyy/presentation/screens/expenses/update_expense.dart';
 
@@ -121,7 +121,7 @@ title: SizedBox(
           widget.transaction.spendingDescription,
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
-          style: GoogleFonts.montserrat(
+          style: GoogleFonts.poppins(
             fontSize: 14.sp, // FONT SIZE
             fontWeight: FontWeight.w500,
             height: 1,

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:moneyy/core/colors/colors.dart';
 
 class AppTheme {
+
+  // LIGHT THEME COLORS
   static final lightTheme = ThemeData(
     primaryColor: AppColors.backgroundColor,
     scaffoldBackgroundColor: AppColors.backgroundColor,
@@ -12,6 +14,7 @@ class AppTheme {
     highlightColor: Color.fromARGB(255, 210, 216, 214),
   );
 
+  // DARK THEME COLORS
   static final darkTheme = ThemeData(
     primaryColor: const Color.fromARGB(255, 22, 22, 22),
     scaffoldBackgroundColor: Colors.black,
@@ -20,6 +23,5 @@ class AppTheme {
     hintColor: AppColors.darkBackgroundColor,
     primaryColorDark:Color.fromARGB(255, 176, 175, 177),
     highlightColor: AppColors.darkBackgroundColor,
-    // Add more dark theme customizations
   );
 }

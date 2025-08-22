@@ -20,6 +20,7 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+
   // HANDLE FIREBASE AUTH EXCEPTIONS
   FirebaseFailure _handleAuthException(FirebaseAuthException e) {
     switch (e.code) {
@@ -40,6 +41,7 @@ class AuthFirebaseServiceImpl extends AuthFirebaseService {
       case 'requires-recent-login':
         return RequiresRecentLoginException();
       case 'invalid-credential':
+        print("CAME TO DATA/SOURCES/AUTH/ HANDLE EXCEPTION");
         return InvalidCredentialException();
       default:
         return GeneralFirebaseException("Unknown error occured , please contact us");

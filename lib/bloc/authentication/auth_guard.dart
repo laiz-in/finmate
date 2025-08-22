@@ -23,12 +23,16 @@ class AuthGuard extends StatelessWidget {
 
             // IF AUTHENTICATION FAILED AND NO INTERNET CONNECTION
             if (authState is AuthFailure && !isConnected) {
+              print("No internet connection and authentication failed");
+              print(isConnected);
               return NoInternetScreen();
             }
 
 
             // WHEN AUTHENTICATON LOADING
             if (authState is AuthLoading) {
+              print("AUTH IS LOADING IN BLOC");
+
               return SplashScreen();
             }
 
@@ -40,12 +44,16 @@ class AuthGuard extends StatelessWidget {
 
             // DEVICE IS NOT AUTHENTICATED
             if (authState is AuthUnauthenticated || authState is AuthFailure) {
+                            print("AUTH IS DEVICE IS NOT AUTHENTICATED IN BLOC");
+
               return LoginScreen();
             }
 
 
             // AUTHENTICATION FAILED
             if (authState is AuthFailure) {
+                                          print("AUTH IS FAILED IN BLOC");
+
               return LoginScreen();
             }
 

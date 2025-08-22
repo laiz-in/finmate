@@ -1,12 +1,7 @@
-// import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:firebase_storage/firebase_storage.dart';
-// import 'package:flutter/material.dart';
-// import 'package:image_cropper/image_cropper.dart';  // Add image_cropper import
-// import 'package:image_picker/image_picker.dart';
 
 abstract class SettingsFirebaseService {
   Future<Either> resetName({required String firstName, required String lastName});
@@ -28,26 +23,16 @@ abstract class SettingsFirebaseService {
 class SettingsFirebaseServiceImpl extends SettingsFirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // helper function to check if the device is connected to the internet
-  // Future<bool> _isConnected() async {
-  //   var connectivityResult = await Connectivity().checkConnectivity();
-  //   return connectivityResult != ConnectivityResult.none;
-  // }
-
 
 // DAILY LIMIT RESET SERVICE
 @override
 Future<Either> resetDailyLimit({required int dailyLimit}) async {
   try {
-    // Get the current user
     User? user = _auth.currentUser;
     if (user == null) return Left("User not logged in");
 
-    // Validate the limit
     if (dailyLimit > 999999) return Left("Maximum daily limit is 999999");
 
-
-    // Update Firestore (Works offline & syncs later)
     FirebaseFirestore.instance.collection('users').doc(user.uid).update({
       'dailyLimit': dailyLimit,
     });
@@ -65,21 +50,16 @@ Future<Either> resetDailyLimit({required int dailyLimit}) async {
 @override
 Future<Either<String, String>> resetMonthlyLimit({required int monthlyLimit}) async {
   try {
-    // Get the current user
     User? user = _auth.currentUser;
     if (user == null) {
       return Left("User not logged in");
     }
-
     if (monthlyLimit > 999999) {
       return Left("Maximum monthly limit is 999999");
     }
-    
-    // Update Firestore (works offline & syncs later)
-    FirebaseFirestore.instance.collection('users').doc(user.uid).update({
+        FirebaseFirestore.instance.collection('users').doc(user.uid).update({
       'monthlyLimit': monthlyLimit,
     });
-
     return Right("Monthly limit updated successfully");
   } on FirebaseException catch (e) {
     return Left("Failed to update monthly limit in Firestore: ${e.message}");
@@ -93,10 +73,8 @@ Future<Either<String, String>> resetMonthlyLimit({required int monthlyLimit}) as
 @override
 Future<Either> sendFeedback({required String feedback}) async {
   try {
-    // Get the current user
     User? user = _auth.currentUser;
 
-    // Generate a unique ID manually (avoid waiting for Firestore auto-ID)
     String docId = FirebaseFirestore.instance.collection('feedbacks').doc().id;
     // Add feedback using set() with merge: true (ensures local write)
     FirebaseFirestore.instance.collection('feedbacks').doc(docId).set({
@@ -137,7 +115,6 @@ Future<Either<String, String>> resetName({
     return Left("Could not edit the name!");
   }
 }
-
 
 
 

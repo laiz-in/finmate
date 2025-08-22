@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+// STORES THE THEME CHOSEN BY THE USER FOR THEIR DEVICE
+
 class ThemeStorage {
   static const String _themeKey = 'isDarkMode';
 

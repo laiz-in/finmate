@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:moneyy/data/models/expenses/user_expenses.dart';
-import 'package:moneyy/domain/entities/spending/expenses.dart';
+import 'package:moneyy/domain/entities/expenses/expenses.dart';
 
 abstract class ExpensesRepository {
 

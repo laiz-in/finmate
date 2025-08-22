@@ -1,6 +1,6 @@
 // expenses_event.dart
 
-import 'package:moneyy/domain/entities/spending/expenses.dart';
+import 'package:moneyy/domain/entities/expenses/expenses.dart';
 
 abstract class ExpensesEvent {}
 

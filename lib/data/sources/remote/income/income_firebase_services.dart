@@ -8,7 +8,7 @@ class IncomeFirebaseService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-// Fetch current logged-in user's ID
+// GET CURRENT USER ID
 String? _getCurrentUserId() {
   final User? currentUser = _auth.currentUser;
   return currentUser?.uid;
@@ -22,19 +22,14 @@ Future<List<IncomeModel>> fetchCompleteIncome() async {
       throw Exception("User is not logged in");
     }
 
-    // Start building the query
     Query query = _firestore
         .collection('users')
         .doc(userId)
         .collection('income')
         .orderBy('incomeDate', descending: true);
 
-    
-
-    // Fetch documents from the 'spendings' subcollection with pagination
     try{
     final QuerySnapshot snapshot = await query.get(GetOptions(source: Source.cache));
-    // Map documents to ExpensesModel
     final List<IncomeModel> income = snapshot.docs.map((doc) {
       return IncomeModel.fromJson(
         doc.data() as Map<String, dynamic>,
@@ -45,7 +40,6 @@ Future<List<IncomeModel>> fetchCompleteIncome() async {
     }
     catch (e){
     final QuerySnapshot snapshot = await query.get(GetOptions(source: Source.server));
-    // Map documents to ExpensesModel
     final List<IncomeModel> income = snapshot.docs.map((doc) {
       return IncomeModel.fromJson(
         doc.data() as Map<String, dynamic>,
@@ -68,7 +62,6 @@ Future<List<IncomeModel>> fetchCompleteIncome() async {
         if (user != null) {
 
 
-            // update the certain expense
             final newIncomeRef = FirebaseFirestore.instance
                 .collection("users")
                 .doc(user.uid)
@@ -105,7 +98,7 @@ Future<List<IncomeModel>> fetchCompleteIncome() async {
                 .collection("users")
                 .doc(user.uid)
                 .collection("income")
-                .doc(); // Create a DocumentReference with a generated ID
+                .doc();
 
             newIncomeRef.set({
               'incomeAmount': income.incomeAmount,
@@ -113,7 +106,7 @@ Future<List<IncomeModel>> fetchCompleteIncome() async {
               'incomeRemarks': income.incomeRemarks,
               'incomeDate': income.incomeDate,
               'createdAt': Timestamp.fromDate(DateTime.now()),
-              'uidOfIncome': newIncomeRef.id, // Store the generated document ID
+              'uidOfIncome': newIncomeRef.id,
             });
             return Right("success");
           }
@@ -133,7 +126,6 @@ Future<List<IncomeModel>> fetchAllIncome({DateTime? lastIncomeDate, required int
       throw Exception("User is not logged in");
     }
 
-    // Start building the query
     Query query = _firestore
         .collection('users')
         .doc(userId)
@@ -141,15 +133,12 @@ Future<List<IncomeModel>> fetchAllIncome({DateTime? lastIncomeDate, required int
         .orderBy('incomeDate', descending: true)
         .limit(pageSize);
 
-    // Use startAfter based on lastSpendingDate if provided
     if (lastIncomeDate != null) {
       query = query.startAfter([lastIncomeDate]);
     }
 
-    // Fetch documents from the 'spendings' subcollection with pagination
     try{
     final QuerySnapshot snapshot = await query.get(GetOptions(source: Source.cache));
-    // Map documents to ExpensesModel
     final List<IncomeModel> income = snapshot.docs.map((doc) {
       return IncomeModel.fromJson(
         doc.data() as Map<String, dynamic>,
@@ -291,11 +280,10 @@ Future<Either<String, double>> fetchThisWeekIncome() async {
     if (user != null) {
       double thisWeekIncome = 0.0;
       DateTime now = DateTime.now();
-      // Calculate the start of the week (last Thursday)
-      int daysSinceThursday = (now.weekday + 3) % 7; // Ensures Thursday is day 0 of the week
+      int daysSinceThursday = (now.weekday + 3) % 7;
       DateTime startOfWeek = DateTime(now.year, now.month, now.day).subtract(Duration(days: daysSinceThursday));
       
-      DateTime currentTime = now; // Current date and time
+      DateTime currentTime = now;
 
       QuerySnapshot incomeSnapshot = await _firestore
           .collection("users")
@@ -324,8 +312,8 @@ Future<Either<String, double>> fetchThisYearIncome() async {
     if (user != null) {
       double thisYearIncome = 0.0;
       DateTime now = DateTime.now();
-      DateTime startOfYear = DateTime(now.year, 1, 1); // 1st of January of the current year at 12:00 AM
-      DateTime currentTime = now; // Current date and time
+      DateTime startOfYear = DateTime(now.year, 1, 1);
+      DateTime currentTime = now;
 
       QuerySnapshot incomeSnapshot = await _firestore
           .collection("users")
@@ -354,8 +342,8 @@ Future<Either<String, double>> fetchTotalIncome() async {
     if (user != null) {
       double todaysIncome = 0.0;
       DateTime now = DateTime.now();
-      DateTime startOfDay = DateTime(now.year, now.month, now.day); // Start of today
-      DateTime endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59); // End of today
+      DateTime startOfDay = DateTime(now.year, now.month, now.day);
+      DateTime endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
 
       QuerySnapshot incomeSnapshot = await _firestore
           .collection("users")

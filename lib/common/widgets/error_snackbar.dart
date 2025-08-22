@@ -39,12 +39,9 @@ class ModernSnackBarContent extends StatelessWidget {
             children: [
             IconButton(onPressed: () {
               Navigator.pop(context);
-                                      },
+              },
             icon: Icon(Icons.dangerous_outlined,size: 50,color: Color.fromARGB(255, 85, 43, 43))),
-            
-            
             const SizedBox(width: 15),
-            
             Expanded(
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

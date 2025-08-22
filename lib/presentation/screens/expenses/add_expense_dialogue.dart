@@ -127,7 +127,7 @@ class _AddSpendingBottomSheetState extends State<AddSpendingBottomSheet> {
                 labelStyle: GoogleFonts.poppins(
                   fontSize: 14.sp, // USE SCREENUTIL FOR FONT SIZE
                   color: Theme.of(context).canvasColor,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w400,
                 ),
                 filled: true,
                 fillColor: Theme.of(context).cardColor,
