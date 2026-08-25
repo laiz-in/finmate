@@ -11,6 +11,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+
+  connectivity_plus: ^6.1.0
+  internet_connection_checker_plus: ^2.5.2
   # State management
   flutter_bloc: ^8.1.6
   equatable: ^2.0.5

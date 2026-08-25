@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'core/connectivity/connectivity_cubit.dart';
 import 'core/di/injector.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_cubit.dart';
@@ -10,16 +11,18 @@ import 'firebase_options.dart';
 import 'presentation/auth/bloc/auth_bloc.dart';
 import 'presentation/auth/bloc/auth_event.dart';
 import 'presentation/auth/screens/auth_gate.dart';
+import 'presentation/profile/bloc/profile_cubit.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Future.wait([
+    Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform),
+    Hive.initFlutter(),
+  ]);
 
-  await Hive.initFlutter();
   await Hive.openBox('settingsBox');
+  await Hive.openBox('profileBox');
 
   setupInjector();
 
@@ -36,6 +39,12 @@ class FinMateApp extends StatelessWidget {
         BlocProvider<ThemeCubit>(create: (_) => ThemeCubit()),
         BlocProvider<AuthBloc>(
           create: (_) => getIt<AuthBloc>()..add(const AuthCheckRequested()),
+        ),
+        BlocProvider<ConnectivityCubit>(
+          create: (_) => getIt<ConnectivityCubit>(),
+        ),
+        BlocProvider<ProfileCubit>(
+          create: (_) => getIt<ProfileCubit>(),
         ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(

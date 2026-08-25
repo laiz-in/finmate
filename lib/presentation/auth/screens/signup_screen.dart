@@ -96,13 +96,13 @@ class _SignupViewState extends State<_SignupView> {
               
                   const SizedBox(height: 40),
 
-                  Text('Email', style: AppTextStyles.bodyMedium(colors.textPrimary)),
+                  Text('Email', style: AppTextStyles.caption(colors.textPrimary)),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
                     style: AppTextStyles.body(colors.textPrimary),
-                    decoration: const InputDecoration(hintText: 'you@example.com'),
+                    decoration: const InputDecoration(hintText: 'finmateuser@gmail.com'),
                     validator: (value) {
                       if (value == null || value.isEmpty) return 'Email is required';
                       if (!value.contains('@')) return 'Enter a valid email';
@@ -111,7 +111,7 @@ class _SignupViewState extends State<_SignupView> {
                   ),
                   const SizedBox(height: 20),
 
-                  Text('Password', style: AppTextStyles.bodyMedium(colors.textPrimary)),
+                  Text('Password', style: AppTextStyles.caption(colors.textPrimary)),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _passwordController,
@@ -122,7 +122,7 @@ class _SignupViewState extends State<_SignupView> {
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                          color: colors.textSecondary,
+                          color: colors.textSecondary,size: 20,
                         ),
                         onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                       ),
@@ -135,7 +135,7 @@ class _SignupViewState extends State<_SignupView> {
                   ),
                   const SizedBox(height: 20),
 
-                  Text('Confirm Password', style: AppTextStyles.bodyMedium(colors.textPrimary)),
+                  Text('Confirm Password', style: AppTextStyles.caption(colors.textPrimary)),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _confirmController,

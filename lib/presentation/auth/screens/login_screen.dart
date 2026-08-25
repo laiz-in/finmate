@@ -83,12 +83,6 @@ class _LoginViewState extends State<_LoginView> {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      Icon(
-                        Icons.arrow_forward_rounded,
-                        color: colors.textPrimary,
-                        size: 40,
-                      ),
                     ],
                   ),
 
@@ -120,7 +114,7 @@ class _LoginViewState extends State<_LoginView> {
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                          color: colors.textSecondary,
+                          color: colors.textSecondary,size: 20,
                         ),
                         onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                       ),
