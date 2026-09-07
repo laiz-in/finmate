@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -11,6 +12,7 @@ import 'firebase_options.dart';
 import 'presentation/auth/bloc/auth_bloc.dart';
 import 'presentation/auth/bloc/auth_event.dart';
 import 'presentation/auth/screens/auth_gate.dart';
+import 'presentation/expense/bloc/expense_cubit.dart';
 import 'presentation/profile/bloc/profile_cubit.dart';
 
 Future<void> main() async {
@@ -23,6 +25,7 @@ Future<void> main() async {
 
   await Hive.openBox('settingsBox');
   await Hive.openBox('profileBox');
+  await Hive.openBox('expensesBox');
 
   setupInjector();
 
@@ -46,16 +49,33 @@ class FinMateApp extends StatelessWidget {
         BlocProvider<ProfileCubit>(
           create: (_) => getIt<ProfileCubit>(),
         ),
+        BlocProvider<ExpenseCubit>(
+          create: (_) => getIt<ExpenseCubit>(),
+        ),
       ],
       child: BlocBuilder<ThemeCubit, ThemeMode>(
         builder: (context, themeMode) {
-          return MaterialApp(
-            title: 'FinMate',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.light,
-            darkTheme: AppTheme.dark,
-            themeMode: themeMode,
-            home: const AuthGate(),
+          final brightness = themeMode == ThemeMode.system
+              ? MediaQuery.platformBrightnessOf(context)
+              : (themeMode == ThemeMode.dark ? Brightness.dark : Brightness.light);
+          final isDark = brightness == Brightness.dark;
+
+          return AnnotatedRegion<SystemUiOverlayStyle>(
+            value: SystemUiOverlayStyle(
+              statusBarColor: Colors.transparent,
+              statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+              statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+              systemNavigationBarColor: isDark ? const Color(0xFF000000) : const Color(0xFFFAFAFA),
+              systemNavigationBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+            ),
+            child: MaterialApp(
+              title: 'FinMate',
+              debugShowCheckedModeBanner: false,
+              theme: AppTheme.light,
+              darkTheme: AppTheme.dark,
+              themeMode: themeMode,
+              home: const AuthGate(),
+            ),
           );
         },
       ),

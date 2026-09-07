@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../core/di/injector.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../dashboard/screens/main_shell.dart';
+import '../../expense/bloc/expense_cubit.dart';
 import '../../onboarding/screens/onboarding_screen.dart';
 import '../../profile/bloc/profile_cubit.dart';
 import '../../profile/bloc/profile_state.dart';
@@ -49,6 +50,7 @@ class _ProfileGateState extends State<_ProfileGate> {
     final uid = getIt<AuthRepository>().currentUser?.uid;
     if (uid != null) {
       context.read<ProfileCubit>().loadProfile(uid);
+      context.read<ExpenseCubit>().loadExpenses(uid);
     }
   }
 

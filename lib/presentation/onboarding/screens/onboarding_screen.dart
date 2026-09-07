@@ -88,9 +88,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Set up FinMate', style: AppTextStyles.heading1(colors.textPrimary)),
-                const SizedBox(height: 8),
-                Text('A few details to personalize your tracking', style: AppTextStyles.body(colors.textSecondary)),
+                  Row(
+                    children: [
+                      Text.rich(
+                        TextSpan(
+                          style: AppTextStyles.heading2(colors.textPrimary),
+                          children: [
+                            TextSpan(
+                              text: 'Set up your ',
+                              style: TextStyle(color: colors.textPrimary.withValues(alpha: 0.5)),
+                            ),
+                            const TextSpan(text: 'finmate'),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),                const SizedBox(height: 8),
                 const SizedBox(height: 32),
 
                 _SectionLabel('YOUR NAME', colors),

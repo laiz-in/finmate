@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../data/models/expense.dart';
 import '../../../data/models/user_profile.dart';
+import '../../expense/bloc/expense_cubit.dart';
 import '../../profile/bloc/profile_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -13,6 +15,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
     final profile = context.watch<ProfileCubit>().state.profile;
+    final expenseState = context.watch<ExpenseCubit>().state;
 
     if (profile == null) {
       return Scaffold(
@@ -28,14 +31,12 @@ class HomeScreen extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
           children: [
             _Header(colors: colors, profile: profile),
-            const SizedBox(height: 20),
-            _SafeToSpendCard(colors: colors, profile: profile),
             const SizedBox(height: 28),
-            _BudgetsSection(colors: colors, profile: profile),
-            const SizedBox(height: 24),
-            _CircleCard(colors: colors),
-            const SizedBox(height: 16),
-            _SavingsGoalsRow(colors: colors, profile: profile),
+            _DateLabel(colors: colors),
+            const SizedBox(height: 10),
+            _SafeToSpendCard(colors: colors, profile: profile, expenses: expenseState.expenses),
+            const SizedBox(height: 28),
+          
           ],
         ),
       ),
@@ -43,17 +44,23 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-// ---------------- Date helper ----------------
+// ---------------- Date / time helpers ----------------
 
-const _weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-const _months = [
-  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+const _weekdaysFull = [
+  'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+];
+const _monthsFull = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
-String _formattedToday() {
+
+
+/// e.g. "Wednesday, 26 August" — natural case, not all-caps.
+String _formattedDate() {
   final now = DateTime.now();
-  final weekday = _weekdays[now.weekday - 1].toUpperCase();
-  final month = _months[now.month - 1].toUpperCase();
+  final weekday = _weekdaysFull[now.weekday - 1];
+  final month = _monthsFull[now.month - 1];
   return '$weekday, ${now.day} $month';
 }
 
@@ -62,6 +69,27 @@ int _daysInCurrentMonth() {
   final nextMonth = DateTime(now.year, now.month + 1, 1);
   final lastDay = nextMonth.subtract(const Duration(days: 1));
   return lastDay.day;
+}
+
+bool _isSameDay(DateTime a, DateTime b) {
+  return a.year == b.year && a.month == b.month && a.day == b.day;
+}
+
+bool _isSameMonth(DateTime a, DateTime b) {
+  return a.year == b.year && a.month == b.month;
+}
+
+double _sumToday(List<Expense> expenses) {
+  final now = DateTime.now();
+  return expenses.where((e) => _isSameDay(e.date, now)).fold(0.0, (sum, e) => sum + e.amount);
+}
+
+/// Sum of every expense from the 1st of the current month through today.
+/// _isSameMonth only checks year/month, so this naturally covers the whole
+/// month-to-date regardless of which day it is.
+double _sumThisMonth(List<Expense> expenses) {
+  final now = DateTime.now();
+  return expenses.where((e) => _isSameMonth(e.date, now)).fold(0.0, (sum, e) => sum + e.amount);
 }
 
 // ---------------- Header ----------------
@@ -73,37 +101,24 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              _formattedToday(),
-              style: AppTextStyles.small(colors.textSecondary).copyWith(letterSpacing: 0.8),
-            ),
-            const SizedBox(height: 4),
-            Text('Morning, ${profile.firstName}', style: AppTextStyles.heading1(colors.textPrimary)),
-          ],
-        ),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            color: colors.surface,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: colors.border),
-          ),
-          child: Row(
-            children: [
-              const Text('🔥', style: TextStyle(fontSize: 13)),
-              const SizedBox(width: 4),
-              Text('34d streak', style: AppTextStyles.caption(colors.textPrimary)),
-            ],
-          ),
-        ),
-      ],
+    return Text(
+      'Hey, ${profile.firstName}',
+      style: AppTextStyles.heading2(colors.primary),
+    );
+  }
+}
+
+// ---------------- Date label (sits above the Safe to Spend card) ----------------
+
+class _DateLabel extends StatelessWidget {
+  final AppColors colors;
+  const _DateLabel({required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      _formattedDate(),
+      style: AppTextStyles.bodyMedium(colors.textSecondary),
     );
   }
 }
@@ -113,7 +128,8 @@ class _Header extends StatelessWidget {
 class _SafeToSpendCard extends StatelessWidget {
   final AppColors colors;
   final UserProfile profile;
-  const _SafeToSpendCard({required this.colors, required this.profile});
+  final List<Expense> expenses;
+  const _SafeToSpendCard({required this.colors, required this.profile, required this.expenses});
 
   @override
   Widget build(BuildContext context) {
@@ -121,56 +137,49 @@ class _SafeToSpendCard extends StatelessWidget {
     final dailyBudget = profile.dailyBudget;
     final monthlyBudget = profile.monthlyBudget;
 
-    // Placeholder until real expense tracking exists — assumes nothing spent yet today.
-    final safeToday = dailyBudget;
-    const double spentThisMonth = 0;
-    final progress = monthlyBudget > 0 ? (spentThisMonth / monthlyBudget).clamp(0.0, 1.0) : 0.0;
+    final spentToday = _sumToday(expenses);
+    final spentThisMonth = _sumThisMonth(expenses);
 
+    final dailyProgress = dailyBudget > 0 ? (spentToday / dailyBudget).clamp(0.0, 1.0) : 0.0;
+    final monthlyProgress = monthlyBudget > 0 ? (spentThisMonth / monthlyBudget).clamp(0.0, 1.0) : 0.0;
+
+    final dailyOver = spentToday > dailyBudget;
+    final monthlyOver = spentThisMonth > monthlyBudget;
     final now = DateTime.now();
-    final totalDays = _daysInCurrentMonth();
-
+    final month = _monthsFull[now.month - 1];
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: colors.surface,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colors.primary,
+            Color.lerp(colors.primary, Colors.black, 0.25)!,
+          ],
+        ),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('SAFE TO SPEND TODAY', style: AppTextStyles.small(colors.textSecondary).copyWith(letterSpacing: 0.8)),
-          const SizedBox(height: 10),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text('$symbol${safeToday.toStringAsFixed(2)}', style: AppTextStyles.display(colors.textPrimary)),
-              const SizedBox(width: 8),
-              Text('of $symbol${dailyBudget.toStringAsFixed(0)} planned', style: AppTextStyles.body(colors.textSecondary)),
-            ],
+          _SpendStat(
+            spent: spentToday,
+            limit: dailyBudget,
+            symbol: symbol,
+            progress: dailyProgress,
+            isOver: dailyOver,
+            suffix: 'spent today',
           ),
-          const SizedBox(height: 16),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: LinearProgressIndicator(
-              value: progress,
-              minHeight: 8,
-              backgroundColor: colors.border,
-              valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '$symbol${spentThisMonth.toStringAsFixed(2)} spent this month',
-                style: AppTextStyles.caption(colors.textSecondary),
-              ),
-              Text('day ${now.day} / $totalDays', style: AppTextStyles.caption(colors.textSecondary)),
-            ],
+          const SizedBox(height: 22),
+          _SpendStat(
+            spent: spentThisMonth,
+            limit: monthlyBudget,
+            symbol: symbol,
+            progress: monthlyProgress,
+            isOver: monthlyOver,
+            suffix: '',
           ),
         ],
       ),
@@ -178,252 +187,63 @@ class _SafeToSpendCard extends StatelessWidget {
   }
 }
 
-// ---------------- Budgets section ----------------
+class _SpendStat extends StatelessWidget {
+  final double spent;
+  final double limit;
+  final String symbol;
+  final double progress;
+  final bool isOver;
+  final String suffix;
 
-class _BudgetsSection extends StatelessWidget {
-  final AppColors colors;
-  final UserProfile profile;
-  const _BudgetsSection({required this.colors, required this.profile});
-
-  static const List<Color> _palette = [
-    Color(0xFFE07A5F),
-    Color(0xFF4A90D9),
-    Color(0xFF9B7EDE),
-    Color(0xFFE0B84A),
-    Color(0xFF5FBF8F),
-    Color(0xFFD97BB0),
-  ];
+  const _SpendStat({
+    required this.spent,
+    required this.limit,
+    required this.symbol,
+    required this.progress,
+    required this.isOver,
+    required this.suffix,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final categories = profile.spendingCategories;
-    // Naive even split of the monthly budget across categories until per-category
-    // budgets and real expense tracking exist.
-    final perCategoryLimit = categories.isNotEmpty ? profile.monthlyBudget / categories.length : 0.0;
+    final spentColor = isOver ? const Color(0xFFFFCDD2) : Colors.white;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.baseline,
+          textBaseline: TextBaseline.alphabetic,
           children: [
-            Text('Budgets', style: AppTextStyles.heading3(colors.textPrimary)),
-            Text('All money', style: AppTextStyles.bodyMedium(colors.primary)),
+            Flexible(
+              child: Text(
+                '$symbol${spent.toStringAsFixed(0)}',
+                style: AppTextStyles.heading2(spentColor),
+              ),
+            ),
+            const SizedBox(width: 2),
+            Flexible(
+              child: Text(
+                '/${limit.toStringAsFixed(0)} $suffix',
+                style: AppTextStyles.body(Colors.white.withValues(alpha: 0.8)),
+              ),
+            ),
           ],
         ),
-        const SizedBox(height: 14),
-        if (categories.isEmpty)
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: colors.surface,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: colors.border),
-            ),
-            child: Text('No categories set up yet', style: AppTextStyles.body(colors.textSecondary)),
-          )
-        else
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 6),
-            decoration: BoxDecoration(
-              color: colors.surface,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: colors.border),
-            ),
-            child: Column(
-              children: List.generate(categories.length, (i) {
-                return _BudgetTile(
-                  colors: colors,
-                  name: categories[i],
-                  spent: 0, // placeholder until real expense data exists
-                  limit: perCategoryLimit,
-                  symbol: profile.currencySymbol,
-                  color: _palette[i % _palette.length],
-                );
-              }),
-            ),
+        const SizedBox(height: 10),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: LinearProgressIndicator(
+            value: progress,
+            minHeight: 7,
+            backgroundColor: Colors.white.withValues(alpha: 0.25),
+            valueColor: AlwaysStoppedAnimation<Color>(isOver ? const Color(0xFFFFCDD2) : Colors.white),
           ),
+        ),
       ],
     );
   }
 }
 
-class _BudgetTile extends StatelessWidget {
-  final AppColors colors;
-  final String name;
-  final double spent;
-  final double limit;
-  final String symbol;
-  final Color color;
 
-  const _BudgetTile({
-    required this.colors,
-    required this.name,
-    required this.spent,
-    required this.limit,
-    required this.symbol,
-    required this.color,
-  });
 
-  @override
-  Widget build(BuildContext context) {
-    final progress = limit > 0 ? (spent / limit).clamp(0.0, 1.0) : 0.0;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Row(
-        children: [
-          Container(
-            width: 8,
-            height: 8,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(name, style: AppTextStyles.bodyMedium(colors.textPrimary)),
-                    Text(
-                      '$symbol${spent.toStringAsFixed(0)} / ${limit.toStringAsFixed(0)}',
-                      style: AppTextStyles.caption(colors.textSecondary),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: LinearProgressIndicator(
-                    value: progress,
-                    minHeight: 6,
-                    backgroundColor: colors.border,
-                    valueColor: AlwaysStoppedAnimation<Color>(color),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ---------------- Circle card (still dummy — group feature not built yet) ----------------
-
-class _CircleCard extends StatelessWidget {
-  final AppColors colors;
-  const _CircleCard({required this.colors});
-
-  @override
-  Widget build(BuildContext context) {
-    final members = ['M', 'J', 'A', 'T', 'S'];
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: colors.primary,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'YOUR CIRCLE · 6 MEMBERS',
-                style: AppTextStyles.small(Colors.white.withOpacity(0.8)).copyWith(letterSpacing: 0.8),
-              ),
-              Text('day 12 / 21', style: AppTextStyles.small(Colors.white.withOpacity(0.8))),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text('Autumn No-Spend Sprint', style: AppTextStyles.heading3(Colors.white)),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              SizedBox(
-                width: members.length * 24.0 + 12,
-                height: 32,
-                child: Stack(
-                  children: List.generate(members.length, (i) {
-                    return Positioned(
-                      left: i * 24.0,
-                      child: CircleAvatar(
-                        radius: 16,
-                        backgroundColor: Colors.white,
-                        child: Text(
-                          members[i],
-                          style: AppTextStyles.caption(colors.primary).copyWith(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    );
-                  }),
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  "You're 2nd — \$218 saved vs your usual",
-                  style: AppTextStyles.caption(Colors.white.withOpacity(0.9)),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ---------------- Savings goals row (still dummy — savings goals feature not built yet) ----------------
-
-class _SavingsGoalsRow extends StatelessWidget {
-  final AppColors colors;
-  final UserProfile profile;
-  const _SavingsGoalsRow({required this.colors, required this.profile});
-
-  @override
-  Widget build(BuildContext context) {
-    final symbol = profile.currencySymbol;
-    return Row(
-      children: [
-        Expanded(child: _GoalCard(colors: colors, title: 'Iceland, March', amount: '$symbol 4,840')),
-        const SizedBox(width: 12),
-        Expanded(child: _GoalCard(colors: colors, title: 'Emergency fund', amount: '$symbol 4,200')),
-      ],
-    );
-  }
-}
-
-class _GoalCard extends StatelessWidget {
-  final AppColors colors;
-  final String title;
-  final String amount;
-  const _GoalCard({required this.colors, required this.title, required this.amount});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: AppTextStyles.caption(colors.textSecondary)),
-          const SizedBox(height: 6),
-          Text(amount, style: AppTextStyles.heading3(colors.textPrimary)),
-        ],
-      ),
-    );
-  }
-}

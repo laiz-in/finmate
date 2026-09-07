@@ -7,6 +7,7 @@ import '../../../core/theme/app_text_styles.dart';
 import '../bloc/auth_bloc.dart';
 import '../bloc/auth_event.dart';
 import '../bloc/auth_state.dart';
+import 'forgot_password_screen.dart';
 import 'signup_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -88,7 +89,6 @@ class _LoginViewState extends State<_LoginView> {
 
                   const SizedBox(height: 60),
 
-                  // Text('Email', style: AppTextStyles.bodyMedium(colors.textPrimary)),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _emailController,
@@ -103,7 +103,6 @@ class _LoginViewState extends State<_LoginView> {
                   ),
                   const SizedBox(height: 10),
 
-                  // Text('Password', style: AppTextStyles.bodyMedium(colors.textPrimary)),
                   const SizedBox(height: 8),
                   TextFormField(
                     controller: _passwordController,
@@ -125,7 +124,32 @@ class _LoginViewState extends State<_LoginView> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 10),
+
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (_) => const ForgotPasswordScreen()),
+                        );
+                      },
+                      child: Text.rich(
+                        TextSpan(
+                          text: 'Forgot password? ',
+                          style: AppTextStyles.caption(colors.textSecondary),
+                          children: [
+                            TextSpan(
+                              text: 'Reset',
+                              style: AppTextStyles.caption(colors.primary).copyWith(fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 24),
 
                   BlocBuilder<AuthBloc, AuthState>(
                     buildWhen: (previous, current) => previous.isSubmitting != current.isSubmitting,

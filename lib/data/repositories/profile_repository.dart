@@ -18,6 +18,8 @@ class ProfileRepository {
   }
 
   /// Used only when Hive has no cache yet (e.g. fresh login on a new device).
+  /// Always resolves quickly — a timeout or any other error is caught, never
+  /// left hanging, so callers (like pull-to-refresh) never get stuck.
   Future<UserProfile?> fetchRemoteProfile(String uid) async {
     try {
       final profile = await _service.getProfile(uid);
@@ -31,9 +33,7 @@ class ProfileRepository {
   }
 
   Future<void> saveProfile(UserProfile profile) async {
-    // Hive first — instant, offline-safe.
     await _box.put(_key, profile.toMap());
-    // Firestore in background — SDK queues this automatically if offline.
     _service.setProfile(profile).catchError((_) {});
   }
 }

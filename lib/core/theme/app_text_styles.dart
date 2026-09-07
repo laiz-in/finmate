@@ -8,7 +8,7 @@ class AppTextStyles {
   AppTextStyles._();
 
   static TextStyle _style(double size, FontWeight weight, Color color) {
-    return GoogleFonts.poppins(
+    return GoogleFonts.montserrat(
       fontSize: size,
       fontWeight: weight,
       color: color,
