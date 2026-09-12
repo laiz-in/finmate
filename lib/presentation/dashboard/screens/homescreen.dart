@@ -1,4 +1,5 @@
 import 'package:finmate/presentation/dashboard/widgets/pixel_spending_chart.dart';
+import 'package:finmate/presentation/dashboard/widgets/quick_actions_row.dart';
 import 'package:finmate/presentation/dashboard/widgets/safe_to_spend_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,10 +20,16 @@ class HomeScreen extends StatelessWidget {
     final profile = context.watch<ProfileCubit>().state.profile;
     final expenseState = context.watch<ExpenseCubit>().state;
 
+    // Show a loading indicator while the profile is being fetched
     if (profile == null) {
       return Scaffold(
         backgroundColor: colors.background,
-        body: const Center(child: CircularProgressIndicator()),
+        body: Center(
+          child: CircularProgressIndicator(
+            color: colors.primary,
+            strokeWidth: 3,
+          ),
+        ),
       );
     }
 
@@ -50,6 +57,8 @@ class HomeScreen extends StatelessWidget {
               expenses: expenseState.expenses,
             ),
             const SizedBox(height: 28),
+            QuickActionsRow(colors: colors),
+            const SizedBox(height: 28),
 
             //PIXEL LIKE SPENDING CHART
             PixelSpendingChart(
@@ -58,6 +67,8 @@ class HomeScreen extends StatelessWidget {
               symbol: profile.currencySymbol,
             ),
             const SizedBox(height: 28),
+
+
 
 
           ],
@@ -77,7 +88,7 @@ const _monthsFull = [
   'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
 ];
 
-/// e.g. "Wednesday, 26 August" — natural case, not all-caps.
+// Helper function to get the current date in the format "WEEKDAY, DAY MONTH"
 String _formattedDate() {
   final now = DateTime.now();
   final weekday = _weekdaysFull[now.weekday - 1];
@@ -86,7 +97,7 @@ String _formattedDate() {
 }
 
 
-// ---------------- Header --------------------------------------------------------
+// ---------------- Header section ( welcome text and notifications ) ----------------
 
 class _Header extends StatelessWidget {
   final AppColors colors;

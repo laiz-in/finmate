@@ -50,7 +50,7 @@ class _SafeToSpendCardState extends State<SafeToSpendCard> {
 
   static const double _frontHeight = 148;
   static const double _backHeight = 102;
-  static const double _backOverlap = 10;
+  static const double _backOverlap =35;
   static const Duration _duration = Duration(milliseconds: 380);
   static const Curve _curve = Curves.easeOutCubic;
 

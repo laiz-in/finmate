@@ -1,3 +1,4 @@
+import 'package:finmate/presentation/expense/screens/expenses_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
@@ -40,8 +41,7 @@ class _MainShellState extends State<MainShell> {
         index: _currentIndex,
         children: [
           const HomeScreen(),
-          _PlaceholderTab(colors: colors, label: 'Money'),
-          _PlaceholderTab(colors: colors, label: 'Circles'),
+          const ExpensesScreen(),          _PlaceholderTab(colors: colors, label: 'Circles'),
           const SettingsScreen(),
         ],
       ),

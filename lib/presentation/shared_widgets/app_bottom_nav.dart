@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 
 import '../../core/theme/app_colors.dart';
 
@@ -26,11 +27,11 @@ class AppBottomNav extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          _NavIcon(icon: Icons.home_rounded, label: '', index: 0, currentIndex: currentIndex, onTap: onTap, colors: colors),
-          _NavIcon(icon: Icons.compare_arrows, label: '', index: 1, currentIndex: currentIndex, onTap: onTap, colors: colors),
+          _NavIcon(icon: Iconsax.home_2, label: '', index: 0, currentIndex: currentIndex, onTap: onTap, colors: colors),
+          _NavIcon(icon: Iconsax.send_2, label: '', index: 1, currentIndex: currentIndex, onTap: onTap, colors: colors),
           const SizedBox(width: 48), // reserved space for the docked FAB notch
-          _NavIcon(icon: Icons.people_alt_rounded, label: '', index: 2, currentIndex: currentIndex, onTap: onTap, colors: colors),
-          _NavIcon(icon: Icons.settings, label: '', index: 3, currentIndex: currentIndex, onTap: onTap, colors: colors),
+          _NavIcon(icon: Iconsax.profile_2user, label: '', index: 2, currentIndex: currentIndex, onTap: onTap, colors: colors),
+          _NavIcon(icon: Iconsax.setting, label: '', index: 3, currentIndex: currentIndex, onTap: onTap, colors: colors),
         ],
       ),
     );
