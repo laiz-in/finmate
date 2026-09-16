@@ -6,7 +6,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 IconData getCategoryIcon(String category) {
   switch (category) {
     case 'Food & Drink':
-      return Icons.font_download_sharp;
+      return Iconsax.coffee;
     case 'Groceries':
       return Iconsax.shopping_cart;
     case 'Transport':
@@ -25,8 +25,8 @@ IconData getCategoryIcon(String category) {
       return Iconsax.airplane;
     case 'Education':
       return Iconsax.book_1;
-    case 'Other':
-      return Iconsax.wallet_1;
+    case 'For others':
+      return Iconsax.profile_2user;
     default:
       return Iconsax.wallet_1;
   }

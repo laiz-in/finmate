@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../core/di/injector.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../core/utils/category_icons.dart';
 import '../../../data/models/expense.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../profile/bloc/profile_cubit.dart';
@@ -44,13 +46,8 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
   }
 
   Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) return;
-    if (_selectedCategory == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a category')),
-      );
-      return;
-    }
+    final isValid = _formKey.currentState!.validate();
+    if (!isValid) return;
 
     final uid = getIt<AuthRepository>().currentUser?.uid;
     if (uid == null) return;
@@ -84,6 +81,15 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }
 
+  Widget _sectionLabel(AppColors colors, String text) {
+    return Row(
+      children: [
+        const SizedBox(width: 6),
+        Text(text, style: AppTextStyles.small(colors.textSecondary).copyWith(letterSpacing: 0.8)),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).extension<AppColors>()!;
@@ -114,51 +120,102 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                 ),
               ),
               const SizedBox(height: 20),
-              Text('Add expense', style: AppTextStyles.heading2(colors.textPrimary)),
-              const SizedBox(height: 24),
-
-              TextFormField(
-                controller: _amountController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                style: AppTextStyles.heading2(colors.textPrimary),
-                decoration: InputDecoration(
-                  hintText: '0.00',
-                  prefixText: '$symbol ',
-                  prefixStyle: AppTextStyles.heading2(colors.textPrimary),
-                ),
-                validator: (v) {
-                  if (v == null || v.trim().isEmpty) return 'Enter an amount';
-                  final parsed = double.tryParse(v.trim());
-                  if (parsed == null || parsed <= 0) return 'Enter a valid amount';
-                  return null;
-                },
+              Row(
+                children: [
+                  Icon(Iconsax.wallet_add_1, color: colors.primary, size: 28),
+                  const SizedBox(width: 10),
+                  Text('Add expense', style: AppTextStyles.heading3(colors.textPrimary)),
+                ],
               ),
               const SizedBox(height: 20),
 
-              Text('CATEGORY', style: AppTextStyles.small(colors.textSecondary).copyWith(letterSpacing: 0.8)),
+              // Amount
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                decoration: BoxDecoration(
+                  color: colors.surface,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: colors.border),
+                ),
+                child: TextFormField(
+                  controller: _amountController,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  style: AppTextStyles.heading3(colors.textPrimary),
+                  decoration: InputDecoration(
+                    hintText: '0.00',
+                    prefixText: '$symbol ',
+                    prefixStyle: AppTextStyles.heading3(colors.textPrimary),
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    filled: false,
+                  ),
+                  validator: (v) {
+                    if (v == null || v.trim().isEmpty) return 'Enter an amount';
+                    final parsed = double.tryParse(v.trim());
+                    if (parsed == null || parsed <= 0) return 'Enter a valid amount';
+                    if (parsed > 10000000) return 'Amount cannot exceed 10,000,000';
+                    return null;
+                  },
+                ),
+              ),
+              const SizedBox(height: 22),
+
+              // Category dropdown
+              _sectionLabel(colors,'CATEGORY'),
               const SizedBox(height: 10),
               if (categories.isEmpty)
                 Text('No categories set up in your profile', style: AppTextStyles.body(colors.textSecondary))
               else
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: categories.map((category) {
-                    final isSelected = _selectedCategory == category;
-                    return ChoiceChip(
-                      label: Text(category),
-                      labelStyle: AppTextStyles.caption(isSelected ? Colors.white : colors.textPrimary),
-                      selected: isSelected,
-                      onSelected: (_) => setState(() => _selectedCategory = category),
-                      backgroundColor: colors.surface,
-                      selectedColor: colors.primary,
-                      side: BorderSide(color: colors.border),
-                    );
-                  }).toList(),
-                ),
-              const SizedBox(height: 20),
+                Container(
+                  decoration: BoxDecoration(
+                    color: colors.surface,
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(color: colors.border),
+                  ),
+                  child: DropdownButtonFormField<String>(
+                    value: _selectedCategory,
+                    isExpanded: true,
+                    icon: Icon(Iconsax.arrow_down_1, size: 18, color: colors.textSecondary),
+                    dropdownColor: colors.surface,
+                    borderRadius: BorderRadius.circular(14),
+                    style: AppTextStyles.body(colors.textPrimary),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    filled: false,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 14),
 
-              Text('DATE', style: AppTextStyles.small(colors.textSecondary).copyWith(letterSpacing: 0.8)),
+                    ),
+                    hint: Text('Select a category', style: AppTextStyles.body(colors.textSecondary)),
+                    items: categories.map((category) {
+                      return DropdownMenuItem(
+                        value: category,
+                        child: Row(
+                          children: [
+                            Icon(getCategoryIcon(category), size: 16, color: colors.primary),
+                            const SizedBox(width: 10),
+                            Flexible(
+                              child: Text(
+                                category,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (value) => setState(() => _selectedCategory = value),
+                    validator: (value) => value == null ? 'Please select a category' : null,
+                  ),
+                ),
+              const SizedBox(height: 22),
+
+              // Date
+              _sectionLabel(colors, 'DATE'),
               const SizedBox(height: 10),
               GestureDetector(
                 onTap: _pickDate,
@@ -167,40 +224,73 @@ class _AddExpenseSheetState extends State<AddExpenseSheet> {
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
                     color: colors.surface,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: colors.border),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.calendar_today_rounded, size: 16, color: colors.textSecondary),
+                      Icon(Iconsax.calendar_1, size: 16, color: colors.primary),
                       const SizedBox(width: 10),
-                      Text(_formattedDate(_selectedDate), style: AppTextStyles.body(colors.textPrimary)),
+                      Expanded(
+                        child: Text(_formattedDate(_selectedDate), style: AppTextStyles.body(colors.textPrimary)),
+                      ),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 22),
 
-              Text('NOTE (OPTIONAL)', style: AppTextStyles.small(colors.textSecondary).copyWith(letterSpacing: 0.8)),
+              // Note
+              _sectionLabel(colors,'NOTE'),
               const SizedBox(height: 10),
-              TextFormField(
-                controller: _noteController,
-                style: AppTextStyles.body(colors.textPrimary),
-                decoration: const InputDecoration(hintText: 'e.g. Lunch with client'),
+              Container(
+                decoration: BoxDecoration(
+                  color: colors.surface,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: colors.border),
+                ),
+                child: TextFormField(
+                  controller: _noteController,
+                  style: AppTextStyles.caption(colors.textPrimary),
+                  decoration: InputDecoration(
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    filled: false,
+                    hintText: 'e.g. Bought sweets',
+                    hintStyle: AppTextStyles.caption(colors.textSecondary),
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                  ),
+                  validator: (v) {
+                    if (v == null || v.trim().isEmpty) return 'Please add a short note';
+                    return null;
+                  },
+                ),
               ),
               const SizedBox(height: 28),
 
               SizedBox(
                 width: double.infinity,
+                height: 52,
                 child: ElevatedButton(
                   onPressed: _isSaving ? null : _submit,
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                  ),
                   child: _isSaving
                       ? const SizedBox(
                           height: 20,
                           width: 20,
                           child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                         )
-                      : const Text('Save Expense'),
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Iconsax.tick_circle, color: Colors.white, size: 18),
+                            const SizedBox(width: 8),
+                            const Text('Save Expense'),
+                          ],
+                        ),
                 ),
               ),
             ],

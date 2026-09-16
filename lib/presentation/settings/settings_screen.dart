@@ -1,3 +1,4 @@
+import 'package:finmate/presentation/expense/bloc/expense_cubit.dart';
 import 'package:finmate/presentation/profile/bloc/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,7 +54,11 @@ class SettingsScreen extends StatelessWidget {
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                 leading: Icon(Icons.logout_rounded, color: colors.error),
                 title: Text('Sign out', style: AppTextStyles.bodyMedium(colors.error)),
-                onTap: () => context.read<AuthBloc>().add(const AuthSignOutRequested()),
+                onTap: () {
+                  context.read<ProfileCubit>().clearOnSignOut();
+                  context.read<ExpenseCubit>().clearOnSignOut();
+                  context.read<AuthBloc>().add(const AuthSignOutRequested());
+                },
               ),
             ),
           ],

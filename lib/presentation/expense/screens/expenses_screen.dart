@@ -18,14 +18,6 @@ const _monthsFull = [
   'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
-const List<Color> _categoryPalette = [
-  Color(0xFFE07A5F),
-  Color(0xFF4A90D9),
-  Color(0xFF9B7EDE),
-  Color(0xFFE0B84A),
-  Color(0xFF5FBF8F),
-  Color(0xFFD97BB0),
-];
 
 class ExpensesScreen extends StatefulWidget {
   const ExpensesScreen({super.key});
@@ -61,11 +53,6 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     return '${date.day} ${_monthsFull[date.month - 1]} ${date.year}';
   }
 
-  Color _colorForCategory(String category, List<String> allCategories) {
-    final index = allCategories.indexOf(category);
-    if (index == -1) return _categoryPalette.last;
-    return _categoryPalette[index % _categoryPalette.length];
-  }
 
   List<Expense> _applyFilters(List<Expense> expenses) {
     var result = expenses;
@@ -393,7 +380,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                               ),
                             ),
                             ...sectionExpenses.map((expense) {
-                              final categoryColor = _colorForCategory(expense.category, categories);
+                              final categoryColor = colors.primary;
                               return _ExpenseTile(
                                 colors: colors,
                                 expense: expense,

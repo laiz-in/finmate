@@ -10,16 +10,19 @@ class ProfileRepository {
 
   ProfileRepository(this._service);
 
-  /// Instant, synchronous, offline-safe — the source every screen reads from.
-  UserProfile? getCachedProfile() {
+  /// Instant, synchronous, offline-safe — but only returned if it actually
+  /// belongs to the given uid. Prevents a stale cached profile from a
+  /// previously signed-in account leaking into a newly signed-in one.
+  UserProfile? getCachedProfile(String uid) {
     final map = _box.get(_key);
     if (map == null) return null;
-    return UserProfile.fromMap(Map<String, dynamic>.from(map));
+    final profile = UserProfile.fromMap(Map<String, dynamic>.from(map));
+    if (profile.uid != uid) return null;
+    return profile;
   }
 
-  /// Used only when Hive has no cache yet (e.g. fresh login on a new device).
-  /// Always resolves quickly — a timeout or any other error is caught, never
-  /// left hanging, so callers (like pull-to-refresh) never get stuck.
+  /// Used when Hive has no valid cache for this uid yet (e.g. fresh login,
+  /// or a different account signed in on this device previously).
   Future<UserProfile?> fetchRemoteProfile(String uid) async {
     try {
       final profile = await _service.getProfile(uid);
@@ -35,5 +38,11 @@ class ProfileRepository {
   Future<void> saveProfile(UserProfile profile) async {
     await _box.put(_key, profile.toMap());
     _service.setProfile(profile).catchError((_) {});
+  }
+
+  /// Clears any locally cached profile — call this on sign out so a
+  /// different account signing in next never sees stale cached data.
+  Future<void> clearCache() async {
+    await _box.delete(_key);
   }
 }

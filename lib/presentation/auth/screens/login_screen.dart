@@ -70,8 +70,15 @@ class _LoginViewState extends State<_LoginView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 60),
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Image.asset(
+                      //   'assets/images/app_logo.png',
+                      //   height: 44,
+                      //   width: 44,
+                      // ),
+                      const SizedBox(height: 16),
                       Text.rich(
                         TextSpan(
                           style: AppTextStyles.heading2(colors.textPrimary),
@@ -87,7 +94,7 @@ class _LoginViewState extends State<_LoginView> {
                     ],
                   ),
 
-                  const SizedBox(height: 60),
+                  const SizedBox(height: 45),
 
                   const SizedBox(height: 8),
                   TextFormField(

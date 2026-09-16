@@ -1,10 +1,10 @@
+import 'package:finmate/presentation/expense/bloc/expense_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/di/injector.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../dashboard/screens/main_shell.dart';
-import '../../expense/bloc/expense_cubit.dart';
 import '../../onboarding/screens/onboarding_screen.dart';
 import '../../profile/bloc/profile_cubit.dart';
 import '../../profile/bloc/profile_state.dart';
@@ -25,7 +25,12 @@ class AuthGate extends StatelessWidget {
           case AuthStatus.initial:
             return const Scaffold(body: Center(child: CircularProgressIndicator()));
           case AuthStatus.authenticated:
-            return const _ProfileGate();
+            final uid = getIt<AuthRepository>().currentUser?.uid ?? 'unknown';
+            // Keyed by uid so switching accounts always creates a fresh
+            // _ProfileGate instance — guarantees initState (and therefore
+            // loadProfile/loadExpenses) reruns for the newly signed-in user,
+            // instead of risking a reused widget with stale cubit data.
+            return _ProfileGate(key: ValueKey(uid));
           case AuthStatus.unverified:
             return const VerifyEmailScreen();
           case AuthStatus.unauthenticated:
@@ -37,7 +42,7 @@ class AuthGate extends StatelessWidget {
 }
 
 class _ProfileGate extends StatefulWidget {
-  const _ProfileGate();
+  const _ProfileGate({super.key});
 
   @override
   State<_ProfileGate> createState() => _ProfileGateState();

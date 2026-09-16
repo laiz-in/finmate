@@ -18,11 +18,9 @@ class ExpenseService {
   }
 
   Future<List<Expense>> fetchAll(String uid) async {
-    print("came in expense services");
     final snapshot = await _expensesRef(uid)
         .get()
         .timeout(const Duration(seconds: 8));
-    print("just before returning expense data in expense service");
     return snapshot.docs
         .map((doc) => Expense.fromMap(doc.data() as Map<String, dynamic>))
         .toList();

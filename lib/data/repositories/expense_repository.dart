@@ -9,50 +9,59 @@ class ExpenseRepository {
 
   ExpenseRepository(this._service);
 
-  List<Expense> _getAllForUid(String uid) {
-    final expenses = _box.values
-        .map((e) => Expense.fromMap(Map<String, dynamic>.from(e as Map)))
-        .where((e) => e.uid == uid)
-        .toList();
+  String _keyFor(String uid, String expenseId) => '${uid}_$expenseId';
+
+  /// Public, synchronous read of a user's expenses — safe to call anytime,
+  /// always reflects the current local cache instantly.
+  List<Expense> getAllForUid(String uid) {
+    final prefix = '${uid}_';
+    final expenses = <Expense>[];
+
+    for (final key in _box.keys) {
+      if (key is! String || !key.startsWith(prefix)) continue;
+      final raw = _box.get(key);
+      if (raw == null) continue;
+      try {
+        final expense = Expense.fromMap(Map<String, dynamic>.from(raw as Map));
+        if (expense.uid == uid) expenses.add(expense);
+      } catch (_) {
+        continue;
+      }
+    }
+
     expenses.sort((a, b) => b.date.compareTo(a.date));
     return expenses;
   }
 
-  /// Live, offline-safe stream — emits the current list immediately,
-  /// then again whenever the local cache changes.
-  Stream<List<Expense>> watchExpenses(String uid) async* {
-    yield _getAllForUid(uid);
-    await for (final _ in _box.watch()) {
-      yield _getAllForUid(uid);
-    }
-  }
+  /// Fires whenever ANY key in the box changes — the cubit filters this
+  /// down to whichever uid is currently active. A single subscription to
+  /// this, held for the cubit's whole lifetime, avoids ever needing to
+  /// cancel/resubscribe per account switch.
+  Stream<void> get onBoxChanged => _box.watch().map((_) {});
 
-  /// Used when Hive has no local cache yet (e.g. fresh login on a new device).
-  /// Always resolves quickly — network failures or timeouts are caught, never
-  /// left hanging, so callers (like pull-to-refresh) never get stuck.
   Future<void> syncFromRemoteIfEmpty(String uid) async {
-    final hasLocalData = _getAllForUid(uid).isNotEmpty;
+    final hasLocalData = getAllForUid(uid).isNotEmpty;
     if (hasLocalData) return;
     try {
       final remote = await _service.fetchAll(uid);
       for (final expense in remote) {
-        await _box.put(expense.id, expense.copyWith(isSynced: true).toMap());
+        await _box.put(_keyFor(uid, expense.id), expense.copyWith(isSynced: true).toMap());
       }
     } catch (_) {
       // No connection, timeout, or other error — fine, just show an empty
-      // list until the user is back online and adds/syncs data.
+      // list until the user is back online.
     }
   }
 
   Future<void> addExpense(Expense expense) async {
-    await _box.put(expense.id, expense.toMap());
+    await _box.put(_keyFor(expense.uid, expense.id), expense.toMap());
     _service.setExpense(expense).then((_) {
-      _box.put(expense.id, expense.copyWith(isSynced: true).toMap());
+      _box.put(_keyFor(expense.uid, expense.id), expense.copyWith(isSynced: true).toMap());
     }).catchError((_) {});
   }
 
   Future<void> deleteExpense(String uid, String expenseId) async {
-    await _box.delete(expenseId);
+    await _box.delete(_keyFor(uid, expenseId));
     _service.deleteExpense(uid, expenseId).catchError((_) {});
   }
 }

@@ -1,3 +1,4 @@
+import 'package:finmate/core/utils/app_page_route.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
@@ -17,22 +18,22 @@ class QuickActionsRow extends StatelessWidget {
     final actions = [
       _ActionData(
         icon: Iconsax.wallet_3,
-        label: 'Liabilities',
+        label: 'LIABILITIES',
         builder: (_) => const LiabilitiesScreen(),
       ),
       _ActionData(
         icon: Iconsax.receipt_1,
-        label: 'Bills',
+        label: 'BILLS',
         builder: (_) => const BillsScreen(),
       ),
       _ActionData(
         icon: Iconsax.status_up,
-        label: 'Statistics',
+        label: 'STATISTICS',
         builder: (_) => const StatisticsScreen(),
       ),
       _ActionData(
         icon: Iconsax.received,
-        label: 'Income',
+        label: 'INCOME',
         builder: (_) => const IncomeScreen(),
       ),
     ];
@@ -44,11 +45,11 @@ class QuickActionsRow extends StatelessWidget {
           colors: colors,
           icon: action.icon,
           label: action.label,
-          onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: action.builder),
-            );
-          },
+              onTap: () {
+                Navigator.of(context).push(
+                  appPageRoute(action.builder(context), colors.background),
+                );
+              },
         );
       }).toList(),
     );

@@ -4,59 +4,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../data/models/expense.dart';
 
-class PixelSpendingChart extends StatefulWidget {
-  final AppColors colors;
-  final List<Expense> expenses;
-  final String symbol;
-  final int daysToShow;
-
-  const PixelSpendingChart({
-    super.key,
-    required this.colors,
-    required this.expenses,
-    required this.symbol,
-    this.daysToShow = 15,
-  });
-
-  @override
-  State<PixelSpendingChart> createState() => _PixelSpendingChartState();
-}
-
-class _PixelSpendingChartState extends State<PixelSpendingChart> {
-  int? _selectedIndex;
-
-  static const double gap = 3;
-
-  List<_DayTotal> _recentDays() {
-    final today = DateTime.now();
-    return List.generate(widget.daysToShow, (i) {
-      final date = DateTime(today.year, today.month, today.day)
-          .subtract(Duration(days: widget.daysToShow - 1 - i));
-      final total = widget.expenses
-          .where((e) =>
-              e.date.year == date.year &&
-              e.date.month == date.month &&
-              e.date.day == date.day)
-          .fold(0.0, (sum, e) => sum + e.amount);
-      return _DayTotal(date: date, total: total);
-    });
-  }
-
-  void _handleTap(TapUpDetails details, double width, int columnCount) {
-    final cellWidth = (width - gap * (columnCount - 1)) / columnCount;
-    final tappedIndex = (details.localPosition.dx / (cellWidth + gap)).floor().clamp(0, columnCount - 1);
-    setState(() {
-      _selectedIndex = _selectedIndex == tappedIndex ? null : tappedIndex;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = widget.colors;
-    final symbol = widget.symbol;
-    final days = _recentDays();
-    final maxValue = days.map((d) => d.total).fold(0.0, (a, b) => a > b ? a : b);
-    const _monthsFull = [
+const _monthsFull = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December'
 ];
@@ -75,9 +23,79 @@ String _ordinalDay(int day) {
   }
 }
 
-    int peakIndex = 0;
-    for (int i = 1; i < days.length; i++) {
-      if (days[i].total > days[peakIndex].total) peakIndex = i;
+int _daysInMonth(DateTime date) {
+  final firstOfNextMonth = DateTime(date.year, date.month + 1, 1);
+  return firstOfNextMonth.subtract(const Duration(days: 1)).day;
+}
+
+class PixelSpendingChart extends StatefulWidget {
+  final AppColors colors;
+  final List<Expense> expenses;
+  final String symbol;
+  final String firstName;
+  const PixelSpendingChart({
+    super.key,
+    required this.colors,
+    required this.expenses,
+    required this.symbol,
+    required this.firstName,
+  });
+
+  @override
+  State<PixelSpendingChart> createState() => _PixelSpendingChartState();
+}
+
+class _PixelSpendingChartState extends State<PixelSpendingChart> {
+  int? _selectedIndex;
+
+  static const double gap = 2;
+
+  List<_DayTotal> _monthDays() {
+    final now = DateTime.now();
+    final totalDays = _daysInMonth(now);
+    return List.generate(totalDays, (i) {
+      final date = DateTime(now.year, now.month, i + 1);
+      final total = widget.expenses
+          .where((e) =>
+              e.date.year == date.year &&
+              e.date.month == date.month &&
+              e.date.day == date.day)
+          .fold(0.0, (sum, e) => sum + e.amount);
+      return _DayTotal(date: date, total: total);
+    });
+  }
+
+  void _handleTap(TapUpDetails details, double width, int columnCount) {
+    final cellWidth = (width - gap * (columnCount - 1)) / columnCount;
+    final tappedIndex = (details.localPosition.dx / (cellWidth + gap)).floor().clamp(0, columnCount - 1);
+    setState(() {
+      _selectedIndex = _selectedIndex == tappedIndex ? null : tappedIndex;
+    });
+  }
+
+  String _formatPeakDays(List<int> indices, List<_DayTotal> days) {
+    final labels = indices.map((i) => _ordinalDay(days[i].date.day)).toList();
+
+    if (labels.length == 1) return labels.first;
+    if (labels.length == 2) return '${labels[0]} and ${labels[1]}';
+
+    final allButLast = labels.sublist(0, labels.length - 1).join(' ,');
+    return '$allButLast and ${labels.last}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = widget.colors;
+    final symbol = widget.symbol;
+    final days = _monthDays();
+    final maxValue = days.map((d) => d.total).fold(0.0, (a, b) => a > b ? a : b);
+    final firstName = widget.firstName;
+
+    final peakIndices = <int>[];
+    if (maxValue > 0) {
+      for (int i = 0; i < days.length; i++) {
+        if (days[i].total == maxValue) peakIndices.add(i);
+      }
     }
 
     return Container(
@@ -91,33 +109,35 @@ String _ordinalDay(int day) {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('LAST ${widget.daysToShow} DAYS', style: AppTextStyles.small(colors.textPrimary)),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 160,
-            width: double.infinity,
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTapUp: (details) => _handleTap(details, constraints.maxWidth, days.length),
-                  child: CustomPaint(
-                    size: Size(constraints.maxWidth, constraints.maxHeight),
-                    painter: _PixelChartPainter(
-                      days: days,
-                      maxValue: maxValue,
-                      primary: colors.primary,
-                      textColor: colors.textPrimary,
-                      fadedTextColor: colors.textSecondary,
-                      symbol: symbol,
-                      selectedIndex: _selectedIndex,
+          Text('THIS MONTH', style: AppTextStyles.small(colors.textPrimary)),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: SizedBox(
+              height: 160,
+              width: double.infinity,
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTapUp: (details) => _handleTap(details, constraints.maxWidth, days.length),
+                    child: CustomPaint(
+                      size: Size(constraints.maxWidth, constraints.maxHeight),
+                      painter: _PixelChartPainter(
+                        days: days,
+                        maxValue: maxValue,
+                        primary: colors.primary,
+                        textColor: colors.textPrimary,
+                        fadedTextColor: colors.textSecondary,
+                        symbol: symbol,
+                        selectedIndex: _selectedIndex,
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ),
-          if (maxValue > 0) ...[
+          if (peakIndices.isNotEmpty) ...[
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
@@ -126,10 +146,11 @@ String _ordinalDay(int day) {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
-                'You spent $symbol${maxValue.toStringAsFixed(0)} on ${_ordinalDay(days[peakIndex].date.day)} ${_monthsFull[days[peakIndex].date.month - 1]}',
+              //  'You have spent $symbol${maxValue.toStringAsFixed(0)} on ${_formatPeakDays(peakIndices, days)} of this month , keep an eye on it $firstName!',
+                '$firstName, you spent $symbol${maxValue.toStringAsFixed(0)} on ${_formatPeakDays(peakIndices, days)}',
                 style: AppTextStyles.small(colors.error),
                 overflow: TextOverflow.ellipsis,
-                maxLines: 1,
+                maxLines: 2,
               ),
             ),
           ],
@@ -155,9 +176,9 @@ class _PixelChartPainter extends CustomPainter {
   final int? selectedIndex;
 
   static const int rows = 14;
-  static const double gap = 3;
+  static const double gap = 2;
   static const double labelSpace = 30;
-  static const double bottomLabelSpace = 20;
+  static const double bottomLabelSpace = 18;
 
   _PixelChartPainter({
     required this.days,
@@ -213,17 +234,19 @@ class _PixelChartPainter extends CustomPainter {
         canvas.drawRRect(rect, paint);
       }
 
-      // Bottom-axis day number.
+      // Bottom-axis day number — kept small so all days in the month fit
+      // without crowding.
       final dayText = TextPainter(
         text: TextSpan(
           text: '${days[col].date.day}',
-          style: AppTextStyles.small(isSelected ? textColor : fadedTextColor),
+          style: AppTextStyles.small(isSelected ? textColor : fadedTextColor)
+              .copyWith(fontSize: 7, letterSpacing: 0),
         ),
         textDirection: TextDirection.ltr,
       )..layout();
       dayText.paint(
         canvas,
-        Offset(colLeft + (cellWidth - dayText.width) / 2, gridBottom + 6),
+        Offset(colLeft + (cellWidth - dayText.width) / 2, gridBottom + 5),
       );
     }
 

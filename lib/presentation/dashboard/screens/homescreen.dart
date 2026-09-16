@@ -1,6 +1,7 @@
 import 'package:finmate/presentation/dashboard/widgets/pixel_spending_chart.dart';
 import 'package:finmate/presentation/dashboard/widgets/quick_actions_row.dart';
 import 'package:finmate/presentation/dashboard/widgets/safe_to_spend_card.dart';
+import 'package:finmate/presentation/dashboard/widgets/streak_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -45,7 +46,18 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 18),
 
             //DATE LABEL
-            _DateLabel(colors: colors),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _DateLabel(colors: colors),
+                StreakIndicator(
+                  colors: colors,
+                  dailyBudget: profile.dailyBudget,
+                  expenses: expenseState.expenses,
+                  firstName: profile.firstName,
+                ),
+              ],
+            ),
             const SizedBox(height: 10),
 
             // MAIN SAFE TO SPEND CARD
@@ -65,6 +77,7 @@ class HomeScreen extends StatelessWidget {
               colors: colors,
               expenses: expenseState.expenses,
               symbol: profile.currencySymbol,
+              firstName: profile.firstName,
             ),
             const SizedBox(height: 28),
 
