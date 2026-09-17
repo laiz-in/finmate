@@ -31,7 +31,7 @@ class AppColors extends ThemeExtension<AppColors> {
     secondary: Color(0xFF8FBBA9),
     textPrimary: Color(0xFF1A1A1A),
     textSecondary: Color(0xFF6B6B6B),
-    success: Color(0xFF2E7D32),
+    success: Color.fromARGB(255, 127, 177, 131),
     error: Color.fromARGB(255, 241, 129, 128),
     border: Color(0xFFE0E0E0),
   );
@@ -43,7 +43,7 @@ class AppColors extends ThemeExtension<AppColors> {
     secondary: Color(0xFF4C7766),
     textPrimary: Color(0xFFF5F5F5),
     textSecondary: Color(0xFFAAAAAA),
-    success: Color(0xFF66BB6A),
+    success: Color.fromARGB(255, 127, 177, 131),
     error: Color.fromARGB(255, 241, 129, 128),
     border: Color(0xFF2C2C2C),
   );

@@ -1,14 +1,10 @@
+import 'package:finmate/presentation/shared_widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
 
-import '../../../core/di/injector.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
-import '../../../core/utils/app_snackbar.dart';
 import '../../../data/models/expense.dart';
-import '../../../data/repositories/auth_repository.dart';
-import '../bloc/expense_cubit.dart';
 
 const _monthsFull = [
   'January', 'February', 'March', 'April', 'May', 'June',
@@ -31,39 +27,18 @@ class ExpenseDetailScreen extends StatelessWidget {
     return '${date.day} ${_monthsFull[date.month - 1]} ${date.year}';
   }
 
-  Future<void> _confirmDelete(BuildContext context, AppColors colors) async {
-    final confirmed = await showDialog<bool>(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            backgroundColor: colors.surface,
-            title: Text('Delete expense?', style: AppTextStyles.heading3(colors.textPrimary)),
-            content: Text(
-              'This will permanently remove this expense.',
-              style: AppTextStyles.body(colors.textSecondary),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(ctx).pop(false),
-                child: Text('Cancel', style: AppTextStyles.bodyMedium(colors.textSecondary)),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(ctx).pop(true),
-                child: Text('Delete', style: AppTextStyles.bodyMedium(colors.error)),
-              ),
-            ],
-          ),
-        ) ??
-        false;
+
+Future<void> _confirmDelete(BuildContext context, AppColors colors) async {
+    final confirmed = await showConfirmationDialog(
+      context: context,
+      colors: colors,
+      title: 'Delete expense?',
+      message: 'This will permanently remove this expense.',
+      confirmLabel: 'Delete',
+    );
 
     if (!confirmed) return;
-    final uid = getIt<AuthRepository>().currentUser?.uid;
-    if (uid == null || !context.mounted) return;
-    await context.read<ExpenseCubit>().deleteExpense(uid, expense.id);
-    if (context.mounted) {
-      Navigator.of(context).pop();
-      AppSnackbar.showInfo(context, 'Expense deleted');
-    }
-  }
+}
 
   @override
   Widget build(BuildContext context) {

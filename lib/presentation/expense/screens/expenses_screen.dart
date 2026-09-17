@@ -1,4 +1,5 @@
 import 'package:finmate/core/utils/category_icons.dart';
+import 'package:finmate/presentation/shared_widgets/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
@@ -14,8 +15,8 @@ import '../bloc/expense_cubit.dart';
 import 'expense_detail_screen.dart';
 
 const _monthsFull = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
+  'JANUARY', 'FEBRUARY', 'MARCH', 'APRIL', 'MAY', 'JUNE',
+  'JULY', 'AUGUST', 'SEPTEMBER', 'OCTOBER', 'NOVEMBER', 'DECEMBER'
 ];
 
 
@@ -48,8 +49,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     final target = DateTime(date.year, date.month, date.day);
     final diff = today.difference(target).inDays;
 
-    if (diff == 0) return 'Today';
-    if (diff == 1) return 'Yesterday';
+    if (diff == 0) return 'TODAY';
+    if (diff == 1) return 'YESTERDAY';
     return '${date.day} ${_monthsFull[date.month - 1]} ${date.year}';
   }
 
@@ -298,7 +299,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Expenses', style: AppTextStyles.heading2(colors.textPrimary)),
+                      Text('Expenses', style: AppTextStyles.heading3(colors.textPrimary)),
                       Text(
                         'Total: $symbol${total.toStringAsFixed(0)}',
                         style: AppTextStyles.bodyMedium(colors.textSecondary),
@@ -313,7 +314,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                           decoration: BoxDecoration(
                             color: colors.surface,
                             borderRadius: BorderRadius.circular(14),
-                            border: Border.all(color: colors.border),
+                            // border: Border.all(color: colors.border),
                           ),
                           child: TextField(
                             controller: _searchController,
@@ -329,19 +330,19 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 4),
                       GestureDetector(
                         onTap: () => _openFilterSheet(context, colors, categories),
                         child: Container(
-                          width: 46,
-                          height: 46,
+                          width: 52,
+                          height: 52,
                           decoration: BoxDecoration(
                             color: _hasActiveFilters ? colors.primary : colors.surface,
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(color: _hasActiveFilters ? colors.primary : colors.border),
                           ),
                           child: Icon(
-                            Iconsax.setting_4,
+                            Iconsax.filter,
                             color: _hasActiveFilters ? Colors.white : colors.textPrimary,
                             size: 20,
                           ),
@@ -371,7 +372,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(sectionTitle, style: AppTextStyles.bodyMedium(colors.textPrimary)),
+                                  Text(sectionTitle, style: AppTextStyles.small(colors.textSecondary)),
                                   Text(
                                     '$symbol${sectionTotal.toStringAsFixed(0)}',
                                     style: AppTextStyles.caption(colors.textSecondary),
@@ -475,29 +476,14 @@ class _ExpenseTile extends StatelessWidget {
     return Dismissible(
       key: ValueKey(expense.id),
       direction: DismissDirection.endToStart,
-      confirmDismiss: (_) async {
-        return await showDialog<bool>(
-              context: context,
-              builder: (ctx) => AlertDialog(
-                backgroundColor: colors.surface,
-                title: Text('Delete expense?', style: AppTextStyles.heading3(colors.textPrimary)),
-                content: Text(
-                  'This will permanently remove this expense.',
-                  style: AppTextStyles.body(colors.textSecondary),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.of(ctx).pop(false),
-                    child: Text('Cancel', style: AppTextStyles.bodyMedium(colors.textSecondary)),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.of(ctx).pop(true),
-                    child: Text('Delete', style: AppTextStyles.bodyMedium(colors.error)),
-                  ),
-                ],
-              ),
-            ) ??
-            false;
+      confirmDismiss: (_) {
+        return showConfirmationDialog(
+          context: context,
+          colors: colors,
+          title: 'Delete expense?',
+          message: 'This will permanently remove this expense.',
+          confirmLabel: 'Delete',
+        );
       },
       onDismissed: (_) => onDelete(),
       background: Container(
@@ -513,12 +499,12 @@ class _ExpenseTile extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          margin: const EdgeInsets.only(bottom: 10),
+          margin: const EdgeInsets.only(bottom: 7),
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: colors.surface,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: colors.border),
+            borderRadius: BorderRadius.circular(10),
+            // border: Border.all(color: colors.border),
           ),
           child: Row(
             children: [

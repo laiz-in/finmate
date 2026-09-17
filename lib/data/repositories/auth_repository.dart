@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../services/auth_service.dart';
+
 class AuthRepository {
   final AuthService _authService;
 
@@ -13,7 +14,7 @@ class AuthRepository {
   Future<String?> signUp({required String email, required String password}) async {
     try {
       await _authService.signUp(email: email, password: password);
-      return null; // null = success
+      return null;
     } on FirebaseAuthException catch (e) {
       return _mapError(e);
     }
@@ -41,6 +42,35 @@ class AuthRepository {
     }
   }
 
+  Future<String?> deleteAccount(String password) async {
+    try {
+      await _authService.deleteAccount(password);
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return _mapError(e);
+    }
+  }
+
+  /// Returns null on success, or a user-facing error message.
+  Future<String?> changeEmail({required String currentPassword, required String newEmail}) async {
+    try {
+      await _authService.changeEmail(currentPassword: currentPassword, newEmail: newEmail);
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return _mapError(e);
+    }
+  }
+
+  /// Returns null on success, or a user-facing error message.
+  Future<String?> changePassword({required String currentPassword, required String newPassword}) async {
+    try {
+      await _authService.changePassword(currentPassword: currentPassword, newPassword: newPassword);
+      return null;
+    } on FirebaseAuthException catch (e) {
+      return _mapError(e);
+    }
+  }
+
   String _mapError(FirebaseAuthException e) {
     switch (e.code) {
       case 'email-already-in-use':
@@ -52,11 +82,13 @@ class AuthRepository {
       case 'user-not-found':
       case 'wrong-password':
       case 'invalid-credential':
-        return 'Incorrect email or password.';
+        return 'Incorrect password.';
       case 'too-many-requests':
         return 'Too many attempts. Please try again later.';
       case 'network-request-failed':
         return 'Network error. Check your connection.';
+      case 'requires-recent-login':
+        return 'Please sign out and sign in again before making this change.';
       default:
         return 'Something went wrong. Please try again.';
     }

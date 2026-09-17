@@ -46,4 +46,32 @@ class AuthService {
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
   }
+
+  Future<void> deleteAccount(String password) async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null || user.email == null) return;
+    final credential = EmailAuthProvider.credential(email: user.email!, password: password);
+    await user.reauthenticateWithCredential(credential);
+    await user.delete();
+  }
+
+  /// Re-authenticates with the current password, then updates to the new
+  /// email. Firebase automatically sends a verification link to the new
+  /// address — the change only fully takes effect once it's verified.
+  Future<void> changeEmail({required String currentPassword, required String newEmail}) async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null || user.email == null) return;
+    final credential = EmailAuthProvider.credential(email: user.email!, password: currentPassword);
+    await user.reauthenticateWithCredential(credential);
+    await user.verifyBeforeUpdateEmail(newEmail);
+  }
+
+  /// Re-authenticates with the current password, then sets the new one.
+  Future<void> changePassword({required String currentPassword, required String newPassword}) async {
+    final user = _firebaseAuth.currentUser;
+    if (user == null || user.email == null) return;
+    final credential = EmailAuthProvider.credential(email: user.email!, password: currentPassword);
+    await user.reauthenticateWithCredential(credential);
+    await user.updatePassword(newPassword);
+  }
 }
