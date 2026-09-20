@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
-import '../../expense/widgets/add_expense_sheet.dart';
+import '../../expense/widgets/add_expense_screen.dart';
 import '../../settings/settings_screen.dart';
 import '../../shared_widgets/app_bottom_nav.dart';
 import 'homescreen.dart';
@@ -19,16 +19,7 @@ class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
 
   void _openAddExpense() {
-    final colors = Theme.of(context).extension<AppColors>()!;
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: colors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (_) => const AddExpenseSheet(),
-    );
+    openAddExpenseSheet(context);
   }
 
   @override
@@ -41,7 +32,8 @@ class _MainShellState extends State<MainShell> {
         index: _currentIndex,
         children: [
           const HomeScreen(),
-          const ExpensesScreen(),          _PlaceholderTab(colors: colors, label: 'Circles'),
+          const ExpensesScreen(),
+          _PlaceholderTab(colors: colors, label: 'Circles'),
           const SettingsScreen(),
         ],
       ),
