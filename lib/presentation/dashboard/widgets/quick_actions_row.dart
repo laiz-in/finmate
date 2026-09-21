@@ -6,7 +6,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../bills/screens/bills_screen.dart';
 import '../../income/screens/income_screen.dart';
-import '../../liabilities/screens/liabilities_screen.dart';
+import '../../liabilities/screens/liability_screen.dart';
 import '../../statistics/screens/statistics_screen.dart';
 
 class QuickActionsRow extends StatelessWidget {
@@ -19,7 +19,7 @@ class QuickActionsRow extends StatelessWidget {
       _ActionData(
         icon: Iconsax.wallet_3,
         label: 'LIABILITIES',
-        builder: (_) => const LiabilitiesScreen(),
+        builder: (_) => const LiabilityScreen(),
       ),
       _ActionData(
         icon: Iconsax.receipt_1,

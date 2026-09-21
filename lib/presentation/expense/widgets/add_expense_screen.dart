@@ -326,7 +326,7 @@ class _OpenAddExpenseScreenState extends State<OpenAddExpenseScreen> {
                           ),
                           child: TextField(
                             controller: _noteController,
-                            style: AppTextStyles.body(colors.textPrimary),
+                            style: AppTextStyles.caption(colors.textPrimary),
                             maxLines: 2,
                             onChanged: (value) => field.didChange(value),
                             decoration: InputDecoration(
@@ -334,7 +334,7 @@ class _OpenAddExpenseScreenState extends State<OpenAddExpenseScreen> {
                               focusedBorder: InputBorder.none,
                               filled: false,
                               hintText: 'e.g. Bought sweets',
-                              hintStyle: AppTextStyles.body(colors.textSecondary),
+                              hintStyle: AppTextStyles.caption(colors.textSecondary),
                               border: InputBorder.none,
                               contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                             ),

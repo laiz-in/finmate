@@ -1,3 +1,5 @@
+import 'package:finmate/presentation/liabilities/bloc/lent_cubit.dart';
+import 'package:finmate/presentation/liabilities/bloc/owe_cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,6 +28,8 @@ Future<void> main() async {
   await Hive.openBox('settingsBox');
   await Hive.openBox('profileBox');
   await Hive.openBox('expensesBox');
+  await Hive.openBox('owesBox');
+  await Hive.openBox('lentsBox');
 
   setupInjector();
 
@@ -39,6 +43,8 @@ class FinMateApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<OweCubit>(create: (_) => getIt<OweCubit>()),
+        BlocProvider<LentCubit>(create: (_) => getIt<LentCubit>()),
         BlocProvider<ThemeCubit>(create: (_) => ThemeCubit()),
         BlocProvider<AuthBloc>(
           create: (_) => getIt<AuthBloc>()..add(const AuthCheckRequested()),

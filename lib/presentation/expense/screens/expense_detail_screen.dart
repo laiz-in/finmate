@@ -240,9 +240,9 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Icon(Iconsax.edit_2, color: colors.textPrimary, size: 18),
+                            Icon(Iconsax.edit_2, color: colors.textSecondary, size: 18),
                             const SizedBox(width: 8),
-                            Text('Edit', style: AppTextStyles.bodyMedium(colors.textPrimary)),
+                            Text('Edit', style: AppTextStyles.bodyMedium(colors.textSecondary)),
                           ],
                         ),
                       ),
@@ -255,17 +255,17 @@ class _ExpenseDetailScreenState extends State<ExpenseDetailScreen> {
                       child: ElevatedButton(
                         onPressed: () => _confirmDelete(context, colors),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: colors.error,
-                          foregroundColor: Colors.white,
+                          backgroundColor: colors.error.withValues(alpha: 0.15),
+                          foregroundColor: colors.error,
                           elevation: 0,
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Icon(Iconsax.trash, color: Colors.white, size: 18),
+                            Icon(Iconsax.trash, color: colors.error, size: 18),
                             const SizedBox(width: 8),
-                            Text('Delete', style: AppTextStyles.bodyMedium(Colors.white)),
+                            Text('Delete', style: AppTextStyles.bodyMedium(colors.error)),
                           ],
                         ),
                       ),

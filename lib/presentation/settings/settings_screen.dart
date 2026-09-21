@@ -1,6 +1,8 @@
 import 'package:finmate/presentation/auth/bloc/auth_bloc.dart';
 import 'package:finmate/presentation/auth/bloc/auth_event.dart';
 import 'package:finmate/presentation/expense/bloc/expense_cubit.dart';
+import 'package:finmate/presentation/liabilities/bloc/lent_cubit.dart';
+import 'package:finmate/presentation/liabilities/bloc/owe_cubit.dart';
 import 'package:finmate/presentation/profile/bloc/profile_cubit.dart';
 import 'package:finmate/presentation/settings/screens/change_email_screen.dart';
 import 'package:finmate/presentation/settings/screens/change_password_screen.dart';
@@ -49,7 +51,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       AppSnackbar.showError(context, error);
       return;
     }
-
+    context.read<OweCubit>().clearOnSignOut();
+    context.read<LentCubit>().clearOnSignOut();
     context.read<ProfileCubit>().clearOnSignOut();
     context.read<ExpenseCubit>().clearOnSignOut();
     context.read<AuthBloc>().add(const AuthSignOutRequested());

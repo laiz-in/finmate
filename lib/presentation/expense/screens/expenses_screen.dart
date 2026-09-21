@@ -170,105 +170,110 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                     Text('Filters', style: AppTextStyles.heading2(colors.textPrimary)),
                     const SizedBox(height: 20),
 
-                    Text(
-                      'QUICK FILTER',
-                      style: AppTextStyles.small(colors.textSecondary).copyWith(letterSpacing: 0.8),
-                    ),
-                    const SizedBox(height: 10),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
+                    Row(
                       children: [
-                        ChoiceChip(
-                          label: const Text('Today'),
-                          labelStyle: AppTextStyles.caption(
-                            _quickFilter == _QuickFilter.today ? Colors.white : colors.textPrimary,
-                          ),
-                          selected: _quickFilter == _QuickFilter.today,
-                          onSelected: (selected) {
-                            setSheetState(() {
-                              _quickFilter = selected ? _QuickFilter.today : _QuickFilter.none;
-                              if (selected) {
-                                _fromDate = null;
-                                _toDate = null;
-                                _pickedDate = null;
-                              }
-                            });
-                            setState(() {});
-                          },
-                          backgroundColor: colors.surface,
-                          selectedColor: colors.primary,
-                          side: BorderSide(color: colors.border),
-                          showCheckmark: false,
-                        ),
-                        ChoiceChip(
-                          label: const Text('Yesterday'),
-                          labelStyle: AppTextStyles.caption(
-                            _quickFilter == _QuickFilter.yesterday ? Colors.white : colors.textPrimary,
-                          ),
-                          selected: _quickFilter == _QuickFilter.yesterday,
-                          onSelected: (selected) {
-                            setSheetState(() {
-                              _quickFilter = selected ? _QuickFilter.yesterday : _QuickFilter.none;
-                              if (selected) {
-                                _fromDate = null;
-                                _toDate = null;
-                                _pickedDate = null;
-                              }
-                            });
-                            setState(() {});
-                          },
-                          backgroundColor: colors.surface,
-                          selectedColor: colors.primary,
-                          side: BorderSide(color: colors.border),
-                          showCheckmark: false,
-                        ),
-                        ChoiceChip(
-                          label: Text(
-                            _quickFilter == _QuickFilter.pickDate && _pickedDate != null
-                                ? '${_pickedDate!.day}/${_pickedDate!.month}/${_pickedDate!.year}'
-                                : 'Pick a date',
-                          ),
-                          labelStyle: AppTextStyles.caption(
-                            _quickFilter == _QuickFilter.pickDate ? Colors.white : colors.textPrimary,
-                          ),
-                          selected: _quickFilter == _QuickFilter.pickDate,
-                          onSelected: (selected) async {
-                            if (!selected) {
+                        Expanded(
+                          child: ChoiceChip(
+                            label: const Center(child: Text('Today')),
+                            labelStyle: AppTextStyles.small(
+                              _quickFilter == _QuickFilter.today ? Colors.white : colors.textPrimary,
+                            ),
+                            selected: _quickFilter == _QuickFilter.today,
+                            onSelected: (selected) {
                               setSheetState(() {
-                                _quickFilter = _QuickFilter.none;
-                                _pickedDate = null;
+                                _quickFilter = selected ? _QuickFilter.today : _QuickFilter.none;
+                                if (selected) {
+                                  _fromDate = null;
+                                  _toDate = null;
+                                  _pickedDate = null;
+                                }
                               });
                               setState(() {});
-                              return;
-                            }
-                            final picked = await showDatePicker(
-                              context: sheetContext,
-                              firstDate: DateTime(2020),
-                              lastDate: DateTime.now(),
-                              initialDate: _pickedDate ?? DateTime.now(),
-                            );
-                            if (picked != null) {
+                            },
+                            backgroundColor: colors.surface,
+                            selectedColor: colors.primary,
+                            side: BorderSide(color: colors.border),
+                            showCheckmark: false,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: ChoiceChip(
+                            label: const Center(child: Text('Yesterday')),
+                            labelStyle: AppTextStyles.small(
+                              _quickFilter == _QuickFilter.yesterday ? Colors.white : colors.textPrimary,
+                            ),
+                            selected: _quickFilter == _QuickFilter.yesterday,
+                            onSelected: (selected) {
                               setSheetState(() {
-                                _quickFilter = _QuickFilter.pickDate;
-                                _pickedDate = picked;
-                                _fromDate = null;
-                                _toDate = null;
+                                _quickFilter = selected ? _QuickFilter.yesterday : _QuickFilter.none;
+                                if (selected) {
+                                  _fromDate = null;
+                                  _toDate = null;
+                                  _pickedDate = null;
+                                }
                               });
                               setState(() {});
-                            }
-                          },
-                          backgroundColor: colors.surface,
-                          selectedColor: colors.primary,
-                          side: BorderSide(color: colors.border),
-                          showCheckmark: false,
+                            },
+                            backgroundColor: colors.surface,
+                            selectedColor: colors.primary,
+                            side: BorderSide(color: colors.border),
+                            showCheckmark: false,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: ChoiceChip(
+                            label: Center(
+                              child: Text(
+                                _quickFilter == _QuickFilter.pickDate && _pickedDate != null
+                                    ? '${_pickedDate!.day}/${_pickedDate!.month}/${_pickedDate!.year}'
+                                    : 'Pick a date',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                            labelStyle: AppTextStyles.small(
+                              _quickFilter == _QuickFilter.pickDate ? Colors.white : colors.textPrimary,
+                            ),
+                            selected: _quickFilter == _QuickFilter.pickDate,
+                            onSelected: (selected) async {
+                              if (!selected) {
+                                setSheetState(() {
+                                  _quickFilter = _QuickFilter.none;
+                                  _pickedDate = null;
+                                });
+                                setState(() {});
+                                return;
+                              }
+                              final picked = await showDatePicker(
+                                context: sheetContext,
+                                firstDate: DateTime(2020),
+                                lastDate: DateTime.now(),
+                                initialDate: _pickedDate ?? DateTime.now(),
+                              );
+                              if (picked != null) {
+                                setSheetState(() {
+                                  _quickFilter = _QuickFilter.pickDate;
+                                  _pickedDate = picked;
+                                  _fromDate = null;
+                                  _toDate = null;
+                                });
+                                setState(() {});
+                              }
+                            },
+                            backgroundColor: colors.surface,
+                            selectedColor: colors.primary,
+                            side: BorderSide(color: colors.border),
+                            showCheckmark: false,
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
 
                     Text(
-                      'CUSTOM DATE RANGE',
+                      'Custom date ',
                       style: AppTextStyles.small(colors.textSecondary).copyWith(letterSpacing: 0.8),
                     ),
                     const SizedBox(height: 10),
@@ -303,7 +308,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                                 _fromDate == null
                                     ? 'From'
                                     : '${_fromDate!.day}/${_fromDate!.month}/${_fromDate!.year}',
-                                style: AppTextStyles.body(colors.textPrimary),
+                                style: AppTextStyles.caption(colors.textPrimary),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                               ),
@@ -340,7 +345,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                                 _toDate == null
                                     ? 'To'
                                     : '${_toDate!.day}/${_toDate!.month}/${_toDate!.year}',
-                                style: AppTextStyles.body(colors.textPrimary),
+                                style: AppTextStyles.caption(colors.textPrimary),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                               ),
@@ -352,7 +357,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                     const SizedBox(height: 20),
 
                     Text(
-                      'CATEGORY',
+                      'Category',
                       style: AppTextStyles.small(colors.textSecondary).copyWith(letterSpacing: 0.8),
                     ),
                     const SizedBox(height: 10),
@@ -369,21 +374,20 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                           dropdownColor: colors.surface,
                           borderRadius: BorderRadius.circular(12),
                           style: AppTextStyles.body(colors.textPrimary),
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
                           value: _selectedCategory,
-                          hint: Text('All categories', style: AppTextStyles.body(colors.textSecondary)),
+                          hint: Text('All categories', style: AppTextStyles.caption(colors.textSecondary)),
                           items: [
                             DropdownMenuItem<String?>(
                               value: null,
-                              child: Text('All categories', style: AppTextStyles.body(colors.textPrimary)),
+                              child: Text('All categories', style: AppTextStyles.caption(colors.textPrimary)),
                             ),
                             ...categories.map((category) {
                               return DropdownMenuItem<String?>(
                                 value: category,
                                 child: Row(
                                   children: [
-                                    Icon(getCategoryIcon(category), size: 16, color: colors.primary),
-                                    const SizedBox(width: 10),
+                                    
                                     Flexible(
                                       child: Text(
                                         category,
@@ -406,47 +410,50 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                     const SizedBox(height: 20),
 
                     Text(
-                      'SORT BY AMOUNT',
+                      'Sort by amount',
                       style: AppTextStyles.small(colors.textSecondary).copyWith(letterSpacing: 0.8),
                     ),
                     const SizedBox(height: 10),
-                    Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
+                    Row(
                       children: [
-                        ChoiceChip(
-                          label: const Text('High to low'),
-                          labelStyle: AppTextStyles.caption(
-                            _sortOrder == _SortOrder.highToLow ? Colors.white : colors.textPrimary,
+                        Expanded(
+                          child: ChoiceChip(
+                            label: const Center(child: Text('High to low')),
+                            labelStyle: AppTextStyles.caption(
+                              _sortOrder == _SortOrder.highToLow ? Colors.white : colors.textPrimary,
+                            ),
+                            selected: _sortOrder == _SortOrder.highToLow,
+                            onSelected: (selected) {
+                              setSheetState(() {
+                                _sortOrder = selected ? _SortOrder.highToLow : _SortOrder.none;
+                              });
+                              setState(() {});
+                            },
+                            backgroundColor: colors.surface,
+                            selectedColor: colors.primary,
+                            side: BorderSide(color: colors.border),
+                            showCheckmark: false,
                           ),
-                          selected: _sortOrder == _SortOrder.highToLow,
-                          onSelected: (selected) {
-                            setSheetState(() {
-                              _sortOrder = selected ? _SortOrder.highToLow : _SortOrder.none;
-                            });
-                            setState(() {});
-                          },
-                          backgroundColor: colors.surface,
-                          selectedColor: colors.primary,
-                          side: BorderSide(color: colors.border),
-                          showCheckmark: false,
                         ),
-                        ChoiceChip(
-                          label: const Text('Low to high'),
-                          labelStyle: AppTextStyles.caption(
-                            _sortOrder == _SortOrder.lowToHigh ? Colors.white : colors.textPrimary,
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: ChoiceChip(
+                            label: const Center(child: Text('Low to high')),
+                            labelStyle: AppTextStyles.caption(
+                              _sortOrder == _SortOrder.lowToHigh ? Colors.white : colors.textPrimary,
+                            ),
+                            selected: _sortOrder == _SortOrder.lowToHigh,
+                            onSelected: (selected) {
+                              setSheetState(() {
+                                _sortOrder = selected ? _SortOrder.lowToHigh : _SortOrder.none;
+                              });
+                              setState(() {});
+                            },
+                            backgroundColor: colors.surface,
+                            selectedColor: colors.primary,
+                            side: BorderSide(color: colors.border),
+                            showCheckmark: false,
                           ),
-                          selected: _sortOrder == _SortOrder.lowToHigh,
-                          onSelected: (selected) {
-                            setSheetState(() {
-                              _sortOrder = selected ? _SortOrder.lowToHigh : _SortOrder.none;
-                            });
-                            setState(() {});
-                          },
-                          backgroundColor: colors.surface,
-                          selectedColor: colors.primary,
-                          side: BorderSide(color: colors.border),
-                          showCheckmark: false,
                         ),
                       ],
                     ),
@@ -470,8 +477,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                                 setState(() {});
                               },
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: colors.error,
-                                foregroundColor: Colors.white,
+                                backgroundColor: colors.error.withValues(alpha: 0.15),
+                                foregroundColor: colors.error,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                               ),
@@ -482,7 +489,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: SizedBox(
-                            height: 50,
+                            height: 52,
                             child: ElevatedButton(
                               onPressed: () => Navigator.of(sheetContext).pop(),
                               style: ElevatedButton.styleFrom(
