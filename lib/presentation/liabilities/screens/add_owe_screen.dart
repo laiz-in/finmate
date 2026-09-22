@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:iconsax_flutter/iconsax_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../core/di/injector.dart';
@@ -103,7 +102,7 @@ class _AddOweScreenState extends State<AddOweScreen> {
   }
 
   Widget _sectionLabel(AppColors colors, String text) {
-    return Text(text, style: AppTextStyles.small(colors.textSecondary).copyWith(letterSpacing: 0.8));
+    return Text(text, style: AppTextStyles.small(colors.textSecondary).copyWith(letterSpacing: 0.5));
   }
 
   @override
@@ -118,7 +117,7 @@ class _AddOweScreenState extends State<AddOweScreen> {
         resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -127,12 +126,13 @@ class _AddOweScreenState extends State<AddOweScreen> {
                   children: [
                     Row(
                       children: [
-                        Icon(Iconsax.arrow_up_1, color: colors.error, size: 24),
-                        const SizedBox(width: 8),
                         Text(
-                          widget.isEditing ? 'Edit owe' : 'You owe',
+                          widget.isEditing ? 'Edit owe' : 'Money you owe',
                           style: AppTextStyles.heading3(colors.textPrimary),
                         ),
+                        const SizedBox(width: 8),
+                        Icon(Icons.arrow_outward, color: colors.error, size: 24),
+                        
                       ],
                     ),
                     GestureDetector(
@@ -149,8 +149,7 @@ class _AddOweScreenState extends State<AddOweScreen> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 18),
-
+                const SizedBox(height: 20),
                 _sectionLabel(colors, 'PERSON'),
                 const SizedBox(height: 8),
                 FormField<String>(
@@ -172,7 +171,7 @@ class _AddOweScreenState extends State<AddOweScreen> {
                             style: AppTextStyles.body(colors.textPrimary),
                             onChanged: (v) => field.didChange(v),
                             decoration: InputDecoration(
-                              hintText: 'e.g. Justin',
+                              hintText: '',
                               hintStyle: AppTextStyles.body(colors.textSecondary),
                               border: InputBorder.none,
                               contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
@@ -204,6 +203,7 @@ class _AddOweScreenState extends State<AddOweScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
+                          width: double.infinity,
                           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
                           decoration: BoxDecoration(
                             color: colors.surface,
@@ -220,6 +220,9 @@ class _AddOweScreenState extends State<AddOweScreen> {
                               prefixText: '$symbol ',
                               prefixStyle: AppTextStyles.heading3(colors.textPrimary),
                               border: InputBorder.none,
+                              enabledBorder: InputBorder.none,
+                              focusedBorder: InputBorder.none,
+                              filled: false,
                             ),
                           ),
                         ),
@@ -244,11 +247,11 @@ class _AddOweScreenState extends State<AddOweScreen> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Iconsax.calendar_1, size: 16, color: colors.primary),
+                        Icon(Icons.alarm, size: 20, color: colors.primary),
                         const SizedBox(width: 10),
                         Text(
                           '${_dueDate.day}/${_dueDate.month}/${_dueDate.year}',
-                          style: AppTextStyles.body(colors.textPrimary),
+                          style: AppTextStyles.caption(colors.textPrimary),
                         ),
                       ],
                     ),
@@ -266,11 +269,11 @@ class _AddOweScreenState extends State<AddOweScreen> {
                   ),
                   child: TextField(
                     controller: _noteController,
-                    style: AppTextStyles.body(colors.textPrimary),
+                    style: AppTextStyles.caption(colors.textPrimary),
                     maxLines: 2,
                     decoration: InputDecoration(
-                      hintText: 'e.g. For dinner last week',
-                      hintStyle: AppTextStyles.body(colors.textSecondary),
+                      hintText: '',
+                      hintStyle: AppTextStyles.caption(colors.textSecondary),
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                     ),

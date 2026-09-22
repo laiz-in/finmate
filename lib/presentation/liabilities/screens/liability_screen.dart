@@ -70,13 +70,26 @@ class _LiabilityScreenState extends State<LiabilityScreen> {
                           duration: const Duration(milliseconds: 200),
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           decoration: BoxDecoration(
-                            color: _tabIndex == 0 ? colors.error : Colors.transparent,
+                            color: _tabIndex == 0 ? colors.primary : Colors.transparent,
                             borderRadius: BorderRadius.circular(11),
                           ),
                           child: Center(
-                            child: Text(
-                              'Owe',
-                              style: AppTextStyles.bodyMedium(_tabIndex == 0 ? Colors.white : colors.textSecondary),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                
+                                Text(
+                                  'OWE',
+                                  style: AppTextStyles.caption(_tabIndex == 0 ? Colors.white : colors.textSecondary,
+                                  ).copyWith(fontWeight: FontWeight.w600),
+                                ),
+                                const SizedBox(width: 4),
+                                Icon(
+                                  Icons.arrow_outward,
+                                  size: 20,
+                                  color: _tabIndex == 0 ? Colors.white : colors.textSecondary,
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -93,9 +106,20 @@ class _LiabilityScreenState extends State<LiabilityScreen> {
                             borderRadius: BorderRadius.circular(11),
                           ),
                           child: Center(
-                            child: Text(
-                              'Lent',
-                              style: AppTextStyles.bodyMedium(_tabIndex == 1 ? Colors.white : colors.textSecondary),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'LENT',
+                                  style: AppTextStyles.bodyMedium(_tabIndex == 1 ? Colors.white : colors.textSecondary).copyWith(fontWeight: FontWeight.w600),
+                                ),
+                                const SizedBox(width: 4),
+                                Icon(
+                                  Icons.arrow_downward,
+                                  size: 20,
+                                  color: _tabIndex == 1 ? Colors.white : colors.textSecondary,
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -118,8 +142,9 @@ class _LiabilityScreenState extends State<LiabilityScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: _tabIndex == 0 ? colors.error : colors.primary,
-        shape: const CircleBorder(),
+        elevation: 0,
+        backgroundColor: _tabIndex == 0 ? colors.primary : colors.primary,
+        shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         onPressed: () async {
           if (_tabIndex == 0) {
             await openAddOweSheet(context);
@@ -510,6 +535,9 @@ class _LiabilityTile extends StatelessWidget {
   }
 }
 
+
+
+// ---------------- Empty state ----------------
 class _EmptyState extends StatelessWidget {
   final AppColors colors;
   final String text;
@@ -523,7 +551,7 @@ class _EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Iconsax.wallet_1, size: 56, color: colors.textSecondary.withValues(alpha: 0.5)),
+            Icon(Iconsax.empty_wallet_add, size:70, color: colors.textSecondary.withValues(alpha: 0.5)),
             const SizedBox(height: 16),
             Text(text, style: AppTextStyles.body(colors.textSecondary), textAlign: TextAlign.center),
           ],

@@ -127,12 +127,13 @@ class _AddLentScreenState extends State<AddLentScreen> {
                   children: [
                     Row(
                       children: [
-                        Icon(Iconsax.arrow_down_1, color: colors.primary, size: 24),
-                        const SizedBox(width: 8),
                         Text(
                           widget.isEditing ? 'Edit lent' : 'You lent',
                           style: AppTextStyles.heading3(colors.textPrimary),
                         ),
+                        Icon(Icons.arrow_downward, color: colors.primary, size: 24),
+                        const SizedBox(width: 8),
+
                       ],
                     ),
                     GestureDetector(

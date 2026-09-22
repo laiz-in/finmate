@@ -6,7 +6,7 @@ import 'package:iconsax_flutter/iconsax_flutter.dart';
 IconData getCategoryIcon(String category) {
   switch (category) {
     case 'Food & Drink':
-      return Iconsax.coffee;
+      return Icons.lunch_dining;
     case 'Groceries':
       return Iconsax.shopping_cart;
     case 'Transport':
@@ -16,7 +16,7 @@ IconData getCategoryIcon(String category) {
     case 'Bills & Utilities':
       return Iconsax.receipt_2;
     case 'Rent & Housing':
-      return Iconsax.house_2;
+      return Icons.home;
     case 'Entertainment':
       return Iconsax.video_play;
     case 'Health':

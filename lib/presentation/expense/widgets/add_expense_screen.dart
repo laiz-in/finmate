@@ -144,7 +144,7 @@ class _OpenAddExpenseScreenState extends State<OpenAddExpenseScreen> {
         resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+            padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -228,7 +228,7 @@ class _OpenAddExpenseScreenState extends State<OpenAddExpenseScreen> {
                 _sectionLabel(colors, 'CATEGORY'),
                 const SizedBox(height: 8),
                 if (categories.isEmpty)
-                  Text('No categories set up in your profile', style: AppTextStyles.body(colors.textSecondary))
+                  Text('No categories set up in your profile', style: AppTextStyles.caption(colors.textSecondary))
                 else
                   FormField<String>(
                     key: _categoryFieldKey,
@@ -250,10 +250,10 @@ class _OpenAddExpenseScreenState extends State<OpenAddExpenseScreen> {
                                 icon: const SizedBox.shrink(),
                                 dropdownColor: colors.surface,
                                 borderRadius: BorderRadius.circular(14),
-                                style: AppTextStyles.body(colors.textPrimary),
+                                style: AppTextStyles.caption(colors.textPrimary),
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                 value: _selectedCategory,
-                                hint: Text('Select a category', style: AppTextStyles.body(colors.textSecondary)),
+                                hint: Text('Select a category', style: AppTextStyles.caption(colors.textSecondary)),
                                 items: categories.map((category) {
                                   return DropdownMenuItem(
                                     value: category,
@@ -293,10 +293,10 @@ class _OpenAddExpenseScreenState extends State<OpenAddExpenseScreen> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Iconsax.calendar_1, size: 16, color: colors.primary),
+                        Icon(Icons.edit_calendar_sharp, size: 20, color: colors.primary),
                         const SizedBox(width: 10),
                         Expanded(
-                          child: Text(_formattedDate(_selectedDate), style: AppTextStyles.body(colors.textPrimary)),
+                          child: Text(_formattedDate(_selectedDate), style: AppTextStyles.caption(colors.textPrimary)),
                         ),
                       ],
                     ),
@@ -333,7 +333,7 @@ class _OpenAddExpenseScreenState extends State<OpenAddExpenseScreen> {
                               enabledBorder: InputBorder.none,
                               focusedBorder: InputBorder.none,
                               filled: false,
-                              hintText: 'e.g. Bought sweets',
+                              hintText: 'something like a description..',
                               hintStyle: AppTextStyles.caption(colors.textSecondary),
                               border: InputBorder.none,
                               contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
@@ -366,7 +366,7 @@ class _OpenAddExpenseScreenState extends State<OpenAddExpenseScreen> {
                             children: [
                               Text(widget.isEditing ? 'Update expense' : 'Save expense'),
                               const SizedBox(width: 8),
-                              const Icon(Iconsax.arrow_right, color: Colors.white, size: 29),
+                              const Icon(Icons.arrow_forward, color: Colors.white, size: 29),
                             ],
                           ),
                   ),
